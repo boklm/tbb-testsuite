@@ -1,0 +1,64 @@
+#!/usr/bin/perl -w
+use strict;
+use Getopt::Long;
+use Cwd qw(getcwd);
+use File::Spec;
+use File::Temp;
+use Data::Dump qw/dd/;
+use FindBin;
+
+my %default_options = (
+    language => 'en-US',
+);
+my $options = get_options(@ARGV);
+sub exit_error {
+    print STDERR "Error: ", $_[0], "\n";
+    exit (exists $_[1] ? $_[1] : 1);
+}
+
+sub get_options {
+    my @options = qw(os=s tbbfile=s language=s);
+    my %res = %default_options;
+    Getopt::Long::GetOptionsFromArray(\@_, \%res, @options) || exit 1;
+    return \%res;
+}
+
+
+sub extract_tbb {
+    my ($tbbfile) = @_;
+    exit_error "Can't open file $tbbfile" unless -f $tbbfile;
+    $tbbfile = File::Spec->rel2abs($tbbfile);
+    my $oldcwd = getcwd;
+    my $tmpdir = File::Temp::newdir('tbbXXXXX', CLEANUP => 0);
+    chdir $tmpdir;
+    system('tar', 'xf', $tbbfile);
+    return "$tmpdir/tor-browser_$options->{language}";
+}
+
+sub setup_tbb {
+    unlink 'Data/Browser/profile.default/extensions/tor-launcher@torproject.org.xpi';
+}
+
+sub mozmill_run {
+    my ($test_path) = @_;
+    system('mozmill', '-b', "$options->{tbbdir}/Browser/firefox", '-p',
+        "$options->{tbbdir}/Data/Browser/profile.default", '-t',
+        "$FindBin::Bin/mozmill-tests/tbb-tests/$test_path");
+}
+
+sub mozmill_tests {
+    my @tests = (
+        'tbbScreenshot.js',
+    );
+    foreach my $test (@tests) {
+        mozmill_run($test);
+    }
+}
+
+$options->{basedir} = getcwd;
+$options->{tbbdir} = extract_tbb($options->{tbbfile});
+chdir $options->{tbbdir} || exit_error "Can't enter directory $options->{tbbdir}";
+setup_tbb;
+print "tbbdir: $options->{tbbdir}\n";
+mozmill_tests;
+
