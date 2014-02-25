@@ -6,6 +6,7 @@ use File::Spec;
 use File::Temp;
 use Data::Dump qw/dd/;
 use FindBin;
+use LWP::UserAgent;
 
 my %default_options = (
     language => 'en-US',
@@ -24,6 +25,22 @@ sub get_options {
     Getopt::Long::GetOptionsFromArray(\@_, \%res, @options) || exit 1;
     $res{files} = \@_;
     return \%res;
+}
+
+sub get_tbbfile {
+    my ($tbbfile) = @_;
+    if ($tbbfile =~ m/^https?:\/\//) {
+        print "Downloading $tbbfile\n";
+        my (undef, undef, $file) = File::Spec->splitpath($tbbfile);
+        my $output = "$options->{tbbinfos}{tmpdir}/$file";
+        my $ua = LWP::UserAgent->new;
+        my $resp = $ua->get($tbbfile, ':content_file' => $output);
+        exit_error "Error downloading $tbbfile:\n" . $resp->status_line
+                unless $resp->is_success;
+        return $output;
+    }
+    exit_error "File $tbbfile does not exist" unless -f $tbbfile;
+    return $tbbfile;
 }
 
 sub tbb_filename_infos {
@@ -51,8 +68,7 @@ sub extract_tbb {
     my ($tbbfile) = @_;
     exit_error "Can't open file $tbbfile" unless -f $tbbfile;
     $tbbfile = File::Spec->rel2abs($tbbfile);
-    my $oldcwd = getcwd;
-    my $tmpdir = File::Temp::newdir('tbbXXXXX', CLEANUP => 0);
+    my $tmpdir = $options->{tbbinfos}{tmpdir};
     chdir $tmpdir;
     system('tar', 'xf', $tbbfile);
     return "$tmpdir/tor-browser_$options->{tbbinfos}{language}";
@@ -95,6 +111,8 @@ sub test_tbb {
     my ($tbbfile) = @_;
     my $oldcwd = getcwd;
     $options->{tbbinfos} = tbb_filename_infos($tbbfile);
+    $options->{tbbinfos}{tmpdir} = File::Temp::newdir;
+    $tbbfile = get_tbbfile($tbbfile);
     $options->{tbbdir} = extract_tbb($tbbfile);
     chdir $options->{tbbdir} || exit_error "Can't enter directory $options->{tbbdir}";
     setup_tbb;
