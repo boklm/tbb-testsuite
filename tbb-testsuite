@@ -9,6 +9,8 @@ use FindBin;
 
 my %default_options = (
     language => 'en-US',
+    mozmill  => 1,
+    selenium => 1,
 );
 my $options = get_options(@ARGV);
 sub exit_error {
@@ -17,7 +19,7 @@ sub exit_error {
 }
 
 sub get_options {
-    my @options = qw(os=s language=s);
+    my @options = qw(os=s language=s mozmill! selenium!);
     my %res = %default_options;
     Getopt::Long::GetOptionsFromArray(\@_, \%res, @options) || exit 1;
     $res{files} = \@_;
@@ -48,6 +50,7 @@ sub mozmill_run {
 }
 
 sub mozmill_tests {
+    return unless $options->{mozmill};
     my @tests = (
         'tbbScreenshot.js',
     );
@@ -57,6 +60,7 @@ sub mozmill_tests {
 }
 
 sub selenium_tests {
+    return unless $options->{selenium};
     my @tests = (
         'test_check.tpo.py',
     );
