@@ -17,9 +17,10 @@ sub exit_error {
 }
 
 sub get_options {
-    my @options = qw(os=s tbbfile=s language=s);
+    my @options = qw(os=s language=s);
     my %res = %default_options;
     Getopt::Long::GetOptionsFromArray(\@_, \%res, @options) || exit 1;
+    $res{files} = \@_;
     return \%res;
 }
 
@@ -66,11 +67,18 @@ sub selenium_tests {
     }
 }
 
-$options->{basedir} = getcwd;
-$options->{tbbdir} = extract_tbb($options->{tbbfile});
-chdir $options->{tbbdir} || exit_error "Can't enter directory $options->{tbbdir}";
-setup_tbb;
-print "tbbdir: $options->{tbbdir}\n";
-mozmill_tests;
-selenium_tests;
+sub test_tbb {
+    my ($tbbfile) = @_;
+    my $oldcwd = getcwd;
+    $options->{tbbdir} = extract_tbb($tbbfile);
+    chdir $options->{tbbdir} || exit_error "Can't enter directory $options->{tbbdir}";
+    setup_tbb;
+    print "tbbdir: $options->{tbbdir}\n";
+    mozmill_tests;
+    selenium_tests;
+    chdir $oldcwd;
+}
 
+foreach my $tbbfile (@{$options->{files}}) {
+    test_tbb($tbbfile);
+}
