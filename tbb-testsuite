@@ -55,10 +55,22 @@ sub mozmill_tests {
     }
 }
 
+sub selenium_tests {
+    my @tests = (
+        'test_check.tpo.py',
+    );
+    $ENV{TBB_BIN} = "$options->{tbbdir}/Browser/firefox";
+    $ENV{TBB_PROFILE} = "$options->{tbbdir}/Data/Browser/profile.default";
+    foreach my $test (@tests) {
+        system("$FindBin::Bin/selenium-tests/$test");
+    }
+}
+
 $options->{basedir} = getcwd;
 $options->{tbbdir} = extract_tbb($options->{tbbfile});
 chdir $options->{tbbdir} || exit_error "Can't enter directory $options->{tbbdir}";
 setup_tbb;
 print "tbbdir: $options->{tbbdir}\n";
 mozmill_tests;
+selenium_tests;
 
