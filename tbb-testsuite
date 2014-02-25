@@ -4,12 +4,15 @@ use Getopt::Long;
 use Cwd qw(getcwd);
 use File::Spec;
 use File::Temp;
+use File::Slurp;
 use Data::Dump qw/dd/;
 use FindBin;
 use LWP::UserAgent;
+use Digest::SHA qw(sha256_hex);
 
 my %default_options = (
-    language => 'en-US',
+    os       => 'Linux',
+    arch     => 'x86_64',
     mozmill  => 1,
     selenium => 1,
 );
@@ -107,12 +110,42 @@ sub selenium_tests {
     }
 }
 
+sub matching_tbbfile {
+    my $o = tbb_filename_infos($_[0]);
+    return $o->{type} eq 'tbbfile' && $o->{os} eq $options->{os}
+        && $o->{arch} eq $options->{arch};
+}
+
+sub test_sha {
+    my ($shafile) = @_;
+    my $content;
+    if ($shafile =~ m/^https?:\/\//) {
+        my $ua = LWP::UserAgent->new;
+        my $resp = $ua->get($shafile);
+        exit_error "Error downloading $shafile:\n" . $resp->status_line
+                unless $resp->is_success;
+        $content = $resp->decoded_content;
+    } else {
+        $content = read_file($shafile);
+    }
+    my (undef, $dir) = File::Spec->splitpath($shafile);
+    my @files = map { [ reverse split /  /, $_ ] } split /\n/, $content;
+    @files = grep { matching_tbbfile($_->[0]) } @files;
+    foreach my $file (@files) {
+        test_tbb("$dir/$file->[0]", $file->[1]);
+    }
+}
+
 sub test_tbb {
-    my ($tbbfile) = @_;
+    my ($tbbfile, $sha256sum) = @_;
     my $oldcwd = getcwd;
     $options->{tbbinfos} = tbb_filename_infos($tbbfile);
+    return test_sha($tbbfile) if $options->{tbbinfos}{type} eq 'sha256sum';
     $options->{tbbinfos}{tmpdir} = File::Temp::newdir;
     $tbbfile = get_tbbfile($tbbfile);
+    if ($sha256sum && $sha256sum ne sha256_hex(read_file($tbbfile))) {
+        exit_error "Wrong sha256sum for $tbbfile";
+    }
     $options->{tbbdir} = extract_tbb($tbbfile);
     chdir $options->{tbbdir} || exit_error "Can't enter directory $options->{tbbdir}";
     setup_tbb;
