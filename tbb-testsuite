@@ -78,7 +78,7 @@ sub extract_tbb {
 }
 
 sub setup_tbb {
-    unlink 'Data/Browser/profile.default/extensions/tor-launcher@torproject.org.xpi';
+    $ENV{TOR_SKIP_LAUNCH} = 1;
 }
 
 sub mozmill_run {
