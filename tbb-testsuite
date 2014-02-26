@@ -9,21 +9,28 @@ use Data::Dump qw/dd/;
 use FindBin;
 use LWP::UserAgent;
 use Digest::SHA qw(sha256_hex);
+use IO::CaptureOutput qw(capture_exec);
+use IO::Socket::INET;
 
 my %default_options = (
     os       => 'Linux',
     arch     => 'x86_64',
     mozmill  => 1,
     selenium => 1,
+    starttor => 1,
+    'tor-control-port' => '9551',
+    'tor-socks-port'   => '9550',
 );
 my $options = get_options(@ARGV);
 sub exit_error {
     print STDERR "Error: ", $_[0], "\n";
+    chdir '/';
     exit (exists $_[1] ? $_[1] : 1);
 }
 
 sub get_options {
-    my @options = qw(mozmill! selenium!);
+    my @options = qw(mozmill! selenium! starttor! tor-control-port=i
+                     tor-socks-port=i);
     my %res = %default_options;
     Getopt::Long::GetOptionsFromArray(\@_, \%res, @options) || exit 1;
     $res{files} = \@_;
@@ -79,6 +86,70 @@ sub extract_tbb {
 
 sub setup_tbb {
     $ENV{TOR_SKIP_LAUNCH} = 1;
+}
+
+sub monitor_bootstrap {
+    my ($control_passwd) = @_;
+    sleep 10;
+    my $sock = new IO::Socket::INET(
+        PeerAddr => 'localhost',
+        PeerPort => $options->{'tor-control-port'},
+        Proto => 'tcp',
+    );
+    exit_error "Error connecting to control port: $!\n" unless $sock;
+    print $sock 'AUTHENTICATE "', $control_passwd, "\"\n";
+    my $r = <$sock>;
+    exit_error "Authentication error: $r" unless $r =~ m/^250 OK/;
+    my $i = 0;
+    while (1) {
+        print $sock "GETINFO status/bootstrap-phase\n";
+        $r = <$sock>;
+        print $r;
+        last if $r =~ m/^250-status\/bootstrap-phase.* TAG=done/;
+        sleep 1;
+        $i++;
+        exit_error "Could not bootstrap after $i seconds" if $i > 300;
+    }
+    print "Bootstraping done\n";
+    return 3;
+}
+
+# TODO: In the future, we should start tor using tor-launcher
+sub start_tor {
+    return unless $options->{starttor};
+    my $control_passwd = map { ('a'..'z', 'A'..'Z', 0..9)[rand 62] } 0..8;
+    my $cwd = getcwd;
+    $ENV{LD_LIBRARY_PATH} = "$cwd/Tor/";
+    $ENV{TOR_SOCKS_PORT} = $options->{'tor-socks-port'};
+    $ENV{TOR_CONTROL_PORT} = $options->{'tor-control-port'};
+    $ENV{TOR_CONTROL_HOST} = '127.0.0.1';
+    $ENV{TOR_CONTROL_COOKIE_AUTH_FILE} = "$cwd/Data/Tor/control_auth_cookie";
+    my ($hashed_password, undef, $success) =
+        capture_exec("$cwd/Tor/tor", '--quiet', '--hash-password', $control_passwd);
+    exit_error "Error running tor --hash-password" unless $success;
+    chomp $hashed_password;
+    my @torrc = read_file('Data/Tor/torrc-defaults');
+    foreach (@torrc) {
+        s/^ControlPort .*/ControlPort $options->{'tor-control-port'}/;
+        s/^SocksPort .*/SocksPort $options->{'tor-socks-port'}/;
+    }
+    write_file('Data/Tor/torrc-defaults', @torrc);
+    my @cmd = ("$cwd/Tor/tor", '--defaults-torrc', "$cwd/Data/Tor/torrc-defaults",
+        '-f', "$cwd/Data/Tor/torrc", 'DataDirectory', "$cwd/Data/Tor",
+        'GeoIPFile', "$cwd/Data/Tor/geoip", '__OwningControllerProcess', $$,
+        'HashedControlPassword', $hashed_password);
+    $options->{tbbinfos}{torpid} = fork;
+    if ($options->{tbbinfos}{torpid} == 0) {
+        open(STDOUT, '>', '/dev/null');
+        open(STDERR, '>', '/dev/null');
+        exec @cmd;
+    }
+    return monitor_bootstrap($control_passwd);
+}
+
+sub stop_tor {
+    return unless $options->{starttor};
+    kill 9, $options->{tbbinfos}{torpid};
 }
 
 sub mozmill_run {
@@ -148,11 +219,13 @@ sub test_tbb {
     }
     $options->{tbbdir} = extract_tbb($tbbfile);
     chdir $options->{tbbdir} || exit_error "Can't enter directory $options->{tbbdir}";
+    start_tor;
     setup_tbb;
     print "tbbdir: $options->{tbbdir}\n";
     mozmill_tests;
     selenium_tests;
     chdir $oldcwd;
+    stop_tor;
 }
 
 foreach my $tbbfile (@{$options->{files}}) {
