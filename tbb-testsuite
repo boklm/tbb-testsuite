@@ -14,6 +14,7 @@ use IO::CaptureOutput qw(capture_exec);
 use IO::Socket::INET;
 use JSON;
 use File::Copy;
+use Image::Resize;
 
 my %default_options = (
     os       => 'Linux',
@@ -168,6 +169,12 @@ sub stop_tor {
     kill 9, $options->{tbbinfos}{torpid};
 }
 
+sub screenshot_thumbnail {
+    my ($dir, $name) = @_;
+    my $image = Image::Resize->new("$dir/$name");
+    write_file("$dir/t-$name", $image->resize(600, 600)->png);
+}
+
 sub mozmill_run {
     my ($test) = @_;
     $test->{screenshots} = [];
@@ -182,6 +189,7 @@ sub mozmill_run {
     my $i = 0;
     for my $screenshot_file (glob "$screenshots_tmp/*.png") {
         move($screenshot_file, "$options->{tbbinfos}{'results-dir'}/$test->{name}-$i.png");
+        screenshot_thumbnail($options->{tbbinfos}{'results-dir'}, "$test->{name}-$i.png");
         push @{$test->{screenshots}}, "$test-$i.png";
         $i++;
     }
