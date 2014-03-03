@@ -222,6 +222,17 @@ sub run_tests {
     }
 }
 
+sub is_success {
+    my ($tests) = @_;
+    foreach my $test (keys %$tests) {
+        if ($tests->{$test}{type} eq 'mozmill'
+            && $tests->{$test}{results}{results}->[0]->{failed}) {
+            return 0;
+        }
+    }
+    return 1;
+}
+
 sub matching_tbbfile {
     my $o = tbb_filename_infos($_[0]);
     return $o->{type} eq 'tbbfile' && $o->{os} eq $options->{os}
@@ -274,6 +285,7 @@ sub test_tbb {
     run_tests($options->{tbbinfos}{tests});
     chdir $oldcwd;
     stop_tor;
+    $options->{tbbinfos}{success} = is_success($options->{tbbinfos}{tests});
     $results{$options->{tbbinfos}{filename}} = $options->{tbbinfos};
 }
 
