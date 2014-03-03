@@ -5,12 +5,15 @@ use Cwd qw(getcwd);
 use File::Spec;
 use File::Temp;
 use File::Slurp;
+use File::Path qw(make_path);
 use Data::Dump qw/dd/;
 use FindBin;
 use LWP::UserAgent;
 use Digest::SHA qw(sha256_hex);
 use IO::CaptureOutput qw(capture_exec);
 use IO::Socket::INET;
+use JSON;
+use File::Copy;
 
 my %default_options = (
     os       => 'Linux',
@@ -30,11 +33,24 @@ sub exit_error {
 
 sub get_options {
     my @options = qw(mozmill! selenium! starttor! tor-control-port=i
-                     tor-socks-port=i);
+                     tor-socks-port=i reports-dir=s);
     my %res = %default_options;
     Getopt::Long::GetOptionsFromArray(\@_, \%res, @options) || exit 1;
     $res{files} = \@_;
     return \%res;
+}
+
+sub set_reports_dir {
+    if ($options->{'reports-dir'}) {
+        make_path($options->{'reports-dir'});
+        return;
+    }
+    my $r = $FindBin::Bin . '/reports';
+    mkdir $r;
+    return $options->{'reports-dir'} = File::Temp::newdir(
+        'XXXXXX',
+        DIR => $r,
+        CLEANUP => 0)->dirname;
 }
 
 sub get_tbbfile {
@@ -56,7 +72,7 @@ sub get_tbbfile {
 sub tbb_filename_infos {
     my ($tbbfile) = @_;
     my (undef, undef, $file) = File::Spec->splitpath($tbbfile);
-    my %res;
+    my %res = (filename => $file);
     if ($file =~ m/^tor-browser-linux(..)-([^_]+)_(.+)\.tar\.xz$/) {
         @res{qw(type os version language)} = ('tbbfile', 'Linux', $2, $3);
         $res{arch} = $1 eq '64' ? 'x86_64' : 'x86';
@@ -153,17 +169,28 @@ sub stop_tor {
 }
 
 sub mozmill_run {
-    my ($test_path) = @_;
+    my ($test) = @_;
+    $test->{screenshots} = [];
+    my %res = ( screenshots => [], );
+    my $screenshots_tmp = File::Temp::newdir;
+    $ENV{'MOZMILL_SCREENSHOTS'} = $screenshots_tmp;
+    my $results_file = "$options->{tbbinfos}{'results-dir'}/$test->{name}.json";
     system('mozmill', '-b', "$options->{tbbdir}/Browser/firefox", '-p',
         "$options->{tbbdir}/Data/Browser/profile.default", '-t',
-        "$FindBin::Bin/mozmill-tests/tbb-tests/$test_path");
+        "$FindBin::Bin/mozmill-tests/tbb-tests/$test->{name}.js",
+        '--report', "file://$results_file");
+    my $i = 0;
+    for my $screenshot_file (glob "$screenshots_tmp/*.png") {
+        move($screenshot_file, "$options->{tbbinfos}{'results-dir'}/$test->{name}-$i.png");
+        push @{$test->{screenshots}}, "$test-$i.png";
+        $i++;
+    }
+    $test->{results} = decode_json(read_file($results_file));
 }
 
 sub mozmill_tests {
     return unless $options->{mozmill};
-    my @tests = (
-        'tbbScreenshot.js',
-    );
+    my @tests = ({ name => 'tbbScreenshot', });
     foreach my $test (@tests) {
         mozmill_run($test);
     }
@@ -217,6 +244,9 @@ sub test_tbb {
     if ($sha256sum && $sha256sum ne sha256_hex(read_file($tbbfile))) {
         exit_error "Wrong sha256sum for $tbbfile";
     }
+    $options->{tbbinfos}{'results-dir'} =
+        "$options->{'reports-dir'}/results-$options->{tbbinfos}{filename}";
+    mkdir $options->{tbbinfos}{'results-dir'};
     $options->{tbbdir} = extract_tbb($tbbfile);
     chdir $options->{tbbdir} || exit_error "Can't enter directory $options->{tbbdir}";
     start_tor;
@@ -228,6 +258,8 @@ sub test_tbb {
     stop_tor;
 }
 
+set_reports_dir;
 foreach my $tbbfile (@{$options->{files}}) {
     test_tbb($tbbfile);
 }
+print "Reports directory: $options->{'reports-dir'}\n";
