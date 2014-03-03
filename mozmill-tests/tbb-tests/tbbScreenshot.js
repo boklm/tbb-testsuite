@@ -14,7 +14,7 @@ const TEST_DATA = BASE_URL + "path/file.html";
 // Include this only if specifying a timeout other than 5000ms
 const TEST_EXAMPLE_TIMEOUT = 3000;
 
-var screenshot = require("../mozilla-mozmill-tests/firefox/lib/screenshot");
+var screenshot = require("../lib/screenshot");
 
 // Setup for the test
 var setupModule = function(aModule) {
