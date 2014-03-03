@@ -48,19 +48,19 @@ function create(controller, boxes) {
 
 /**
  * Saves a given Canvas object to a file.
- * The path to save the file under should be given on the command line. If not,
- * it will be saved in the temporary folder of the system.
+ * The path to save the file under should be given in the
+ * MOZMILL_SCREENSHOTS environment variable. If not, it will be saved
+ * in the temporary folder of the system.
  *
  * @param {canvas} canvas
  */
 function _saveCanvas(canvas) {
-  // Use the path given on the command line and saved under
-  // persisted.screenshotPath, if available. If not, use the path to the
-  // temporary folder as a fallback.
+  var env = Cc["@mozilla.org/process/environment;1"]
+                .getService(Ci.nsIEnvironment);
   var file = null;
-  if ("screenshotPath" in persisted) {
+  if (env.exists("MOZMILL_SCREENSHOTS")) {
     file = Cc["@mozilla.org/file/local;1"].createInstance(Ci.nsILocalFile);
-    file.initWithPath(persisted.screenshotPath);
+    file.initWithPath(env.get("MOZMILL_SCREENSHOTS"));
   }
   else {
     file = Services.dirsvc.get("TmpD", Ci.nsIFile);
