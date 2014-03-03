@@ -1,0 +1,26 @@
+<html>
+    <head>
+        <title>Tests screenshots</title>
+        <style type="text/css">
+            .test_ok {
+                color: #006600;
+                font-weight: bold;
+            }
+            .test_notok {
+                color: #FF0000;
+                font-weight: bold;
+            }
+        </style>
+    </head>
+    <body>
+        [% FOREACH tbbfile IN results.keys %]
+            <h1>[% tbbfile %]</h1>
+            [% FOREACH test IN results.$tbbfile.tests.values %]
+               [% FOREACH screenshot IN test.screenshots %]
+                  <a href="results-[% tbbfile %]/[% screenshot %]"><img src="results-[% tbbfile %]/t-[% screenshot %]" /></a><br />
+               [% END %]
+            [% END %]
+            <hr />
+        [% END %]
+    </body>
+</html>

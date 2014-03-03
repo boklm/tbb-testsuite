@@ -1,0 +1,31 @@
+<html>
+    <head>
+        <title>Tests reports</title>
+        <style type="text/css">
+            .test_ok {
+                color: #006600;
+                font-weight: bold;
+            }
+            .test_notok {
+                color: #FF0000;
+                font-weight: bold;
+            }
+        </style>
+    </head>
+    <body>
+        <h1>Bundle list</h1>
+        <ul>
+        [% FOREACH tbbfile IN results.keys %]
+        <li><a href="[% tbbfile %].html">[% tbbfile %]</a>:
+        [% IF results.$tbbfile.success %]
+        <span class="test_ok">OK</a>
+        [% ELSE %]
+        <span class="test_notok">NOT OK</a>
+        [% END %]
+        </li>
+        [% END %]
+        </ul>
+        <hr>
+        <a href="screenshots.html">screenshots</a>
+    </body>
+</html>
