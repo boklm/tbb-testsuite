@@ -1,1 +1,31 @@
-Tor Browser Bundle test suite.
+Tor Browser Bundle test suite
+=============================
+
+Usage
+-----
+
+ $ ./tbb-testsuite [options] <tbb-file>...
+
+
+Available options
+-----------------
+
+--no-mozmill
+        Don't run mozmill tests.
+
+--no-selenium
+        Don't run the Selenium tests.
+
+--no-start-tor
+        Don't start a tor daemon. If you use this option, you should
+        already have a tor daemon running.
+
+--tor-control-port=<port>
+        Select the tor control port number. Default is 9551.
+
+--tor-socks-port=<port>
+        Select the tor socks port. Default is 9550.
+
+--reports-dir=<directory>
+        Directory where the tests reports are saved.
+
