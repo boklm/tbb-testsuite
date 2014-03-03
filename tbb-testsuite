@@ -16,6 +16,13 @@ use JSON;
 use File::Copy;
 use Image::Resize;
 
+my %tests = (
+    tbbScreenshot => { type => 'mozmill' },
+    'check.tpo' => { type => 'selenium' },
+);
+
+my %results;
+
 my %default_options = (
     os       => 'Linux',
     arch     => 'x86_64',
@@ -177,6 +184,7 @@ sub screenshot_thumbnail {
 
 sub mozmill_run {
     my ($test) = @_;
+    return unless $options->{mozmill};
     $test->{screenshots} = [];
     my %res = ( screenshots => [], );
     my $screenshots_tmp = File::Temp::newdir;
@@ -190,29 +198,27 @@ sub mozmill_run {
     for my $screenshot_file (glob "$screenshots_tmp/*.png") {
         move($screenshot_file, "$options->{tbbinfos}{'results-dir'}/$test->{name}-$i.png");
         screenshot_thumbnail($options->{tbbinfos}{'results-dir'}, "$test->{name}-$i.png");
-        push @{$test->{screenshots}}, "$test-$i.png";
+        push @{$test->{screenshots}}, "$test->{name}-$i.png";
         $i++;
     }
     $test->{results} = decode_json(read_file($results_file));
 }
 
-sub mozmill_tests {
-    return unless $options->{mozmill};
-    my @tests = ({ name => 'tbbScreenshot', });
-    foreach my $test (@tests) {
-        mozmill_run($test);
-    }
+sub selenium_run {
+    my ($test) = @_;
+    return unless $options->{selenium};
+    system("$FindBin::Bin/selenium-tests/test_$test->{name}.py");
 }
 
-sub selenium_tests {
-    return unless $options->{selenium};
-    my @tests = (
-        'test_check.tpo.py',
+sub run_tests {
+    my ($tests) = @_;
+    my %types = (
+        mozmill  => \&mozmill_run,
+        selenium => \&selenium_run,
     );
-    $ENV{TBB_BIN} = "$options->{tbbdir}/Browser/firefox";
-    $ENV{TBB_PROFILE} = "$options->{tbbdir}/Data/Browser/profile.default";
-    foreach my $test (@tests) {
-        system("$FindBin::Bin/selenium-tests/$test");
+    foreach my $test (keys %$tests) {
+        $tests->{$test}{name} = $test;
+        $types{$tests->{$test}{type}}->($tests->{$test});
     }
 }
 
@@ -252,18 +258,21 @@ sub test_tbb {
     if ($sha256sum && $sha256sum ne sha256_hex(read_file($tbbfile))) {
         exit_error "Wrong sha256sum for $tbbfile";
     }
+    $options->{tbbinfos}{tests} = { map { $_ => { %{$tests{$_}} } } keys %tests };
     $options->{tbbinfos}{'results-dir'} =
         "$options->{'reports-dir'}/results-$options->{tbbinfos}{filename}";
     mkdir $options->{tbbinfos}{'results-dir'};
     $options->{tbbdir} = extract_tbb($tbbfile);
     chdir $options->{tbbdir} || exit_error "Can't enter directory $options->{tbbdir}";
+    $ENV{TBB_BIN} = "$options->{tbbdir}/Browser/firefox";
+    $ENV{TBB_PROFILE} = "$options->{tbbdir}/Data/Browser/profile.default";
     start_tor;
     setup_tbb;
     print "tbbdir: $options->{tbbdir}\n";
-    mozmill_tests;
-    selenium_tests;
+    run_tests($options->{tbbinfos}{tests});
     chdir $oldcwd;
     stop_tor;
+    $results{$options->{tbbinfos}{filename}} = $options->{tbbinfos};
 }
 
 set_reports_dir;
