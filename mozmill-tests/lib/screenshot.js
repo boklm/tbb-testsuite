@@ -7,9 +7,6 @@
 
 Cu.import("resource://gre/modules/Services.jsm");
 
-// Include the required modules
-var utils = require("utils");
-
 /**
  * This function creates a screenshot of the window provided in the given
  * controller and highlights elements from the coordinates provided in the
@@ -69,12 +66,7 @@ function _saveCanvas(canvas) {
     file = Services.dirsvc.get("TmpD", Ci.nsIFile);
   }
 
-  var fileName = utils.appInfo.name + "-" +
-                 utils.appInfo.locale + "." +
-                 utils.appInfo.version + "." +
-                 utils.appInfo.buildID + "." +
-                 utils.appInfo.os + ".png";
-  file.append(fileName);
+  file.append("screenshot.png");
 
   // if a file already exists, don't overwrite it and create a new name
   file.createUnique(Ci.nsIFile.NORMAL_FILE_TYPE, parseInt("0666", 8));
