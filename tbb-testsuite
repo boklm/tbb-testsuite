@@ -258,6 +258,8 @@ sub test_tbb {
     if ($sha256sum && $sha256sum ne sha256_hex(read_file($tbbfile))) {
         exit_error "Wrong sha256sum for $tbbfile";
     }
+    $options->{tbbinfos}{sha256sum} = $sha256sum ? $sha256sum
+                                        : sha256_hex(read_file($tbbfile));
     $options->{tbbinfos}{tests} = { map { $_ => { %{$tests{$_}} } } keys %tests };
     $options->{tbbinfos}{'results-dir'} =
         "$options->{'reports-dir'}/results-$options->{tbbinfos}{filename}";
