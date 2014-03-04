@@ -202,6 +202,7 @@ sub mozmill_run {
         $i++;
     }
     $test->{results} = decode_json(read_file($results_file));
+    $test->{results}{success} = !$test->{results}{results}->[0]->{failed};
 }
 
 sub selenium_run {
@@ -228,12 +229,7 @@ sub run_tests {
 sub is_success {
     my ($tests) = @_;
     foreach my $test (keys %$tests) {
-        if ($tests->{$test}{type} eq 'mozmill'
-            && $tests->{$test}{results}{results}->[0]->{failed}) {
-            return 0;
-        }
-        if (defined $tests->{$test}{results}{success} &&
-            !$tests->{$test}{results}{success}) {
+        if ($tests->{$test}{results} && !$tests->{$test}{results}{success}) {
             return 0;
         }
     }
