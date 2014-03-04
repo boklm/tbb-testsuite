@@ -18,9 +18,11 @@ use Image::Resize;
 use Template;
 
 my %tests = (
+    tor_bootstrap => { type => 'tor_bootstrap' },
     check_screenshot => { type => 'mozmill' },
     check => { type => 'selenium' },
 );
+%tests = map { $_ => { name => $_, %{$tests{$_}} } } keys %tests;
 
 my %results;
 
@@ -133,9 +135,13 @@ sub monitor_bootstrap {
         last if $r =~ m/^250-status\/bootstrap-phase.* TAG=done/;
         sleep 1;
         $i++;
-        exit_error "Could not bootstrap after $i seconds" if $i > 300;
+        if ($i > 300) {
+            $options->{tbbinfos}{tests}{tor_bootstrap}{results}{success} = 0;
+            return 0;
+        }
     }
     print "Bootstraping done\n";
+    $options->{tbbinfos}{tests}{tor_bootstrap}{results}{success} = 1;
     return 3;
 }
 
@@ -165,8 +171,9 @@ sub start_tor {
         'HashedControlPassword', $hashed_password);
     $options->{tbbinfos}{torpid} = fork;
     if ($options->{tbbinfos}{torpid} == 0) {
-        open(STDOUT, '>', '/dev/null');
-        open(STDERR, '>', '/dev/null');
+        my $logfile = "$options->{tbbinfos}{'results-dir'}/tor.log";
+        open(STDOUT, '>', $logfile);
+        open(STDERR, '>', $logfile);
         exec @cmd;
     }
     return monitor_bootstrap($control_passwd);
@@ -221,8 +228,8 @@ sub run_tests {
         selenium => \&selenium_run,
     );
     foreach my $test (keys %$tests) {
-        $tests->{$test}{name} = $test;
-        $types{$tests->{$test}{type}}->($tests->{$test});
+        $types{$tests->{$test}{type}}->($tests->{$test})
+                if $types{$tests->{$test}{type}};
     }
 }
 
@@ -302,12 +309,12 @@ sub test_tbb {
     chdir $options->{tbbdir} || exit_error "Can't enter directory $options->{tbbdir}";
     $ENV{TBB_BIN} = "$options->{tbbdir}/Browser/firefox";
     $ENV{TBB_PROFILE} = "$options->{tbbdir}/Data/Browser/profile.default";
-    start_tor;
-    setup_tbb;
-    print "tbbdir: $options->{tbbdir}\n";
-    run_tests($options->{tbbinfos}{tests});
+    if (start_tor) {
+        setup_tbb;
+        run_tests($options->{tbbinfos}{tests});
+        stop_tor;
+    }
     chdir $oldcwd;
-    stop_tor;
     $options->{tbbinfos}{success} = is_success($options->{tbbinfos}{tests});
     $results{$options->{tbbinfos}{filename}} = $options->{tbbinfos};
 }
