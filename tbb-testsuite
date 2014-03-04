@@ -281,7 +281,8 @@ sub make_report {
     }
     foreach my $tbbfile (keys %results) {
         $vars->{tbbfile} = $tbbfile;
-        $template->process('report.html', $vars, "$tbbfile.html", binmode => ':utf8');
+        $template->process('report.html', $vars, "$tbbfile.html",
+            binmode => ':utf8') || exit_error "Template Error:\n" . $template->error;
     }
 }
 
