@@ -208,7 +208,7 @@ sub mozmill_run {
 sub selenium_run {
     my ($test) = @_;
     return unless $options->{selenium};
-    system("$FindBin::Bin/selenium-tests/test_$test->{name}.py");
+    system("$FindBin::Bin/selenium-tests/run_test", $test->{name});
 }
 
 sub run_tests {

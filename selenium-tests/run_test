@@ -1,0 +1,10 @@
+#!/usr/bin/python
+import unittest, time, re
+import sys
+
+if len(sys.argv) != 2:
+    sys.exit('Usage: run_test <test_name>')
+
+t = __import__('test_%s' % sys.argv[1])
+suite = unittest.TestLoader().loadTestsFromTestCase(t.Test)
+res = unittest.TextTestRunner(verbosity=2).run(suite)
