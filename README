@@ -10,6 +10,13 @@ Usage
 Available options
 -----------------
 
+--no-gpgcheck
+        Disable gpg check when downloading a sha256sum.txt file.
+
+--keyring
+        Name of the keyring used to check the gpg signature of a
+        downloaded sha256sum.txt file.
+
 --no-mozmill
         Don't run mozmill tests.
 

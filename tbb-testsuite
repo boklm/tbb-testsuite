@@ -32,6 +32,8 @@ my %default_options = (
     mozmill  => 1,
     selenium => 1,
     starttor => 1,
+    gpgcheck => 1,
+    keyring  => 'erinn.gpg',
     'tor-control-port' => '9551',
     'tor-socks-port'   => '9550',
 );
@@ -44,7 +46,7 @@ sub exit_error {
 
 sub get_options {
     my @options = qw(mozmill! selenium! starttor! tor-control-port=i
-                     tor-socks-port=i reports-dir=s);
+                     tor-socks-port=i reports-dir=s gpgcheck! keyring=s);
     my %res = %default_options;
     Getopt::Long::GetOptionsFromArray(\@_, \%res, @options) || exit 1;
     $res{files} = \@_;
@@ -249,6 +251,14 @@ sub matching_tbbfile {
         && $o->{arch} eq $options->{arch};
 }
 
+sub check_gpgsig {
+    my ($file) = @_;
+    my $keyring = $options->{keyring} =~ m/^\// ? $options->{keyring}
+        : "$FindBin::Bin/keyring/$options->{keyring}";
+    return system('gpg', '--no-default-keyring', '--keyring', $keyring,
+        '--verify', '--', $file) == 0;
+}
+
 sub test_sha {
     my ($shafile) = @_;
     my $content;
@@ -258,6 +268,16 @@ sub test_sha {
         exit_error "Error downloading $shafile:\n" . $resp->status_line
                 unless $resp->is_success;
         $content = $resp->decoded_content;
+        if ($options->{gpgcheck}) {
+            $resp = $ua->get("$shafile.asc");
+            exit_error "Error downloading $shafile.asc:\n" . $resp->status_line
+                unless $resp->is_success;
+            my $tmpdir = File::Temp::newdir;
+            write_file("$tmpdir/sha256sum.txt", $content);
+            write_file("$tmpdir/sha256sum.txt.asc", $resp->decoded_content);
+            exit_error "Error checking gpg signature of $shafile"
+                unless check_gpgsig("$tmpdir/sha256sum.txt.asc");
+        }
     } else {
         $content = read_file($shafile);
     }
