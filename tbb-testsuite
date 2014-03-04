@@ -19,7 +19,7 @@ use Template;
 
 my %tests = (
     tbbScreenshot => { type => 'mozmill' },
-    'check.tpo' => { type => 'selenium' },
+    check => { type => 'selenium' },
 );
 
 my %results;
