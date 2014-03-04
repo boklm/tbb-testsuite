@@ -207,7 +207,10 @@ sub mozmill_run {
 sub selenium_run {
     my ($test) = @_;
     return unless $options->{selenium};
+    my $result_file = $ENV{SELENIUM_TEST_RESULT_FILE} =
+        "$options->{tbbinfos}{'results-dir'}/$test->{name}.json";
     system("$FindBin::Bin/selenium-tests/run_test", $test->{name});
+    $test->{results} = decode_json(read_file($result_file));
 }
 
 sub run_tests {
@@ -227,6 +230,10 @@ sub is_success {
     foreach my $test (keys %$tests) {
         if ($tests->{$test}{type} eq 'mozmill'
             && $tests->{$test}{results}{results}->[0]->{failed}) {
+            return 0;
+        }
+        if (defined $tests->{$test}{results}{success} &&
+            !$tests->{$test}{results}{success}) {
             return 0;
         }
     }

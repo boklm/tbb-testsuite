@@ -30,19 +30,36 @@
         <ul>
             <li><b>Test type:</b> [% test.type %]</li>
             [% IF test.type == 'mozmill' %]
-            <li><b>Status:</b>
-              [% IF test.results.results.0.failed == 0 %]
-              <span class="test_ok">OK</span>
-              [% ELSE %]
-              <span class="test_notok">NOT OK</span>
-              [% END %]
-            </li>
-            <li><b>Passed tests:</b>
-            [% GET test.results.results.0.passed %]/[% GET test.results.results.0.passed + test.results.results.0.failed %]
-            </li>
-            <li><a href="results-[% tbbfile %]/[% test.name %].json">json results</a></li>
+                    <li><b>Status:</b>
+                      [% IF test.results.results.0.failed == 0 %]
+                      <span class="test_ok">OK</span>
+                      [% ELSE %]
+                      <span class="test_notok">NOT OK</span>
+                      [% END %]
+                    </li>
+                    <li><b>Passed tests:</b>
+                    [% GET test.results.results.0.passed %]/[% GET test.results.results.0.passed + test.results.results.0.failed %]
+                    </li>
+                    <li><a href="results-[% tbbfile %]/[% test.name %].json">json results</a></li>
+            [% ELSIF test.type == 'selenium' %]
+                    <li><b>Status:</b>
+                      [% IF test.results.success %]
+                      <span class="test_ok">OK</span>
+                      [% ELSE %]
+                      <span class="test_notok">NOT OK</span>
+                      [% END %]
+                    </li>
+                    [% SET stests = test.results.total_tests - test.results.failed.size %]
+                    <li><b>Passed tests:</b> [% stests %]/[% test.results.total_tests %]</li>
+                    <li><a href="results-[% tbbfile %]/[% test.name %].json">json results</a></li>
             [% END %]
         </ul>
+        [% IF test.type == 'selenium' && test.results.failed %]
+                [% FOREACH f IN test.results.failed %]
+                        <b>Failed test:</b> [% f.id %]<br />
+                        <pre>[% f.error %]</pre><br />
+                [% END %]
+        [% END %]
         [% END %]
 
         <hr>
