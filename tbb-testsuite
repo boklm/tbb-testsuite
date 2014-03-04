@@ -187,7 +187,6 @@ sub mozmill_run {
     my ($test) = @_;
     return unless $options->{mozmill};
     $test->{screenshots} = [];
-    my %res = ( screenshots => [], );
     my $screenshots_tmp = File::Temp::newdir;
     $ENV{'MOZMILL_SCREENSHOTS'} = $screenshots_tmp;
     my $results_file = "$options->{tbbinfos}{'results-dir'}/$test->{name}.json";
