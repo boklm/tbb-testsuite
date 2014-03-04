@@ -23,6 +23,10 @@
         <h1>Results</h1>
         [% FOREACH test IN results.$tbbfile.tests.values %]
         <h3>[% test.name %]</h3>
+        [% IF ! test.results %]
+                NOT RUN
+                [% NEXT %]
+        [% END %]
         <ul>
             <li><b>Test type:</b> [% test.type %]</li>
             [% IF test.type == 'mozmill' %]
