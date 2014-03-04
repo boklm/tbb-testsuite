@@ -18,7 +18,7 @@ use Image::Resize;
 use Template;
 
 my %tests = (
-    tbbScreenshot => { type => 'mozmill' },
+    check_screenshot => { type => 'mozmill' },
     check => { type => 'selenium' },
 );
 
