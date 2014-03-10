@@ -14,7 +14,7 @@ use IO::CaptureOutput qw(capture_exec);
 use IO::Socket::INET;
 use JSON;
 use File::Copy;
-use Image::Resize;
+use Image::Magick;
 use Template;
 
 my %tests = (
@@ -188,8 +188,10 @@ sub stop_tor {
 
 sub screenshot_thumbnail {
     my ($dir, $name) = @_;
-    my $image = Image::Resize->new("$dir/$name");
-    write_file("$dir/t-$name", $image->resize(600, 600)->png);
+    my $image = Image::Magick->new;
+    $image->Read("$dir/$name");
+    $image->Scale(geometry => '600x600');
+    $image->Write("$dir/t-$name");
 }
 
 sub mozmill_run {
