@@ -333,7 +333,8 @@ sub test_tbb {
     my $oldcwd = getcwd;
     my $tbbinfos = tbb_filename_infos($tbbfile);
     return test_sha($tbbfile) if $tbbinfos->{type} eq 'sha256sum';
-    $tbbinfos->{tmpdir} = File::Temp::newdir;
+    my $tmpdir = File::Temp::newdir;
+    $tbbinfos->{tmpdir} = $tmpdir->dirname;
     $tbbfile = get_tbbfile($tbbinfos, $tbbfile);
     if ($sha256sum && $sha256sum ne sha256_hex(read_file($tbbfile))) {
         exit_error "Wrong sha256sum for $tbbfile";
