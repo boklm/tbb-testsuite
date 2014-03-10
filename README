@@ -42,6 +42,22 @@ Usage
 
  $ ./tbb-testsuite [options] <tbb-file>...
 
+The <tbb-file> can be:
+
+- the path to a tbb tarball file.
+
+- the path to a sha256sum file. In which case all tarballs listed in the
+  sha256sum and compatible with the current platform will be tested.
+
+- the URL of a tbb tarball, which will be downloaded before being tested.
+
+- the URL of a sha256sum file, which will be downloaded. The gpg signature
+  from file sha256sum.asc will also be downloaded and checked with the
+  keyring selected with the --keyring option, unless the --no-gpgcheck
+  option is used. All the tarballs listed in the sha256sum and compatible
+  with the current platform will be downloaded, have their checksum
+  checked and will be tested.
+
 
 Available options
 -----------------
