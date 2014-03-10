@@ -36,6 +36,9 @@ a virtualenv:
 If you want to reinstall the virtualenv used, remove the 'virtualenv'
 directory and run 'setup' again.
 
+Unless you are using the '--no-xvfb' option, all tests will be run in
+a virtual framebuffer with xvfb, so you need to have xvfb installed.
+
 
 Usage
 -----
@@ -92,4 +95,11 @@ Available options
         Path to the virtualenv where selenium and mozmill are installed.
         The default is the 'virtualenv' directory created by the 'setup'
         script.
+
+--no-xvfb
+        Don't run the tests using a virtual frame buffer X server.
+
+--resolution=<resolution>
+        When using xvfb, this sets the default resolution. The default
+        is 1024x768.
 

@@ -37,6 +37,8 @@ my %default_options = (
     'tor-control-port' => '9551',
     'tor-socks-port'   => '9550',
     virtualenv => "$FindBin::Bin/virtualenv",
+    resolution => '1024x768',
+    xvfb       => 1,
 );
 my $options = get_options(@ARGV);
 sub exit_error {
@@ -48,7 +50,7 @@ sub exit_error {
 sub get_options {
     my @options = qw(mozmill! selenium! starttor! tor-control-port=i
                      tor-socks-port=i reports-dir=s gpgcheck! keyring=s
-                     virtualenv=s);
+                     virtualenv=s xvfb!);
     my %res = %default_options;
     Getopt::Long::GetOptionsFromArray(\@_, \%res, @options) || exit 1;
     $res{files} = \@_;
@@ -196,6 +198,14 @@ sub screenshot_thumbnail {
     $image->Write("$dir/t-$name");
 }
 
+sub xvfb_run {
+    my ($test) = @_;
+    return () unless $options->{xvfb};
+    my $resolution = $test->{resolution} ? $test->{resolution}
+                                         : $options->{resolution};
+    return ('xvfb-run', '-s', "-screen 0 ${resolution}x24");
+}
+
 sub mozmill_run {
     my ($test) = @_;
     return unless $options->{mozmill};
@@ -203,7 +213,7 @@ sub mozmill_run {
     my $screenshots_tmp = File::Temp::newdir;
     $ENV{'MOZMILL_SCREENSHOTS'} = $screenshots_tmp;
     my $results_file = "$options->{tbbinfos}{'results-dir'}/$test->{name}.json";
-    system("$options->{virtualenv}/bin/mozmill", '-b',
+    system(xvfb_run($test), "$options->{virtualenv}/bin/mozmill", '-b',
         "$options->{tbbdir}/Browser/firefox", '-p',
         "$options->{tbbdir}/Data/Browser/profile.default", '-t',
         "$FindBin::Bin/mozmill-tests/tbb-tests/$test->{name}.js",
@@ -224,7 +234,7 @@ sub selenium_run {
     return unless $options->{selenium};
     my $result_file = $ENV{SELENIUM_TEST_RESULT_FILE} =
         "$options->{tbbinfos}{'results-dir'}/$test->{name}.json";
-    system("$options->{virtualenv}/bin/python",
+    system(xvfb_run($test), "$options->{virtualenv}/bin/python",
         "$FindBin::Bin/selenium-tests/run_test", $test->{name});
     $test->{results} = decode_json(read_file($result_file));
 }
