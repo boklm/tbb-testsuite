@@ -36,6 +36,7 @@ my %default_options = (
     keyring  => 'erinn.gpg',
     'tor-control-port' => '9551',
     'tor-socks-port'   => '9550',
+    virtualenv => "$FindBin::Bin/virtualenv",
 );
 my $options = get_options(@ARGV);
 sub exit_error {
@@ -46,7 +47,8 @@ sub exit_error {
 
 sub get_options {
     my @options = qw(mozmill! selenium! starttor! tor-control-port=i
-                     tor-socks-port=i reports-dir=s gpgcheck! keyring=s);
+                     tor-socks-port=i reports-dir=s gpgcheck! keyring=s
+                     virtualenv=s);
     my %res = %default_options;
     Getopt::Long::GetOptionsFromArray(\@_, \%res, @options) || exit 1;
     $res{files} = \@_;
@@ -201,7 +203,8 @@ sub mozmill_run {
     my $screenshots_tmp = File::Temp::newdir;
     $ENV{'MOZMILL_SCREENSHOTS'} = $screenshots_tmp;
     my $results_file = "$options->{tbbinfos}{'results-dir'}/$test->{name}.json";
-    system('mozmill', '-b', "$options->{tbbdir}/Browser/firefox", '-p',
+    system("$options->{virtualenv}/bin/mozmill", '-b',
+        "$options->{tbbdir}/Browser/firefox", '-p',
         "$options->{tbbdir}/Data/Browser/profile.default", '-t',
         "$FindBin::Bin/mozmill-tests/tbb-tests/$test->{name}.js",
         '--report', "file://$results_file");
@@ -221,7 +224,8 @@ sub selenium_run {
     return unless $options->{selenium};
     my $result_file = $ENV{SELENIUM_TEST_RESULT_FILE} =
         "$options->{tbbinfos}{'results-dir'}/$test->{name}.json";
-    system("$FindBin::Bin/selenium-tests/run_test", $test->{name});
+    system("$options->{virtualenv}/bin/python",
+        "$FindBin::Bin/selenium-tests/run_test", $test->{name});
     $test->{results} = decode_json(read_file($result_file));
 }
 

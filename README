@@ -1,6 +1,42 @@
 Tor Browser Bundle test suite
 =============================
 
+Installation
+------------
+
+To run the test suite, you need perl and the following perl modules:
+
+  Cwd
+  Data::Dump
+  Digest::SHA
+  File::Copy
+  File::Path
+  File::Slurp
+  File::Spec
+  File::Temp
+  FindBin
+  Getopt::Long
+  IO::CaptureOutput
+  IO::Socket::INET
+  Image::Magick
+  JSON
+  LWP::UserAgent
+  Template
+  YAML
+
+If you are using Fedora or other yum based distribution, you can install
+each module with 'yum install perl(ModuleName)'.
+
+The test suite also requires mozmill and python selenium, which we install
+using a virtualenv. You can use the 'setup' script to install them into
+a virtualenv:
+
+  $ ./setup
+
+If you want to reinstall the virtualenv used, remove the 'virtualenv'
+directory and run 'setup' again.
+
+
 Usage
 -----
 
@@ -35,4 +71,9 @@ Available options
 
 --reports-dir=<directory>
         Directory where the tests reports are saved.
+
+--virtualenv=<directory>
+        Path to the virtualenv where selenium and mozmill are installed.
+        The default is the 'virtualenv' directory created by the 'setup'
+        script.
 
