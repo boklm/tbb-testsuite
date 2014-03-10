@@ -71,11 +71,11 @@ sub set_reports_dir {
 }
 
 sub get_tbbfile {
-    my ($tbbfile) = @_;
+    my ($tbbinfos, $tbbfile) = @_;
     if ($tbbfile =~ m/^https?:\/\//) {
         print "Downloading $tbbfile\n";
         my (undef, undef, $file) = File::Spec->splitpath($tbbfile);
-        my $output = "$options->{tbbinfos}{tmpdir}/$file";
+        my $output = "$tbbinfos->{tmpdir}/$file";
         my $ua = LWP::UserAgent->new;
         my $resp = $ua->get($tbbfile, ':content_file' => $output);
         exit_error "Error downloading $tbbfile:\n" . $resp->status_line
@@ -108,13 +108,13 @@ sub tbb_filename_infos {
 }
 
 sub extract_tbb {
-    my ($tbbfile) = @_;
+    my ($tbbinfos, $tbbfile) = @_;
     exit_error "Can't open file $tbbfile" unless -f $tbbfile;
     $tbbfile = File::Spec->rel2abs($tbbfile);
-    my $tmpdir = $options->{tbbinfos}{tmpdir};
+    my $tmpdir = $tbbinfos->{tmpdir};
     chdir $tmpdir;
     system('tar', 'xf', $tbbfile);
-    return "$tmpdir/tor-browser_$options->{tbbinfos}{language}";
+    return "$tmpdir/tor-browser_$tbbinfos->{language}";
 }
 
 sub setup_tbb {
@@ -122,7 +122,7 @@ sub setup_tbb {
 }
 
 sub monitor_bootstrap {
-    my ($control_passwd) = @_;
+    my ($tbbinfos, $control_passwd) = @_;
     sleep 10;
     my $sock = new IO::Socket::INET(
         PeerAddr => 'localhost',
@@ -142,17 +142,18 @@ sub monitor_bootstrap {
         sleep 1;
         $i++;
         if ($i > 300) {
-            $options->{tbbinfos}{tests}{tor_bootstrap}{results}{success} = 0;
+            $tbbinfos->{tests}{tor_bootstrap}{results}{success} = 0;
             return 0;
         }
     }
     print "Bootstraping done\n";
-    $options->{tbbinfos}{tests}{tor_bootstrap}{results}{success} = 1;
+    $tbbinfos->{tests}{tor_bootstrap}{results}{success} = 1;
     return 3;
 }
 
 # TODO: In the future, we should start tor using tor-launcher
 sub start_tor {
+    my ($tbbinfos) = @_;
     return unless $options->{starttor};
     my $control_passwd = map { ('a'..'z', 'A'..'Z', 0..9)[rand 62] } 0..8;
     my $cwd = getcwd;
@@ -175,19 +176,20 @@ sub start_tor {
         '-f', "$cwd/Data/Tor/torrc", 'DataDirectory', "$cwd/Data/Tor",
         'GeoIPFile', "$cwd/Data/Tor/geoip", '__OwningControllerProcess', $$,
         'HashedControlPassword', $hashed_password);
-    $options->{tbbinfos}{torpid} = fork;
-    if ($options->{tbbinfos}{torpid} == 0) {
-        my $logfile = "$options->{tbbinfos}{'results-dir'}/tor.log";
+    $tbbinfos->{torpid} = fork;
+    if ($tbbinfos->{torpid} == 0) {
+        my $logfile = "$tbbinfos->{'results-dir'}/tor.log";
         open(STDOUT, '>', $logfile);
         open(STDERR, '>', $logfile);
         exec @cmd;
     }
-    return monitor_bootstrap($control_passwd);
+    return monitor_bootstrap($tbbinfos, $control_passwd);
 }
 
 sub stop_tor {
+    my ($tbbinfos) = @_;
     return unless $options->{starttor};
-    kill 9, $options->{tbbinfos}{torpid};
+    kill 9, $tbbinfos->{torpid};
 }
 
 sub screenshot_thumbnail {
@@ -207,12 +209,12 @@ sub xvfb_run {
 }
 
 sub mozmill_run {
-    my ($test) = @_;
+    my ($tbbinfos, $test) = @_;
     return unless $options->{mozmill};
     $test->{screenshots} = [];
     my $screenshots_tmp = File::Temp::newdir;
     $ENV{'MOZMILL_SCREENSHOTS'} = $screenshots_tmp;
-    my $results_file = "$options->{tbbinfos}{'results-dir'}/$test->{name}.json";
+    my $results_file = "$tbbinfos->{'results-dir'}/$test->{name}.json";
     system(xvfb_run($test), "$options->{virtualenv}/bin/mozmill", '-b',
         "$options->{tbbdir}/Browser/firefox", '-p',
         "$options->{tbbdir}/Data/Browser/profile.default", '-t',
@@ -220,8 +222,8 @@ sub mozmill_run {
         '--report', "file://$results_file");
     my $i = 0;
     for my $screenshot_file (glob "$screenshots_tmp/*.png") {
-        move($screenshot_file, "$options->{tbbinfos}{'results-dir'}/$test->{name}-$i.png");
-        screenshot_thumbnail($options->{tbbinfos}{'results-dir'}, "$test->{name}-$i.png");
+        move($screenshot_file, "$tbbinfos->{'results-dir'}/$test->{name}-$i.png");
+        screenshot_thumbnail($tbbinfos->{'results-dir'}, "$test->{name}-$i.png");
         push @{$test->{screenshots}}, "$test->{name}-$i.png";
         $i++;
     }
@@ -230,23 +232,24 @@ sub mozmill_run {
 }
 
 sub selenium_run {
-    my ($test) = @_;
+    my ($tbbinfos, $test) = @_;
     return unless $options->{selenium};
     my $result_file = $ENV{SELENIUM_TEST_RESULT_FILE} =
-        "$options->{tbbinfos}{'results-dir'}/$test->{name}.json";
+        "$tbbinfos->{'results-dir'}/$test->{name}.json";
     system(xvfb_run($test), "$options->{virtualenv}/bin/python",
         "$FindBin::Bin/selenium-tests/run_test", $test->{name});
     $test->{results} = decode_json(read_file($result_file));
 }
 
 sub run_tests {
-    my ($tests) = @_;
+    my ($tbbinfos) = @_;
     my %types = (
         mozmill  => \&mozmill_run,
         selenium => \&selenium_run,
     );
+    my $tests = $tbbinfos->{tests};
     foreach my $test (keys %$tests) {
-        $types{$tests->{$test}{type}}->($tests->{$test})
+        $types{$tests->{$test}{type}}->($tbbinfos, $tests->{$test})
                 if $types{$tests->{$test}{type}};
     }
 }
@@ -328,31 +331,31 @@ sub make_report {
 sub test_tbb {
     my ($tbbfile, $sha256sum) = @_;
     my $oldcwd = getcwd;
-    $options->{tbbinfos} = tbb_filename_infos($tbbfile);
-    return test_sha($tbbfile) if $options->{tbbinfos}{type} eq 'sha256sum';
-    $options->{tbbinfos}{tmpdir} = File::Temp::newdir;
-    $tbbfile = get_tbbfile($tbbfile);
+    my $tbbinfos = tbb_filename_infos($tbbfile);
+    return test_sha($tbbfile) if $tbbinfos->{type} eq 'sha256sum';
+    $tbbinfos->{tmpdir} = File::Temp::newdir;
+    $tbbfile = get_tbbfile($tbbinfos, $tbbfile);
     if ($sha256sum && $sha256sum ne sha256_hex(read_file($tbbfile))) {
         exit_error "Wrong sha256sum for $tbbfile";
     }
-    $options->{tbbinfos}{sha256sum} = $sha256sum ? $sha256sum
+    $tbbinfos->{sha256sum} = $sha256sum ? $sha256sum
                                         : sha256_hex(read_file($tbbfile));
-    $options->{tbbinfos}{tests} = { map { $_ => { %{$tests{$_}} } } keys %tests };
-    $options->{tbbinfos}{'results-dir'} =
-        "$options->{'reports-dir'}/results-$options->{tbbinfos}{filename}";
-    mkdir $options->{tbbinfos}{'results-dir'};
-    $options->{tbbdir} = extract_tbb($tbbfile);
+    $tbbinfos->{tests} = { map { $_ => { %{$tests{$_}} } } keys %tests };
+    $tbbinfos->{'results-dir'} =
+        "$options->{'reports-dir'}/results-$tbbinfos->{filename}";
+    mkdir $tbbinfos->{'results-dir'};
+    $options->{tbbdir} = extract_tbb($tbbinfos, $tbbfile);
     chdir $options->{tbbdir} || exit_error "Can't enter directory $options->{tbbdir}";
     $ENV{TBB_BIN} = "$options->{tbbdir}/Browser/firefox";
     $ENV{TBB_PROFILE} = "$options->{tbbdir}/Data/Browser/profile.default";
-    if (start_tor) {
+    if (start_tor($tbbinfos)) {
         setup_tbb;
-        run_tests($options->{tbbinfos}{tests});
-        stop_tor;
+        run_tests($tbbinfos);
+        stop_tor($tbbinfos);
     }
     chdir $oldcwd;
-    $options->{tbbinfos}{success} = is_success($options->{tbbinfos}{tests});
-    $results{$options->{tbbinfos}{filename}} = $options->{tbbinfos};
+    $tbbinfos->{success} = is_success($tbbinfos->{tests});
+    $results{$tbbinfos->{filename}} = $tbbinfos;
 }
 
 set_reports_dir;
