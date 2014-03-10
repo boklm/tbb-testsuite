@@ -16,6 +16,7 @@ use JSON;
 use File::Copy;
 use Image::Magick;
 use Template;
+use YAML;
 
 my %tests = (
     tor_bootstrap => { type => 'tor_bootstrap' },
@@ -364,4 +365,9 @@ foreach my $tbbfile (@{$options->{files}}) {
     test_tbb($tbbfile);
 }
 print "Reports directory: $options->{'reports-dir'}\n";
+YAML::DumpFile("$options->{'reports-dir'}/results.yml",
+    {
+        results => \%results,
+        options => $options,
+    });
 make_report;
