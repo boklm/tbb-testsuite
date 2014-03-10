@@ -114,7 +114,7 @@ sub extract_tbb {
     my $tmpdir = $tbbinfos->{tmpdir};
     chdir $tmpdir;
     system('tar', 'xf', $tbbfile);
-    return "$tmpdir/tor-browser_$tbbinfos->{language}";
+    $tbbinfos->{tbbdir} = "$tmpdir/tor-browser_$tbbinfos->{language}";
 }
 
 sub setup_tbb {
@@ -216,8 +216,8 @@ sub mozmill_run {
     $ENV{'MOZMILL_SCREENSHOTS'} = $screenshots_tmp;
     my $results_file = "$tbbinfos->{'results-dir'}/$test->{name}.json";
     system(xvfb_run($test), "$options->{virtualenv}/bin/mozmill", '-b',
-        "$options->{tbbdir}/Browser/firefox", '-p',
-        "$options->{tbbdir}/Data/Browser/profile.default", '-t',
+        "$tbbinfos->{tbbdir}/Browser/firefox", '-p',
+        "$tbbinfos->{tbbdir}/Data/Browser/profile.default", '-t',
         "$FindBin::Bin/mozmill-tests/tbb-tests/$test->{name}.js",
         '--report', "file://$results_file");
     my $i = 0;
@@ -344,10 +344,10 @@ sub test_tbb {
     $tbbinfos->{'results-dir'} =
         "$options->{'reports-dir'}/results-$tbbinfos->{filename}";
     mkdir $tbbinfos->{'results-dir'};
-    $options->{tbbdir} = extract_tbb($tbbinfos, $tbbfile);
-    chdir $options->{tbbdir} || exit_error "Can't enter directory $options->{tbbdir}";
-    $ENV{TBB_BIN} = "$options->{tbbdir}/Browser/firefox";
-    $ENV{TBB_PROFILE} = "$options->{tbbdir}/Data/Browser/profile.default";
+    extract_tbb($tbbinfos, $tbbfile);
+    chdir $tbbinfos->{tbbdir} || exit_error "Can't enter directory $tbbinfos->{tbbdir}";
+    $ENV{TBB_BIN} = "$tbbinfos->{tbbdir}/Browser/firefox";
+    $ENV{TBB_PROFILE} = "$tbbinfos->{tbbdir}/Data/Browser/profile.default";
     if (start_tor($tbbinfos)) {
         setup_tbb;
         run_tests($tbbinfos);
