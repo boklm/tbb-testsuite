@@ -374,5 +374,6 @@ YAML::DumpFile("$options->{'report-dir'}/results.yml",
     {
         results => \%results,
         options => $options,
+        time    => time,
     });
 make_report;
