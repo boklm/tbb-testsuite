@@ -1,0 +1,23 @@
+#!/usr/bin/perl -w
+use strict;
+use FindBin;
+use IO::CaptureOutput qw(qxx);
+
+my $virtenv = "$FindBin::Bin/virtualenv";
+my $pip = "$virtenv/bin/pip";
+
+sub run {
+    system(@_) == 0 || die "Error running " . join(' ', @_);
+}
+
+sub pip_install {
+    my ($pkg) = @_;
+    my ($output) = qxx($pip, 'show', $pkg);
+    run($pip, 'install', $pkg) unless $output;
+}
+
+run('virtualenv', $virtenv) unless -d $virtenv;
+for my $pkg (qw(selenium mozmill)) {
+    pip_install($pkg);
+}
+
