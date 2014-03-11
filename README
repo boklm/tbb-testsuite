@@ -69,9 +69,10 @@ Available options
 --no-gpgcheck
         Disable gpg check when downloading a sha256sum.txt file.
 
---keyring
-        Name of the keyring used to check the gpg signature of a
-        downloaded sha256sum.txt file.
+--keyring=<file>
+        Name of the keyring file used to check the gpg signature of a
+        downloaded sha256sum.txt file. If the file is not an absolute
+        path, then it is relative to the keyring directory.
 
 --download-dir=<directory>
         The directory where to store the files downloaded when a URL is
