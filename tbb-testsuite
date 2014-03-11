@@ -52,7 +52,7 @@ sub exit_error {
 sub get_options {
     my @options = qw(mozmill! selenium! starttor! tor-control-port=i
                      tor-socks-port=i reports-dir=s gpgcheck! keyring=s
-                     virtualenv=s xvfb! name=s);
+                     virtualenv=s xvfb! name=s download-dir=s);
     my %res = %default_options;
     Getopt::Long::GetOptionsFromArray(\@_, \%res, @options) || exit 1;
     $res{files} = \@_;
@@ -77,9 +77,11 @@ sub set_report_dir {
 sub get_tbbfile {
     my ($tbbinfos, $tbbfile) = @_;
     if ($tbbfile =~ m/^https?:\/\//) {
-        print "Downloading $tbbfile\n";
         my (undef, undef, $file) = File::Spec->splitpath($tbbfile);
-        my $output = "$tbbinfos->{tmpdir}/$file";
+        my $output = $options->{'download-dir'} ?
+                "$options->{'download-dir'}/$file" : "$tbbinfos->{tmpdir}/$file";
+        return $output if -f $output;
+        print "Downloading $tbbfile\n";
         my $ua = LWP::UserAgent->new;
         my $resp = $ua->get($tbbfile, ':content_file' => $output);
         exit_error "Error downloading $tbbfile:\n" . $resp->status_line

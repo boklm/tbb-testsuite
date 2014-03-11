@@ -73,6 +73,13 @@ Available options
         Name of the keyring used to check the gpg signature of a
         downloaded sha256sum.txt file.
 
+--download-dir=<directory>
+        The directory where to store the files downloaded when a URL is
+        given rather than a local path. If the file already exists in
+        this directory, it is not downloaded again. If this option is
+        not given, the files are downloaded in a temporary directory
+        which is removed at the end of the tests.
+
 --no-mozmill
         Don't run mozmill tests.
 
