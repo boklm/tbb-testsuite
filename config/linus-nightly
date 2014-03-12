@@ -1,0 +1,29 @@
+# vim: filetype=perl expandtab
+
+use strict;
+use DateTime;
+use Data::Dump qw(dd);
+use LWP::Simple;
+use TBBTestSuite::Common;
+
+my $system_infos = TBBTestSuite::Common::system_infos;
+my $osname = $system_infos->{osname} . '-' . $system_infos->{arch};
+my $today = DateTime->now->ymd;
+my $shaurl = "https://people.torproject.org/~linus/builds/tbb-nightly-$today/sha256sums.txt";
+my $name = "tbb-nightly-$today-$osname";
+
+if (-d "$options->{'reports-dir'}/$name") {
+    print "Doing nothing: $name already done\n";
+    return ( args => [] );
+}
+
+if (!get($shaurl)) {
+    print "Doing nothing: cannot download $shaurl\n";
+    return ( args => [] );
+}
+
+(
+    name    => $name,
+    keyring => 'linus-nightly.gpg',
+    args    => [ $shaurl ],
+);
