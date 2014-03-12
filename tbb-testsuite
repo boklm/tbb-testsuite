@@ -11,6 +11,7 @@ sub run_tests {
         tbbfiles => {},
         options  => $options,
         time     => time,
+        system_infos => TBBTestSuite::Common::system_infos,
     };
     TBBTestSuite::Reports::set_report_dir($report);
     foreach my $tbbfile (@{$options->{args}}) {
