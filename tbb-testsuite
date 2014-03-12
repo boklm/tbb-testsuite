@@ -1,11 +1,9 @@
 #!/usr/bin/perl -w
 use strict;
-use Getopt::Long;
 use Cwd qw(getcwd);
 use File::Spec;
 use File::Temp;
 use File::Slurp;
-use File::Path qw(make_path);
 use Data::Dump qw/dd/;
 use FindBin;
 use LWP::UserAgent;
@@ -15,8 +13,10 @@ use IO::Socket::INET;
 use JSON;
 use File::Copy;
 use Image::Magick;
-use Template;
 use YAML;
+use TBBTestSuite::Common qw(exit_error);
+use TBBTestSuite::Options qw($options);
+use TBBTestSuite::Reports;
 
 my %tests = (
     tor_bootstrap => { type => 'tor_bootstrap' },
@@ -24,55 +24,6 @@ my %tests = (
     check => { type => 'selenium' },
 );
 %tests = map { $_ => { name => $_, %{$tests{$_}} } } keys %tests;
-
-my %results;
-
-my %default_options = (
-    os       => 'Linux',
-    arch     => 'x86_64',
-    mozmill  => 1,
-    selenium => 1,
-    starttor => 1,
-    gpgcheck => 1,
-    keyring  => 'erinn.gpg',
-    'tor-control-port' => '9551',
-    'tor-socks-port'   => '9550',
-    'reports-dir'      => "$FindBin::Bin/reports",
-    virtualenv => "$FindBin::Bin/virtualenv",
-    resolution => '1024x768',
-    xvfb       => 1,
-);
-my $options = get_options(@ARGV);
-sub exit_error {
-    print STDERR "Error: ", $_[0], "\n";
-    chdir '/';
-    exit (exists $_[1] ? $_[1] : 1);
-}
-
-sub get_options {
-    my @options = qw(mozmill! selenium! starttor! tor-control-port=i
-                     tor-socks-port=i reports-dir=s gpgcheck! keyring=s
-                     virtualenv=s xvfb! name=s download-dir=s);
-    my %res = %default_options;
-    Getopt::Long::GetOptionsFromArray(\@_, \%res, @options) || exit 1;
-    $res{files} = \@_;
-    return \%res;
-}
-
-sub set_report_dir {
-    if ($options->{'name'}) {
-        $options->{'report-dir'} = "$options->{'reports-dir'}/$options->{'name'}";
-        make_path($options->{'report-dir'});
-        return;
-    }
-    make_path($options->{'reports-dir'});
-    $options->{'report-dir'} = File::Temp::newdir(
-        'XXXXXX',
-        DIR => $options->{'reports-dir'},
-        CLEANUP => 0)->dirname;
-    (undef, undef, $options->{name})
-                = File::Spec->splitpath($options->{'report-dir'});
-}
 
 sub get_tbbfile {
     my ($tbbinfos, $tbbfile) = @_;
@@ -314,51 +265,8 @@ sub test_sha {
     }
 }
 
-sub make_report {
-    my $template = Template->new(
-        ENCODING => 'utf8',
-        INCLUDE_PATH => "$FindBin::Bin/tmpl",
-        OUTPUT_PATH => $options->{'report-dir'},
-    );
-    my $vars = {
-        options     => $options,
-        results     => \%results,
-    };
-    for my $page (qw(index.html screenshots.html)) {
-        $template->process($page, $vars, $page, binmode => ':utf8');
-    }
-    foreach my $tbbfile (keys %results) {
-        $vars->{tbbfile} = $tbbfile;
-        $template->process('report.html', $vars, "$tbbfile.html",
-            binmode => ':utf8') || exit_error "Template Error:\n" . $template->error;
-    }
-}
-
-sub make_reports_index {
-    my $template = Template->new(
-        ENCODING => 'utf8',
-        INCLUDE_PATH => "$FindBin::Bin/tmpl",
-        OUTPUT_PATH => $options->{'reports-dir'},
-    );
-    my %reports;
-    foreach my $dir (glob "$options->{'reports-dir'}/*") {
-        my $resfile = "$dir/results.yml";
-        next unless -f $resfile;
-        my (undef, undef, $name) = File::Spec->splitpath($dir);
-        $reports{$name} = YAML::LoadFile($resfile);
-        $reports{$name}->{time} = 1 unless $reports{$name}->{time};
-    }
-    my @reports_by_time =
-        sort { $reports{$b}->{time} <=> $reports{$a}->{time} } keys %reports;
-    my $vars = {
-        reports => \%reports,
-        reports_by_time => \@reports_by_time,
-    };
-    $template->process('reports_index.html', $vars, 'index.html');
-}
-
 sub test_tbb {
-    my ($tbbfile, $sha256sum) = @_;
+    my ($report, $tbbfile, $sha256sum) = @_;
     my $oldcwd = getcwd;
     my $tbbinfos = tbb_filename_infos($tbbfile);
     return test_sha($tbbfile) if $tbbinfos->{type} eq 'sha256sum';
@@ -385,19 +293,19 @@ sub test_tbb {
     }
     chdir $oldcwd;
     $tbbinfos->{success} = is_success($tbbinfos->{tests});
-    $results{$tbbinfos->{filename}} = $tbbinfos;
+    $report->{tbbfiles}{$tbbinfos->{filename}} = $tbbinfos;
 }
 
-set_report_dir;
+my $report = {
+    tbbfiles => {},
+    options  => $options,
+    time     => time,
+};
+TBBTestSuite::Reports::set_report_dir;
 foreach my $tbbfile (@{$options->{files}}) {
-    test_tbb($tbbfile);
+    test_tbb($report, $tbbfile);
 }
 print "Report directory: $options->{'report-dir'}\n";
-YAML::DumpFile("$options->{'report-dir'}/results.yml",
-    {
-        results => \%results,
-        options => $options,
-        time    => time,
-    });
-make_report;
-make_reports_index;
+YAML::DumpFile("$options->{'report-dir'}/results.yml", $report);
+TBBTestSuite::Reports::make_report($report);
+TBBTestSuite::Reports::make_reports_index;

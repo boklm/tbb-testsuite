@@ -15,9 +15,9 @@
     <body>
         <h1>Bundle list</h1>
         <ul>
-        [% FOREACH tbbfile IN results.keys %]
+        [% FOREACH tbbfile IN tbbfiles.keys %]
         <li><a href="[% tbbfile %].html">[% tbbfile %]</a>:
-        [% IF results.$tbbfile.success %]
+        [% IF tbbfiles.$tbbfile.success %]
         <span class="test_ok">OK</a>
         [% ELSE %]
         <span class="test_notok">NOT OK</a>
