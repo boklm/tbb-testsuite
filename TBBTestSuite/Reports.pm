@@ -51,7 +51,7 @@ sub make_reports_index {
     );
     my %reports;
     foreach my $dir (glob "$options->{'reports-dir'}/*") {
-        my $resfile = "$dir/results.yml";
+        my $resfile = "$dir/report.yml";
         next unless -f $resfile;
         my (undef, undef, $name) = File::Spec->splitpath($dir);
         $reports{$name} = YAML::LoadFile($resfile);

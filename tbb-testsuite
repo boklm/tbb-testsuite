@@ -306,6 +306,6 @@ foreach my $tbbfile (@{$options->{files}}) {
     test_tbb($report, $tbbfile);
 }
 print "Report directory: $options->{'report-dir'}\n";
-YAML::DumpFile("$options->{'report-dir'}/results.yml", $report);
+YAML::DumpFile("$options->{'report-dir'}/report.yml", $report);
 TBBTestSuite::Reports::make_report($report);
 TBBTestSuite::Reports::make_reports_index;
