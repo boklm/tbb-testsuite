@@ -6,16 +6,20 @@ use TBBTestSuite::Options qw($options);
 use TBBTestSuite::Reports;
 use TBBTestSuite::Tests;
 
-my $report = {
-    tbbfiles => {},
-    options  => $options,
-    time     => time,
-};
-TBBTestSuite::Reports::set_report_dir($report);
-foreach my $tbbfile (@{$options->{files}}) {
-    TBBTestSuite::Tests::test_tbb($report, $tbbfile);
+sub run_tests {
+    my $report = {
+        tbbfiles => {},
+        options  => $options,
+        time     => time,
+    };
+    TBBTestSuite::Reports::set_report_dir($report);
+    foreach my $tbbfile (@{$options->{files}}) {
+        TBBTestSuite::Tests::test_tbb($report, $tbbfile);
+    }
+    print "Report directory: $options->{'report-dir'}\n";
+    YAML::DumpFile("$options->{'report-dir'}/report.yml", $report);
+    TBBTestSuite::Reports::make_report($report);
+    TBBTestSuite::Reports::make_reports_index;
 }
-print "Report directory: $options->{'report-dir'}\n";
-YAML::DumpFile("$options->{'report-dir'}/report.yml", $report);
-TBBTestSuite::Reports::make_report($report);
-TBBTestSuite::Reports::make_reports_index;
+
+run_tests;
