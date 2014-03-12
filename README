@@ -66,6 +66,10 @@ The <tbb-file> can be:
 Available options
 -----------------
 
+--config=<file>
+        Select a configuration file. See the section about Configuration
+        Files below.
+
 --no-gpgcheck
         Disable gpg check when downloading a sha256sum.txt file.
 
@@ -116,4 +120,18 @@ Available options
 --resolution=<resolution>
         When using xvfb, this sets the default resolution. The default
         is 1024x768.
+
+
+Configuration Files
+-------------------
+
+In addition to setting options using command line arguments, it is
+possible to set options using a configuration file and the --config
+option. If the path given to the --config option is relative, it is
+expected to be in the config directory.
+
+The configuration file is a perl script which when evaluated should
+return a hash containing the configuration. The options set by the
+default configuration and command line arguments are available to this
+script in the $option hash reference.
 
