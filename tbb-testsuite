@@ -11,7 +11,7 @@ my $report = {
     options  => $options,
     time     => time,
 };
-TBBTestSuite::Reports::set_report_dir;
+TBBTestSuite::Reports::set_report_dir($report);
 foreach my $tbbfile (@{$options->{files}}) {
     TBBTestSuite::Tests::test_tbb($report, $tbbfile);
 }

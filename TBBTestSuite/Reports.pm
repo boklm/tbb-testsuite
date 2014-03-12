@@ -12,18 +12,19 @@ use TBBTestSuite::Common qw(exit_error);
 use TBBTestSuite::Options qw($options);
 
 sub set_report_dir {
-    if ($options->{'name'}) {
-        $options->{'report-dir'} = "$options->{'reports-dir'}/$options->{'name'}";
+    my ($report) = @_;
+    if ($report->{options}{name}) {
+        $report->{options}{'report-dir'} = "$report->{options}{'reports-dir'}/$report->{options}{name}";
         make_path($options->{'report-dir'});
         return;
     }
-    make_path($options->{'reports-dir'});
-    $options->{'report-dir'} = File::Temp::newdir(
+    make_path($report->{options}{'reports-dir'});
+    $report->{options}{'report-dir'} = File::Temp::newdir(
         'XXXXXX',
-        DIR => $options->{'reports-dir'},
+        DIR => $report->{options}{'reports-dir'},
         CLEANUP => 0)->dirname;
-    (undef, undef, $options->{name})
-                = File::Spec->splitpath($options->{'report-dir'});
+    (undef, undef, $report->{options}{name})
+                = File::Spec->splitpath($report->{options}{'report-dir'});
 }
 
 sub make_report {
@@ -31,7 +32,7 @@ sub make_report {
     my $template = Template->new(
         ENCODING => 'utf8',
         INCLUDE_PATH => "$FindBin::Bin/tmpl",
-        OUTPUT_PATH => $options->{'report-dir'},
+        OUTPUT_PATH => $report->{options}{'report-dir'},
     );
     for my $page (qw(index.html screenshots.html)) {
         $template->process($page, $report, $page, binmode => ':utf8');
