@@ -334,6 +334,29 @@ sub make_report {
     }
 }
 
+sub make_reports_index {
+    my $template = Template->new(
+        ENCODING => 'utf8',
+        INCLUDE_PATH => "$FindBin::Bin/tmpl",
+        OUTPUT_PATH => $options->{'reports-dir'},
+    );
+    my %reports;
+    foreach my $dir (glob "$options->{'reports-dir'}/*") {
+        my $resfile = "$dir/results.yml";
+        next unless -f $resfile;
+        my (undef, undef, $name) = File::Spec->splitpath($dir);
+        $reports{$name} = YAML::LoadFile($resfile);
+        $reports{$name}->{time} = 1 unless $reports{$name}->{time};
+    }
+    my @reports_by_time =
+        sort { $reports{$b}->{time} <=> $reports{$a}->{time} } keys %reports;
+    my $vars = {
+        reports => \%reports,
+        reports_by_time => \@reports_by_time,
+    };
+    $template->process('reports_index.html', $vars, 'index.html');
+}
+
 sub test_tbb {
     my ($tbbfile, $sha256sum) = @_;
     my $oldcwd = getcwd;
@@ -377,3 +400,4 @@ YAML::DumpFile("$options->{'report-dir'}/results.yml",
         time    => time,
     });
 make_report;
+make_reports_index;

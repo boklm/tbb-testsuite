@@ -1,0 +1,50 @@
+[% USE date -%]
+<html>
+    <head>
+        <title>Tests reports</title>
+        <style type="text/css">
+            .test_ok {
+                color: #006600;
+                font-weight: bold;
+            }
+            .test_notok {
+                color: #FF0000;
+                font-weight: bold;
+            }
+            .test_notok A {
+                color: #FF0000;
+            }
+            .reportdate {
+                font-size: small;
+            }
+        </style>
+    </head>
+    <body>
+        <h1>Tests Reports</h1>
+        <table>
+            <tr>
+                <th>Name</th>
+                <th>Date</th>
+                <th>Result</th>
+            </tr>
+            [% FOREACH report IN reports_by_time %]
+            <tr>
+                <td valign="top"><a href="[% report %]/index.html">[% report %]</a></td>
+                <td valign="top">[% date.format(reports.$report.time, '%Y-%m-%d %H:%M') %]</td>
+                <td valign="top">
+                    [% failed = 0 %]
+                    [% FOREACH tbbfile IN reports.$report.results.keys %]
+                      [% IF ! reports.$report.results.$tbbfile.success %]
+                        <span class="test_notok">Failed: <a href="[% report %]/[% tbbfile %].html">[% tbbfile %]</a></span><br />
+                        [% failed = 1 %]
+                      [% END %]
+                    [% END %]
+                    [% IF failed == 0 %]
+                      <span class="test_ok">OK</span>
+                    [% END %]
+                </td>
+            </tr>
+            [% END %]
+        </table>
+    </body>
+</html>
