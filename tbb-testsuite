@@ -13,7 +13,7 @@ sub run_tests {
         time     => time,
     };
     TBBTestSuite::Reports::set_report_dir($report);
-    foreach my $tbbfile (@{$options->{files}}) {
+    foreach my $tbbfile (@{$options->{args}}) {
         TBBTestSuite::Tests::test_tbb($report, $tbbfile);
     }
     print "Report directory: $options->{'report-dir'}\n";

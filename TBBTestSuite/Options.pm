@@ -35,7 +35,7 @@ sub get_options {
                      virtualenv=s xvfb! name=s download-dir=s);
     my %res = %default_options;
     Getopt::Long::GetOptionsFromArray(\@_, \%res, @options) || exit 1;
-    $res{files} = \@_;
+    $res{args} = \@_;
     return \%res;
 }
 
