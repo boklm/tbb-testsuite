@@ -16,6 +16,7 @@ BEGIN {
 }
 
 my %default_options = (
+    action   => 'run_tests',
     os       => 'Linux',
     arch     => 'x86_64',
     mozmill  => 1,
@@ -35,7 +36,8 @@ my %default_options = (
 sub get_options {
     my @options = qw(mozmill! selenium! starttor! tor-control-port=i
                      tor-socks-port=i reports-dir=s gpgcheck! keyring=s
-                     virtualenv=s xvfb! name=s download-dir=s config=s);
+                     virtualenv=s xvfb! name=s download-dir=s config=s
+                     action=s);
     my (%cli, %config);
     Getopt::Long::GetOptionsFromArray(\@_, \%cli, @options) || exit 1;
     $cli{args} = \@_ if @_;

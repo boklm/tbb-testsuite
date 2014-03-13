@@ -66,6 +66,10 @@ The <tbb-file> can be:
 Available options
 -----------------
 
+--action=<name>
+        Select the action to be done. The default is to run the tests.
+        See the section about actions for details.
+
 --config=<file>
         Select a configuration file. See the section about Configuration
         Files below.
@@ -134,4 +138,18 @@ The configuration file is a perl script which when evaluated should
 return a hash containing the configuration. The options set by the
 default configuration and command line arguments are available to this
 script in the $option hash reference.
+
+
+Selecting action
+----------------
+
+The --action option can be used to select the action to be done. The
+following actions are available:
+
+  run_tests::
+        Run the tests, make a report, and update the reports index page.
+        This is the default action.
+
+  reports_index::
+        Create an index page listing the tests reports.
 

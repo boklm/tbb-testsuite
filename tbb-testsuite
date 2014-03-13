@@ -23,4 +23,10 @@ sub run_tests {
     TBBTestSuite::Reports::make_reports_index;
 }
 
-run_tests;
+my %actions = (
+    run_tests => \&run_tests,
+    reports_index => \&TBBTestSuite::Reports::make_reports_index,
+);
+
+exit_error "Unknow action $options->{action}" unless $actions{$options->{action}};
+$actions{$options->{action}}->();
