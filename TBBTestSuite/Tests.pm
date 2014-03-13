@@ -19,11 +19,26 @@ use TBBTestSuite::Common qw(exit_error);
 use TBBTestSuite::Options qw($options);
 
 my %tests = (
-    tor_bootstrap => { type => 'tor_bootstrap' },
-    check_screenshot => { type => 'mozmill' },
-    check => { type => 'selenium' },
+    tor_bootstrap => {
+        type  => 'tor_bootstrap',
+        descr => 'Check that we can bootstrap tor',
+    },
+    check_screenshot => {
+        type  => 'mozmill',
+        descr => 'Load http://check.torproject.org/ and take a screenshot',
+    },
+    check => {
+        type => 'selenium',
+        descr => 'Check that http://check.torproject.org/ think we are using tor',
+    },
 );
 %tests = map { $_ => { name => $_, %{$tests{$_}} } } keys %tests;
+
+sub list_tests {
+    foreach my $test (keys %tests) {
+        print "$test ($tests{$test}->{type})\n   $tests{$test}->{descr}\n\n";
+    }
+}
 
 sub get_tbbfile {
     my ($tbbinfos, $tbbfile) = @_;

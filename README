@@ -153,3 +153,6 @@ following actions are available:
   reports_index::
         Create an index page listing the tests reports.
 
+  list_tests::
+        List available tests and their descriptions.
+

@@ -25,6 +25,7 @@ sub run_tests {
 
 my %actions = (
     run_tests => \&run_tests,
+    list_tests => \&TBBTestSuite::Tests::list_tests,
     reports_index => \&TBBTestSuite::Reports::make_reports_index,
 );
 
