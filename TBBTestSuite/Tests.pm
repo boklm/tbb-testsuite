@@ -18,11 +18,18 @@ use YAML;
 use TBBTestSuite::Common qw(exit_error);
 use TBBTestSuite::Options qw($options);
 
+my %test_types = (
+    tor_bootstrap => \&start_tor,
+    mozmill       => \&mozmill_run,
+    selenium      => \&selenium_run,
+);
+
 our @tests = (
     {
         name  => 'tor_bootstrap',
         type  => 'tor_bootstrap',
         descr => 'Check that we can bootstrap tor',
+        fatal => 1,
     },
     {
         name => 'check_screenshot',
@@ -163,7 +170,7 @@ sub start_tor {
 sub stop_tor {
     my ($tbbinfos) = @_;
     return unless $options->{starttor};
-    kill 9, $tbbinfos->{torpid};
+    kill 9, $tbbinfos->{torpid} if $tbbinfos->{torpid};
 }
 
 sub screenshot_thumbnail {
@@ -217,13 +224,13 @@ sub selenium_run {
 
 sub run_tests {
     my ($tbbinfos) = @_;
-    my %types = (
-        mozmill  => \&mozmill_run,
-        selenium => \&selenium_run,
-    );
     foreach my $test (@{$tbbinfos->{tests}}) {
-        $types{$test->{type}}->($tbbinfos, $test)
-                if $types{$test->{type}};
+        $test_types{$test->{type}}->($tbbinfos, $test)
+                if $test_types{$test->{type}};
+        if ($test->{fatal} && $test->{results} &&
+            !$test->{results}{success}) {
+            last;
+        }
     }
 }
 
@@ -302,11 +309,9 @@ sub test_tbb {
     chdir $tbbinfos->{tbbdir} || exit_error "Can't enter directory $tbbinfos->{tbbdir}";
     $ENV{TBB_BIN} = "$tbbinfos->{tbbdir}/Browser/firefox";
     $ENV{TBB_PROFILE} = "$tbbinfos->{tbbdir}/Data/Browser/profile.default";
-    if (start_tor($tbbinfos, $tbbinfos->{tests}[0])) {
-        setup_tbb;
-        run_tests($tbbinfos);
-        stop_tor($tbbinfos);
-    }
+    setup_tbb;
+    run_tests($tbbinfos);
+    stop_tor($tbbinfos);
     chdir $oldcwd;
     $tbbinfos->{success} = is_success($tbbinfos->{tests});
     $report->{tbbfiles}{$tbbinfos->{filename}} = $tbbinfos;
