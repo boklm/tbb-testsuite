@@ -98,10 +98,6 @@ sub extract_tbb {
     $tbbinfos->{tbbdir} = "$tmpdir/tor-browser_$tbbinfos->{language}";
 }
 
-sub setup_tbb {
-    $ENV{TOR_SKIP_LAUNCH} = 1;
-}
-
 sub monitor_bootstrap {
     my ($tbbinfos, $test, $control_passwd) = @_;
     sleep 10;
@@ -309,7 +305,7 @@ sub test_tbb {
     chdir $tbbinfos->{tbbdir} || exit_error "Can't enter directory $tbbinfos->{tbbdir}";
     $ENV{TBB_BIN} = "$tbbinfos->{tbbdir}/Browser/firefox";
     $ENV{TBB_PROFILE} = "$tbbinfos->{tbbdir}/Data/Browser/profile.default";
-    setup_tbb;
+    $ENV{TOR_SKIP_LAUNCH} = 1;
     run_tests($tbbinfos);
     stop_tor($tbbinfos);
     chdir $oldcwd;
