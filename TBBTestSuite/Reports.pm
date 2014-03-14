@@ -35,9 +35,10 @@ sub make_report {
         INCLUDE_PATH => "$FindBin::Bin/tmpl",
         OUTPUT_PATH => $report->{options}{'report-dir'},
     );
-    for my $page (qw(index.html screenshots.html)) {
-        $template->process($page, $report, $page, binmode => ':utf8');
-    }
+    $template->process('screenshots.html', $report, 'screenshots.html',
+                       binmode => ':utf8');
+    $template->process('testrun_report.html', $report, 'index.html',
+                       binmode => ':utf8');
     foreach my $tbbfile (keys %{$report->{tbbfiles}}) {
         $template->process('report.html', { %$report, tbbfile => $tbbfile },
                 "$tbbfile.html", binmode => ':utf8')
