@@ -21,7 +21,7 @@
             <li><b>sha256sum:</b> [% tbbfiles.$tbbfile.sha256sum %]</li>
         </ul>
         <h1>Results</h1>
-        [% FOREACH test IN tbbfiles.$tbbfile.tests.values %]
+        [% FOREACH test IN tbbfiles.$tbbfile.tests %]
         <h3>[% test.name %]</h3>
         [% IF ! test.results %]
                 NOT RUN
@@ -59,7 +59,7 @@
 
         <hr>
         <h1>Screenshots</h1>
-        [% FOREACH test IN tbbfiles.$tbbfile.tests.values %]
+        [% FOREACH test IN tbbfiles.$tbbfile.tests %]
           [% IF test.screenshots %]
             <h3>[% test.name %]</h3>
             [% FOREACH screenshot IN test.screenshots %]

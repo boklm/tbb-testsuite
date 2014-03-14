@@ -18,25 +18,27 @@ use YAML;
 use TBBTestSuite::Common qw(exit_error);
 use TBBTestSuite::Options qw($options);
 
-my %tests = (
-    tor_bootstrap => {
+our @tests = (
+    {
+        name  => 'tor_bootstrap',
         type  => 'tor_bootstrap',
         descr => 'Check that we can bootstrap tor',
     },
-    check_screenshot => {
+    {
+        name => 'check_screenshot',
         type  => 'mozmill',
         descr => 'Load http://check.torproject.org/ and take a screenshot',
     },
-    check => {
-        type => 'selenium',
+    {
+        name => 'check',
+        type  => 'selenium',
         descr => 'Check that http://check.torproject.org/ think we are using tor',
     },
 );
-%tests = map { $_ => { name => $_, %{$tests{$_}} } } keys %tests;
 
 sub list_tests {
-    foreach my $test (keys %tests) {
-        print "$test ($tests{$test}->{type})\n   $tests{$test}->{descr}\n\n";
+    foreach my $test (@tests) {
+        print "$test->{name} ($test->{type})\n   $test->{descr}\n\n";
     }
 }
 
@@ -94,7 +96,7 @@ sub setup_tbb {
 }
 
 sub monitor_bootstrap {
-    my ($tbbinfos, $control_passwd) = @_;
+    my ($tbbinfos, $test, $control_passwd) = @_;
     sleep 10;
     my $sock = new IO::Socket::INET(
         PeerAddr => 'localhost',
@@ -114,18 +116,18 @@ sub monitor_bootstrap {
         sleep 1;
         $i++;
         if ($i > 300) {
-            $tbbinfos->{tests}{tor_bootstrap}{results}{success} = 0;
+            $test->{results}{success} = 0;
             return 0;
         }
     }
     print "Bootstraping done\n";
-    $tbbinfos->{tests}{tor_bootstrap}{results}{success} = 1;
+    $test->{results}{success} = 1;
     return 3;
 }
 
 # TODO: In the future, we should start tor using tor-launcher
 sub start_tor {
-    my ($tbbinfos) = @_;
+    my ($tbbinfos, $test) = @_;
     return unless $options->{starttor};
     my $control_passwd = map { ('a'..'z', 'A'..'Z', 0..9)[rand 62] } 0..8;
     my $cwd = getcwd;
@@ -155,7 +157,7 @@ sub start_tor {
         open(STDERR, '>', $logfile);
         exec @cmd;
     }
-    return monitor_bootstrap($tbbinfos, $control_passwd);
+    return monitor_bootstrap($tbbinfos, $test, $control_passwd);
 }
 
 sub stop_tor {
@@ -219,17 +221,16 @@ sub run_tests {
         mozmill  => \&mozmill_run,
         selenium => \&selenium_run,
     );
-    my $tests = $tbbinfos->{tests};
-    foreach my $test (keys %$tests) {
-        $types{$tests->{$test}{type}}->($tbbinfos, $tests->{$test})
-                if $types{$tests->{$test}{type}};
+    foreach my $test (@{$tbbinfos->{tests}}) {
+        $types{$test->{type}}->($tbbinfos, $test)
+                if $types{$test->{type}};
     }
 }
 
 sub is_success {
     my ($tests) = @_;
-    foreach my $test (keys %$tests) {
-        if ($tests->{$test}{results} && !$tests->{$test}{results}{success}) {
+    foreach my $test (@$tests) {
+        if ($test->{results} && !$test->{results}{success}) {
             return 0;
         }
     }
@@ -293,7 +294,7 @@ sub test_tbb {
     }
     $tbbinfos->{sha256sum} = $sha256sum ? $sha256sum
                                         : sha256_hex(read_file($tbbfile));
-    $tbbinfos->{tests} = { map { $_ => { %{$tests{$_}} } } keys %tests };
+    $tbbinfos->{tests} = [ map { { %$_ } } @tests ];
     $tbbinfos->{'results-dir'} =
         "$options->{'report-dir'}/results-$tbbinfos->{filename}";
     mkdir $tbbinfos->{'results-dir'};
@@ -301,7 +302,7 @@ sub test_tbb {
     chdir $tbbinfos->{tbbdir} || exit_error "Can't enter directory $tbbinfos->{tbbdir}";
     $ENV{TBB_BIN} = "$tbbinfos->{tbbdir}/Browser/firefox";
     $ENV{TBB_PROFILE} = "$tbbinfos->{tbbdir}/Data/Browser/profile.default";
-    if (start_tor($tbbinfos)) {
+    if (start_tor($tbbinfos, $tbbinfos->{tests}[0])) {
         setup_tbb;
         run_tests($tbbinfos);
         stop_tor($tbbinfos);
