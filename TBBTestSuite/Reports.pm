@@ -10,6 +10,7 @@ use File::Spec;
 use YAML;
 use TBBTestSuite::Common qw(exit_error);
 use TBBTestSuite::Options qw($options);
+use TBBTestSuite::Tests;
 
 sub set_report_dir {
     my ($report) = @_;
@@ -65,6 +66,8 @@ sub make_reports_index {
         reports_by_time => \@reports_by_time,
     };
     $template->process('reports_index.html', $vars, 'index.html');
+    $template->process('tests_index.html', { %$vars, tests =>
+            \@TBBTestSuite::Tests::tests }, 'tests.html');
 }
 
 1;

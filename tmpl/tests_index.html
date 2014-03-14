@@ -1,0 +1,14 @@
+[% USE date -%]
+<html>
+    <head>
+        <title>Available Tests</title>
+    </head>
+    <body>
+        <h1>Available Tests</h1>
+
+        [% FOREACH test IN tests %]
+        <h2>[% test.name %] ([% test.type %])</h2>
+        <p>[% test.descr %]</p>
+        [% END %]
+    </body>
+</html>
