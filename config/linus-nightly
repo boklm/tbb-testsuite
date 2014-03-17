@@ -12,7 +12,7 @@ my $today = DateTime->now->ymd;
 my $shaurl = "https://people.torproject.org/~linus/builds/tbb-nightly-$today/sha256sums.txt";
 my $name = "tbb-nightly-$today-$osname";
 
-if (-d "$options->{'reports-dir'}/$name") {
+if (-d "$options->{'reports-dir'}/r/$name") {
     print "Doing nothing: $name already done\n";
     return ( args => [] );
 }

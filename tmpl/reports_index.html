@@ -29,13 +29,13 @@
             </tr>
             [% FOREACH report IN reports_by_time %]
             <tr>
-                <td valign="top"><a href="[% report %]/index.html">[% report %]</a></td>
+                <td valign="top"><a href="r/[% report %]/index.html">[% report %]</a></td>
                 <td valign="top">[% date.format(reports.$report.time, '%Y-%m-%d %H:%M') %]</td>
                 <td valign="top">
                     [% failed = 0 %]
                     [% FOREACH tbbfile IN reports.$report.tbbfiles.keys %]
                       [% IF ! reports.$report.tbbfiles.$tbbfile.success %]
-                        <span class="test_notok">Failed: <a href="[% report %]/[% tbbfile %].html">[% tbbfile %]</a></span><br />
+                        <span class="test_notok">Failed: <a href="r/[% report %]/[% tbbfile %].html">[% tbbfile %]</a></span><br />
                         [% failed = 1 %]
                       [% END %]
                     [% END %]

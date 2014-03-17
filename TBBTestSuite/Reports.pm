@@ -14,15 +14,16 @@ use TBBTestSuite::Tests;
 
 sub set_report_dir {
     my ($report) = @_;
+    my $rdir = $report->{options}{'reports-dir'} . '/r';
     if ($report->{options}{name}) {
-        $report->{options}{'report-dir'} = "$report->{options}{'reports-dir'}/$report->{options}{name}";
+        $report->{options}{'report-dir'} = "$rdir/$report->{options}{name}";
         make_path($options->{'report-dir'});
         return;
     }
-    make_path($report->{options}{'reports-dir'});
+    make_path($rdir);
     $report->{options}{'report-dir'} = File::Temp::newdir(
         'XXXXXX',
-        DIR => $report->{options}{'reports-dir'},
+        DIR => $rdir,
         CLEANUP => 0)->dirname;
     (undef, undef, $report->{options}{name})
                 = File::Spec->splitpath($report->{options}{'report-dir'});
@@ -53,7 +54,7 @@ sub make_reports_index {
         OUTPUT_PATH => $options->{'reports-dir'},
     );
     my %reports;
-    foreach my $dir (glob "$options->{'reports-dir'}/*") {
+    foreach my $dir (glob "$options->{'reports-dir'}/r/*") {
         my $resfile = "$dir/report.yml";
         next unless -f $resfile;
         my (undef, undef, $name) = File::Spec->splitpath($dir);
