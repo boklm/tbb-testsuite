@@ -24,6 +24,7 @@ To run the test suite, you need perl and the following perl modules:
   LWP::Protocol::https
   Template
   YAML
+  DateTime
 
 If you are using Fedora or other yum based distribution, you can install
 each module with 'yum install perl(ModuleName)'.
