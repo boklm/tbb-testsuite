@@ -189,7 +189,7 @@ sub mozmill_run {
     my ($tbbinfos, $test) = @_;
     return unless $options->{mozmill};
     $test->{screenshots} = [];
-    my $screenshots_tmp = File::Temp::newdir;
+    my $screenshots_tmp = File::Temp::newdir('XXXXXX', DIR => $options->{tmpdir});
     $ENV{'MOZMILL_SCREENSHOTS'} = $screenshots_tmp;
     my $results_file = "$tbbinfos->{'results-dir'}/$test->{name}.json";
     system(xvfb_run($test), "$options->{virtualenv}/bin/mozmill", '-b',
@@ -267,7 +267,7 @@ sub test_sha {
             $resp = $ua->get("$shafile.asc");
             exit_error "Error downloading $shafile.asc:\n" . $resp->status_line
                 unless $resp->is_success;
-            my $tmpdir = File::Temp::newdir;
+            my $tmpdir = File::Temp::newdir('XXXXXX', DIR => $options->{tmpdir});
             write_file("$tmpdir/sha256sum.txt", $content);
             write_file("$tmpdir/sha256sum.txt.asc", $resp->decoded_content);
             exit_error "Error checking gpg signature of $shafile"
@@ -289,7 +289,7 @@ sub test_tbb {
     my $oldcwd = getcwd;
     my $tbbinfos = tbb_filename_infos($tbbfile);
     return test_sha($report, $tbbfile) if $tbbinfos->{type} eq 'sha256sum';
-    my $tmpdir = File::Temp::newdir;
+    my $tmpdir = File::Temp::newdir('XXXXXX', DIR => $options->{tmpdir});
     $tbbinfos->{tmpdir} = $tmpdir->dirname;
     $tbbfile = get_tbbfile($tbbinfos, $tbbfile);
     if ($sha256sum && $sha256sum ne sha256_hex(read_file($tbbfile))) {

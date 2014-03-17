@@ -16,6 +16,7 @@ BEGIN {
 }
 
 my %default_options = (
+    tmpdir   => "$FindBin::Bin/tmp",
     action   => 'run_tests',
     os       => 'Linux',
     arch     => 'x86_64',

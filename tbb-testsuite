@@ -1,6 +1,7 @@
 #!/usr/bin/perl -w
 use strict;
 use Data::Dump qw/dd/;
+use File::Path qw(make_path);
 use TBBTestSuite::Common qw(exit_error);
 use TBBTestSuite::Options qw($options);
 use TBBTestSuite::Reports;
@@ -31,4 +32,5 @@ my %actions = (
 );
 
 exit_error "Unknow action $options->{action}" unless $actions{$options->{action}};
+make_path($options->{tmpdir});
 $actions{$options->{action}}->();
