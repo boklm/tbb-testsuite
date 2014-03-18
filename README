@@ -15,7 +15,7 @@ as root, which will install the needed packages. This script has been
 tested on Ubuntu, Debian, Fedora, Centos.
 
 After installing the required dependencies, a python virtualenv needs
-to be created with mozmill and selenium. This can be with the 'setup'
+to be created with mozmill and selenium. This can be with the 'setup-virtualenv'
 script.
 
 Summary of installation instructions:
@@ -23,7 +23,7 @@ Summary of installation instructions:
   $ git submodule init
   $ git submodule update
   $ sudo ./install-deps
-  $ ./setup
+  $ ./setup-virtualenv
 
 
 Usage
@@ -100,8 +100,8 @@ Available options
 
 --virtualenv=<directory>
         Path to the virtualenv where selenium and mozmill are installed.
-        The default is the 'virtualenv' directory created by the 'setup'
-        script.
+        The default is the 'virtualenv' directory created by the
+        'setup-virtualenv' script.
 
 --no-xvfb
         Don't run the tests using a virtual frame buffer X server.
