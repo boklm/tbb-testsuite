@@ -110,6 +110,12 @@ Available options
         When using xvfb, this sets the default resolution. The default
         is 1024x768.
 
+--enable-tests=<test1,test2>
+        Only run the list of tests selected. When this option is not
+        used, all tests are run. This option is useful when you are
+        working on a new test and don't want to run all the test suite
+        to try your new test.
+
 
 Configuration Files
 -------------------

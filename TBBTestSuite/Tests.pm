@@ -26,10 +26,11 @@ my %test_types = (
 
 our @tests = (
     {
-        name  => 'tor_bootstrap',
-        type  => 'tor_bootstrap',
-        descr => 'Check that we can bootstrap tor',
-        fatal => 1,
+        name   => 'tor_bootstrap',
+        type   => 'tor_bootstrap',
+        descr  => 'Check that we can bootstrap tor',
+        fatal  => 1,
+        always => 1,
     },
     {
         name => 'check_screenshot',
@@ -220,7 +221,13 @@ sub selenium_run {
 
 sub run_tests {
     my ($tbbinfos) = @_;
+    my @enable_tests = $options->{'enable-tests'}
+                ? split(',', $options->{'enable-tests'}) : ();
     foreach my $test (@{$tbbinfos->{tests}}) {
+        if (@enable_tests && !$test->{always}
+            && ! grep { $test->{name} eq $_ } @enable_tests) {
+            next;
+        }
         $test_types{$test->{type}}->($tbbinfos, $test)
                 if $test_types{$test->{type}};
         if ($test->{fatal} && $test->{results} &&
