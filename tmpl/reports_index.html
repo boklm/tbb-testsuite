@@ -25,12 +25,16 @@
             <tr>
                 <th>Name</th>
                 <th>Date</th>
+                <th>OS</th>
+                <th>Arch</th>
                 <th>Result</th>
             </tr>
             [% FOREACH report IN reports_by_time %]
             <tr>
                 <td valign="top"><a href="r/[% report %]/index.html">[% report %]</a></td>
                 <td valign="top">[% date.format(reports.$report.time, '%Y-%m-%d %H:%M') %]</td>
+                <td valign="top">[% reports.$report.system_infos.osname %]</td>
+                <td valign="top">[% reports.$report.system_infos.arch %]</td>
                 <td valign="top">
                     [% failed = 0 %]
                     [% FOREACH tbbfile IN reports.$report.tbbfiles.keys %]
