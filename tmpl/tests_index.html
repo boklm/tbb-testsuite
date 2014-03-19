@@ -9,6 +9,11 @@
         [% FOREACH test IN tests %]
         <h2>[% test.name %] ([% test.type %])</h2>
         <p>[% test.descr %]</p>
+        [% IF test.type == 'mozmill' %]
+        <p><a href="https://gitweb.torproject.org/boklm/tor-browser-bundle-testsuite.git/blob/HEAD:/mozmill-tests/tbb-tests/[% test.name %].js">test source</a></p>
+        [% ELSIF test.type == 'selenium' %]
+        <p><a href="https://gitweb.torproject.org/boklm/tor-browser-bundle-testsuite.git/blob/HEAD:/selenium-tests/test_[% test.name %].py">test source</a></p>
+        [% END %]
         [% END %]
     </body>
 </html>
