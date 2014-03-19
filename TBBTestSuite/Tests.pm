@@ -54,6 +54,11 @@ our @tests = (
         pre   => sub { toggle_https_everywhere(0) },
         post  => sub { toggle_https_everywhere(1) },
     },
+    {
+        name  => 'settings',
+        type  => 'mozmill',
+        descr => 'Check that some important settings are correctly set',
+    },
 );
 
 sub toggle_https_everywhere {
