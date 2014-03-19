@@ -7,6 +7,10 @@
                 color: #006600;
                 font-weight: bold;
             }
+            .test_ok A {
+                color: #006600;
+                font-weight: bold;
+            }
             .test_notok {
                 color: #FF0000;
                 font-weight: bold;
@@ -44,7 +48,7 @@
                       [% END %]
                     [% END %]
                     [% IF failed == 0 %]
-                      <span class="test_ok">OK</span>
+                      <span class="test_ok"><a href="r/[% report %]/index.html">OK</a></span>
                     [% END %]
                 </td>
             </tr>
