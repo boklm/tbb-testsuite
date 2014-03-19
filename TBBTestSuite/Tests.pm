@@ -42,7 +42,36 @@ our @tests = (
         type  => 'selenium',
         descr => 'Check that http://check.torproject.org/ think we are using tor',
     },
+    {
+        name  => 'https-everywhere',
+        type  => 'mozmill',
+        descr => 'Check that https everywhere is enabled and working',
+    },
+    {
+        name  => 'https-everywhere-disabled',
+        type  => 'mozmill',
+        descr => 'Check that https everywhere is not doing anything when disabled',
+        pre   => sub { toggle_https_everywhere(0) },
+        post  => sub { toggle_https_everywhere(1) },
+    },
 );
+
+sub toggle_https_everywhere {
+    my ($t) = @_;
+    my $prefs = 'Data/Browser/profile.default/extensions/' .
+        'https-everywhere@eff.org/defaults/preferences/preferences.js';
+    my @f = read_file($prefs);
+    foreach (@f) {
+        if ($t) {
+            s/pref\("extensions\.https_everywhere\.globalEnabled",false\);
+             /pref("extensions.https_everywhere.globalEnabled",true);/x;
+        } else {
+            s/pref\("extensions\.https_everywhere\.globalEnabled",true\);
+             /pref("extensions.https_everywhere.globalEnabled",false);/x;
+        }
+    }
+    write_file($prefs, @f);
+}
 
 sub list_tests {
     foreach my $test (@tests) {
@@ -228,8 +257,10 @@ sub run_tests {
             && ! grep { $test->{name} eq $_ } @enable_tests) {
             next;
         }
+        $test->{pre}->($test) if $test->{pre};
         $test_types{$test->{type}}->($tbbinfos, $test)
                 if $test_types{$test->{type}};
+        $test->{post}->($test) if $test->{post};
         if ($test->{fatal} && $test->{results} &&
             !$test->{results}{success}) {
             last;
