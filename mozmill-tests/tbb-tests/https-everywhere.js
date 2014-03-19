@@ -20,7 +20,7 @@ var testStartTBB = function() {
     expect.equal(prefSrv.getPref(PREF_ENABLE_HE, false), true,
             "https-everywhere is enabled");
     controller.open(HTTP_URL);
-    controller.waitForPageLoad();
+    controller.waitForPageLoad(10000);
     expect.equal(controller.tabs.activeTab.URL, HTTPS_URL,
             "https-everywhere seems to work");
 }

@@ -24,6 +24,6 @@ var setupModule = function(aModule) {
 // Run the test
 var testStartTBB = function() {
     controller.open('http://check.torproject.org');
-    controller.waitForPageLoad();
+    controller.waitForPageLoad(10000);
     screenshot.create(controller, []);
 }

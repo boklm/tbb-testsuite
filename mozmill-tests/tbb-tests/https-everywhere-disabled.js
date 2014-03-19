@@ -21,7 +21,7 @@ var testStartTBB = function() {
     expect.equal(prefSrv.getPref(PREF_ENABLE_HE, true), false,
             "https-everywhere is disabled");
     controller.open(HTTP_URL);
-    controller.waitForPageLoad();
+    controller.waitForPageLoad(10000);
     expect.equal(controller.tabs.activeTab.URL, HTTP_URL,
             "http URL has not been redirected to https");
 }
