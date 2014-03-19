@@ -2,6 +2,7 @@
 use strict;
 use Data::Dump qw/dd/;
 use File::Path qw(make_path);
+use YAML;
 use TBBTestSuite::Common qw(exit_error);
 use TBBTestSuite::Options qw($options);
 use TBBTestSuite::Reports;
@@ -26,10 +27,20 @@ sub run_tests {
     TBBTestSuite::Reports::make_reports_index;
 }
 
+sub make_report {
+    exit_error "--name is not set" unless $options->{name};
+    my $report = { options => $options };
+    TBBTestSuite::Reports::set_report_dir($report);
+    $report = YAML::LoadFile("$options->{'report-dir'}/report.yml");
+    $report->{options} = { %{$report->{options}}, %$options };
+    TBBTestSuite::Reports::make_report($report);
+}
+
 my %actions = (
     run_tests => \&run_tests,
     list_tests => \&TBBTestSuite::Tests::list_tests,
     reports_index => \&TBBTestSuite::Reports::make_reports_index,
+    make_report => \&make_report,
 );
 
 exit_error "Unknow action $options->{action}" unless $actions{$options->{action}};

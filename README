@@ -144,6 +144,10 @@ following actions are available:
   reports_index::
         Create an index page listing the tests reports.
 
+  make_report::
+        Regenerate the html report of a test run. You should use the
+        --name option to select the test run.
+
   list_tests::
         List available tests and their descriptions.
 
