@@ -54,6 +54,13 @@
                         <b>Failed test:</b> [% f.id %]<br />
                         <pre>[% f.error %]</pre><br />
                 [% END %]
+        [% ELSIF test.type == 'mozmill' && test.results.results.0.failed %]
+                [% FOREACH f IN test.results.results.0.fails %]
+                        [% FOREACH v IN f.values %]
+                                <b>Error:</b> [% v.name %]<br />
+                                <pre>[% v.message %]</pre><br />
+                        [% END %]
+                [% END %]
         [% END %]
         [% END %]
 
