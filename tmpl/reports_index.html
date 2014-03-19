@@ -29,14 +29,19 @@
             <tr>
                 <th>Name</th>
                 <th>Date</th>
+                <th>Version</th>
                 <th>OS</th>
                 <th>Arch</th>
                 <th>Result</th>
             </tr>
-            [% FOREACH report IN reports_by_time %]
+            [% FOREACH report IN reports_list %]
             <tr>
                 <td valign="top"><a href="r/[% report %]/index.html">[% report %]</a></td>
                 <td valign="top">[% date.format(reports.$report.time, '%Y-%m-%d %H:%M') %]</td>
+                <td valign="top">[% IF reports.$report.options.tbbversion %]
+                                        <a href="tbbversion_[% reports.$report.options.tbbversion %].html">[% reports.$report.options.tbbversion %]</a>
+                                 [% END %]
+                                    </td>
                 <td valign="top">[% reports.$report.system_infos.osname %]</td>
                 <td valign="top">[% reports.$report.system_infos.arch %]</td>
                 <td valign="top">

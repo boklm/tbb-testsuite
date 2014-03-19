@@ -63,13 +63,24 @@ sub make_reports_index {
     }
     my @reports_by_time =
         sort { $reports{$b}->{time} <=> $reports{$a}->{time} } keys %reports;
+    my %reports_by_tbbversion;
+    foreach my $report (keys %reports) {
+        my $tbbver = $reports{$report}->{options}{tbbversion};
+        push @{$reports_by_tbbversion{$tbbver}}, $report if $tbbver;
+    }
     my $vars = {
         reports => \%reports,
-        reports_by_time => \@reports_by_time,
+        reports_list => \@reports_by_time,
     };
     $template->process('reports_index.html', $vars, 'index.html');
     $template->process('tests_index.html', { %$vars, tests =>
             \@TBBTestSuite::Tests::tests }, 'tests.html');
+    foreach my $tbbver (keys %reports_by_tbbversion) {
+        my @s = sort { $reports{$b}->{time} <=> $reports{$a}->{time} }
+                @{$reports_by_tbbversion{$tbbver}};
+        $template->process('reports_index.html',
+            { %$vars, reports_list => \@s }, "tbbversion_$tbbver.html");
+    }
 }
 
 1;
