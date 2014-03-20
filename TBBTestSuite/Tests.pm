@@ -217,7 +217,7 @@ sub xvfb_run {
     return () unless $options->{xvfb};
     my $resolution = $test->{resolution} ? $test->{resolution}
                                          : $options->{resolution};
-    return ('xvfb-run', '-s', "-screen 0 ${resolution}x24");
+    return ('xvfb-run', '--auto-servernum', '-s', "-screen 0 ${resolution}x24");
 }
 
 sub mozmill_run {
