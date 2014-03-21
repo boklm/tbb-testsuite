@@ -17,7 +17,7 @@
             <h1>[% tbbfile %]</h1>
             [% FOREACH test IN tbbfiles.$tbbfile.tests %]
                [% FOREACH screenshot IN test.screenshots %]
-                  <a href="results-[% tbbfile %]/[% screenshot %]"><img src="results-[% tbbfile %]/t-[% screenshot %]" /></a><br />
+                  <a href="results-[% tbbfile %]/[% screenshot %]"><img src="results-[% tbbfile %]/t-[% screenshot %]" /></a><br /><br />
                [% END %]
             [% END %]
             <hr />
