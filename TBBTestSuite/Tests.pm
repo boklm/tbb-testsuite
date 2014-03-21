@@ -33,9 +33,9 @@ our @tests = (
         always => 1,
     },
     {
-        name => 'check_screenshot',
+        name => 'screenshots',
         type  => 'mozmill',
-        descr => 'Load http://check.torproject.org/ and take a screenshot',
+        descr => 'Take some screenshots',
     },
     {
         name => 'check',
