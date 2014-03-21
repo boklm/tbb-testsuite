@@ -233,7 +233,7 @@ sub mozmill_run {
         "$FindBin::Bin/mozmill-tests/tbb-tests/$test->{name}.js",
         '--report', "file://$results_file");
     my $i = 0;
-    for my $screenshot_file (glob "$screenshots_tmp/*.png") {
+    for my $screenshot_file (reverse sort glob "$screenshots_tmp/*.png") {
         move($screenshot_file, "$tbbinfos->{'results-dir'}/$test->{name}-$i.png");
         screenshot_thumbnail($tbbinfos->{'results-dir'}, "$test->{name}-$i.png");
         push @{$test->{screenshots}}, "$test->{name}-$i.png";
