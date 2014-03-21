@@ -8,6 +8,10 @@ then
 	   libfile-spec-perl libio-captureoutput-perl perlmagick libjson-perl \
 	    libwww-perl libtemplate-perl libyaml-perl libdatetime-perl
    apt-get install -y libgtk2.0-0
+   if lsb_release -i | grep -q Debian
+   then
+       apt-get install iceweasel
+   fi
 fi
 
 if [ -f /etc/redhat-release ] && which yum > /dev/null 2>&1
