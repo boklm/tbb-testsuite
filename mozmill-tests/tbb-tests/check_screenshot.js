@@ -14,6 +14,7 @@ const TEST_DATA = BASE_URL + "path/file.html";
 // Include this only if specifying a timeout other than 5000ms
 const TEST_EXAMPLE_TIMEOUT = 3000;
 
+var common = require("../lib/common");
 var screenshot = require("../lib/screenshot");
 
 // Setup for the test
@@ -23,7 +24,6 @@ var setupModule = function(aModule) {
 
 // Run the test
 var testStartTBB = function() {
-    controller.open('http://check.torproject.org');
-    controller.waitForPageLoad(10000);
+    common.load_page(controller, 'http://check.torproject.org');
     screenshot.create(controller, []);
 }

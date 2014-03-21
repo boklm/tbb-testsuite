@@ -8,6 +8,7 @@
 
 var {expect} = require("../mozilla-mozmill-tests/lib/assertions");
 var prefs = require("../mozilla-mozmill-tests/firefox/lib/prefs");
+var common = require("../lib/common");
 
 const PREF_ENABLE_HE = "extensions.https_everywhere.globalEnabled";
 const HTTP_URL = "http://www.mediawiki.org/wiki/MediaWiki";
@@ -20,8 +21,7 @@ var testStartTBB = function() {
     var prefSrv = prefs.preferences;
     expect.equal(prefSrv.getPref(PREF_ENABLE_HE, true), false,
             "https-everywhere is disabled");
-    controller.open(HTTP_URL);
-    controller.waitForPageLoad(10000);
+    common.load_page(controller, HTTP_URL);
     expect.equal(controller.tabs.activeTab.URL, HTTP_URL,
             "http URL has not been redirected to https");
 }
