@@ -13,7 +13,7 @@ function load_page(controller, url) {
         }
     }
     controller.open(url);
-    return controller.waitForPageLoad(10000);
+    return controller.waitForPageLoad(50000);
 }
 
 exports.load_page = load_page;
