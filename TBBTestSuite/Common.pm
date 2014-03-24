@@ -2,19 +2,34 @@ package TBBTestSuite::Common;
 
 use warnings;
 use strict;
+use FindBin;
 use IO::CaptureOutput qw(capture_exec);
+use File::Slurp;
 
 our (@ISA, @EXPORT_OK);
 BEGIN {
     require Exporter;
     @ISA       = qw(Exporter);
-    @EXPORT_OK = qw(exit_error system_infos);
+    @EXPORT_OK = qw(exit_error system_infos run_alone rm_pidfile);
 }
 
 sub exit_error {
     print STDERR "Error: ", $_[0], "\n";
     chdir '/';
     exit (exists $_[1] ? $_[1] : 1);
+}
+
+sub run_alone {
+    my $pidfile = "$FindBin::Bin/lock";
+    if (-f $pidfile) {
+        my $pid = read_file($pidfile);
+        exit_error "tbbtestsuite is already running" if (kill(0, $pid));
+    }
+    write_file($pidfile, $$);
+}
+
+sub rm_pidfile {
+    unlink "$FindBin::Bin/lock";
 }
 
 sub system_infos {
