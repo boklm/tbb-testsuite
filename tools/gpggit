@@ -1,0 +1,4 @@
+#!/bin/sh
+set -e
+basedir=$(cd $(dirname $0); pwd)
+exec gpg --no-default-keyring --keyring "$(dirname $basedir)"/.gitkeyring "$@"

@@ -1,0 +1,5 @@
+#!/bin/sh
+set -e
+basedir=$(cd $(dirname $0); pwd)
+git config --replace-all --local gpg.program "$basedir/gpggit"
+exec git pull --verify-signatures "$@"
