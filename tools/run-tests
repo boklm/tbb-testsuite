@@ -1,0 +1,6 @@
+#!/bin/sh
+basedir=$(cd $(dirname dirname $0); pwd)
+cd "$basedir"
+./tools/pull
+./tbbtestsuite --config=release
+./tbbtestsuite --config=linus-nightly
