@@ -1,7 +1,6 @@
 # vim: filetype=perl expandtab
 
 use strict;
-use DateTime;
 use Data::Dump qw(dd);
 use LWP::Simple;
 use TBBTestSuite::Common;
@@ -9,7 +8,6 @@ use TBBTestSuite::Common;
 my $version = '3.5.3';
 my $system_infos = TBBTestSuite::Common::system_infos;
 my $osname = $system_infos->{osname} . '-' . $system_infos->{arch};
-my $today = DateTime->now->ymd;
 my $shaurl = "https://people.torproject.org/~mikeperry/builds/$version/sha256sums.txt";
 my $name = "$version-$osname";
 
