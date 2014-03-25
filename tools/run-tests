@@ -1,6 +1,5 @@
 #!/bin/sh
-basedir=$(cd $(dirname dirname $0); pwd)
-cd "$basedir"
+cd $(dirname $0)/..
 ./tools/pull
-./tbbtestsuite --config=release
-./tbbtestsuite --config=linus-nightly
+./tbb-testsuite --config=release
+./tbb-testsuite --config=linus-nightly
