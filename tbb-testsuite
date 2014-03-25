@@ -8,6 +8,8 @@ use YAML;
 use TBBTestSuite::Common qw(exit_error run_alone rm_pidfile);
 use TBBTestSuite::Options qw($options);
 use TBBTestSuite::Reports;
+use TBBTestSuite::Reports::Receive;
+use TBBTestSuite::Reports::Send;
 use TBBTestSuite::Tests;
 
 sub run_tests {
@@ -27,6 +29,7 @@ sub run_tests {
     YAML::DumpFile("$options->{'report-dir'}/report.yml", $report);
     TBBTestSuite::Reports::make_report($report);
     TBBTestSuite::Reports::make_reports_index;
+    TBBTestSuite::Reports::Send::send_report if $options->{'upload-to'};
 }
 
 sub make_report {
@@ -38,11 +41,19 @@ sub make_report {
     TBBTestSuite::Reports::make_report($report);
 }
 
+sub receive_report {
+    TBBTestSuite::Reports::Receive::receive_report;
+    TBBTestSuite::Reports::make_reports_index;
+}
+
 my %actions = (
     run_tests => \&run_tests,
     list_tests => \&TBBTestSuite::Tests::list_tests,
     reports_index => \&TBBTestSuite::Reports::make_reports_index,
     make_report => \&make_report,
+    send_report => \&TBBTestSuite::Reports::Send::send_report,
+    receive_report => \&receive_report,
+    update_authkeys => \&TBBTestSuite::Reports::Receive::update_authkeys,
 );
 
 exit_error "Unknow action $options->{action}" unless $actions{$options->{action}};

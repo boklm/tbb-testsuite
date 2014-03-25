@@ -116,6 +116,9 @@ Available options
         working on a new test and don't want to run all the test suite
         to try your new test.
 
+--upload-to=<login@hostname>
+        Upload the tests reports to select host, with ssh.
+
 
 Configuration Files
 -------------------
@@ -150,4 +153,19 @@ following actions are available:
 
   list_tests::
         List available tests and their descriptions.
+
+  send_report::
+        Upload a report to a remote host. The report name is selected
+        with the --name option, and the remote host with the --upload-to.
+        This action is also done as part of run_tests if the --upload-to
+        option is defined.
+
+  receive_report::
+        Receive a report on stdin. Usually this action is run from an
+        ssh authorized_keys file.
+
+  update_authkeys::
+        Update the ssh authorized_keys file with users defined in the
+        'uploaders' option. You need to run this on a user account that
+        will be receiving tests reports.
 
