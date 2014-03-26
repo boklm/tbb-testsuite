@@ -1,0 +1,146 @@
+Running the test suite
+======================
+
+
+Usage
+-----
+
+ $ ./tbb-testsuite [options] <tbb-file>...
+
+The <tbb-file> can be:
+
+- the path to a tbb tarball file.
+
+- the path to a sha256sum file. In which case all tarballs listed in the
+  sha256sum and compatible with the current platform will be tested.
+
+- the URL of a tbb tarball, which will be downloaded before being tested.
+
+- the URL of a sha256sum file, which will be downloaded. The gpg signature
+  from file sha256sum.asc will also be downloaded and checked with the
+  keyring selected with the --keyring option, unless the --no-gpgcheck
+  option is used. All the tarballs listed in the sha256sum and compatible
+  with the current platform will be downloaded, have their checksum
+  checked and will be tested.
+
+
+Available options
+-----------------
+
+--action=<name>::
+        Select the action to be done. The default is to run the tests.
+        See the section about actions for details.
+
+--config=<file>::
+        Select a configuration file. See the section about Configuration
+        Files below.
+
+--no-gpgcheck::
+        Disable gpg check when downloading a sha256sum.txt file.
+
+--keyring=<file>::
+        Name of the keyring file used to check the gpg signature of a
+        downloaded sha256sum.txt file. If the file is not an absolute
+        path, then it is relative to the keyring directory.
+
+--download-dir=<directory>::
+        The directory where to store the files downloaded when a URL is
+        given rather than a local path. If the file already exists in
+        this directory, it is not downloaded again. If this option is
+        not given, the files are downloaded in a temporary directory
+        which is removed at the end of the tests.
+
+--no-mozmill::
+        Don't run mozmill tests.
+
+--no-selenium::
+        Don't run the Selenium tests.
+
+--no-start-tor::
+        Don't start a tor daemon. If you use this option, you should
+        already have a tor daemon running.
+
+--tor-control-port=<port>::
+        Select the tor control port number. Default is 9551.
+
+--tor-socks-port=<port>::
+        Select the tor socks port. Default is 9550.
+
+--reports-dir=<directory>::
+        Directory where the tests reports are saved.
+
+--name=<name>::
+        The name of the tests run. This is used as directory name to
+        save the results inside the reports-dir. If not set, a random
+        name is used.
+
+--virtualenv=<directory>::
+        Path to the virtualenv where selenium and mozmill are installed.
+        The default is the 'virtualenv' directory created by the
+        'setup-virtualenv' script.
+
+--no-xvfb::
+        Don't run the tests using a virtual frame buffer X server.
+
+--resolution=<resolution>::
+        When using xvfb, this sets the default resolution. The default
+        is 1024x768.
+
+--enable-tests=<test1,test2>::
+        Only run the list of tests selected. When this option is not
+        used, all tests are run. This option is useful when you are
+        working on a new test and don't want to run all the test suite
+        to try your new test.
+
+--upload-to=<login@hostname>::
+        Upload the tests reports to select host, with ssh.
+
+
+Configuration Files
+-------------------
+
+In addition to setting options using command line arguments, it is
+possible to set options using a configuration file and the --config
+option. If the path given to the --config option is relative, it is
+expected to be in the config directory.
+
+The configuration file is a perl script which when evaluated should
+return a hash containing the configuration. The options set by the
+default configuration and command line arguments are available to this
+script in the $option hash reference.
+
+
+Selecting action
+----------------
+
+The --action option can be used to select the action to be done. The
+following actions are available:
+
+  run_tests::
+        Run the tests, make a report, and update the reports index page.
+        This is the default action.
+
+  reports_index::
+        Create an index page listing the tests reports.
+
+  make_report::
+        Regenerate the html report of a test run. You should use the
+        --name option to select the test run.
+
+  list_tests::
+        List available tests and their descriptions.
+
+  send_report::
+        Upload a report to a remote host. The report name is selected
+        with the --name option, and the remote host with the --upload-to.
+        This action is also done as part of run_tests if the --upload-to
+        option is defined.
+
+  receive_report::
+        Receive a report on stdin. Usually this action is run from an
+        ssh authorized_keys file.
+
+  update_authkeys::
+        Update the ssh authorized_keys file with users defined in the
+        'uploaders' option. You need to run this on a user account that
+        will be receiving tests reports.

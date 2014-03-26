@@ -1,0 +1,24 @@
+Installation
+============
+
+This git repository is using git submodules. So before running the test
+suite, you will need to run 'git submodule init' and 'git submodule update'.
+
+To run the test suite, you need perl and a few perl modules, python
+virtualenv, and xvfb.
+
+Those dependencies can be installed by running the 'install-deps' script
+as root, which will install the needed packages. This script has been
+tested on Ubuntu, Debian, Fedora, Centos.
+
+After installing the required dependencies, a python virtualenv needs
+to be created with mozmill and selenium. This can be with the 'setup-virtualenv'
+script.
+
+Summary of installation instructions:
+
+  $ git submodule init
+  $ git submodule update
+  $ sudo ./install-deps
+  $ ./setup-virtualenv
+
