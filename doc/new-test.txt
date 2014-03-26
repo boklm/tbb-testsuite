@@ -1,0 +1,70 @@
+How to add a new test
+=====================
+
+The list of tests to be run by the test suite is defined in file
+'TBBTestSuite/Tests.pm' in the '@tests' variable.
+
+Each test is defined with the following properties:
+
+name::
+        The name of the test. For 'mozmill' and 'selenium' tests this
+        name is used to find the test filename.
+
+type::
+        The type of tests. This can be 'mozmill', 'selenium', or
+        something else if you want to write the test in perl. In the
+        later case, you need to define it in the '%test_types' variable.
+
+descr::
+        A short description.
+
+fatal::
+        If you set this to 1, when this test fail the following tests
+        are not run.
+
+pre::
+        A reference to a perl subroutine that will be run before the
+        test.
+
+post::
+        A reference to a perl subroutine that will be run after the
+        test.
+
+
+Adding a mozmill test
+---------------------
+
+To add a new test based on mozmill, you will add something like this in
+'TBBTestSuite/Tests.pm':
+
+----
+    {
+        name  => 'example-test',
+        type  => 'mozmill',
+        descr => 'Example mozmill test',
+    },
+----
+
+The mozmill test files are stored in the directory
+'mozmill/mozmill-tests/tbb-tests/'. The name of the file is the name
+of the test with '.js' at the end.
+
+
+Adding a selenium test
+----------------------
+
+To add a new test based on selenium webdriver, you will add something
+like this in 'TBBTestSuite/Tests.pm':
+
+----
+    {
+        name  => 'example-test',
+        type  => 'selenium',
+        descr => 'Example selenium test',
+    },
+----
+
+The selenium test files are stored in the directory 'selenium-tests'.
+The name of the file that will be executed is 'test_$name.py' (with
+$name replaced by the test name).
+

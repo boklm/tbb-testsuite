@@ -6,6 +6,7 @@ ASCIIDOC_ARGS = --theme volnitsky
 PAGES_ASC = index.asc
 PAGES_ASC += install.asc
 PAGES_ASC += usage.asc
+PAGES_ASC += new-test.asc
 
 PAGES_HTML = $(patsubst %.asc,%.html,$(PAGES_ASC))
 

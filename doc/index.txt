@@ -5,3 +5,5 @@ TBB Test Suite
 
 * link:usage.html[How to use the test suite]
 
+* link:new-test.html[How to add a new test]
+
