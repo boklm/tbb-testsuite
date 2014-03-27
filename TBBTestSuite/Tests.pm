@@ -129,8 +129,15 @@ sub extract_tbb {
     $tbbfile = File::Spec->rel2abs($tbbfile);
     my $tmpdir = $tbbinfos->{tmpdir};
     chdir $tmpdir;
-    system('tar', 'xf', $tbbfile);
-    $tbbinfos->{tbbdir} = "$tmpdir/tor-browser_$tbbinfos->{language}";
+    if ($tbbinfos->{os} eq 'Linux') {
+        system('tar', 'xf', $tbbfile);
+        $tbbinfos->{tbbdir} = "$tmpdir/tor-browser_$tbbinfos->{language}";
+    } elsif ($tbbinfos->{os} eq 'Windows') {
+        my (undef, undef, $f) = File::Spec->splitpath($tbbfile);
+        copy($tbbfile, "$tmpdir/$f");
+        system('7z', 'x', $f);
+        $tbbinfos->{tbbdir} = "$tmpdir/\$_OUTDIR";
+    }
 }
 
 sub monitor_bootstrap {

@@ -95,6 +95,18 @@ Available options
 --upload-to=<login@hostname>::
         Upload the tests reports to select host, with ssh.
 
+--os=<os>::
+        Select the OS for which you want to run tests, when using a
+        sha256sums.txt file. By default, it is the OS you are currently
+        running. This option can be useful to run some tests from a
+        different OS than what you are running, for instance testing
+        the Windows bundles from Linux.
+
+--arch=<arch>::
+        Select the architecture for which you want to run tests, when
+        using a sha256sums.txt file. By default, it is the architecture
+        you are currently running.
+
 
 Configuration Files
 -------------------
