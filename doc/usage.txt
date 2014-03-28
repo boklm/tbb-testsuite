@@ -107,6 +107,10 @@ Available options
         using a sha256sums.txt file. By default, it is the architecture
         you are currently running.
 
+--virustotal::
+        Enable upload of files for analysis on virustotal.com. It is
+        disabled by default.
+
 
 Configuration Files
 -------------------

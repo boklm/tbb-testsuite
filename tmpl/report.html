@@ -47,6 +47,10 @@
                     <li><a href="results-[% tbbfile %]/[% test.name %].json">json results</a></li>
             [% ELSIF test.type == 'tor_bootstrap' %]
                     <li><a href="results-[% tbbfile %]/tor.log">tor daemon logs</a></li>
+            [% ELSIF test.type == 'virustotal' %]
+                    [% FOREACH file IN test.results.files.keys %]
+                    <li>virustotal report: <a href="[% test.results.files.$file.permalink %]">[% file %]</a></li>
+                    [% END %]
             [% END %]
         </ul>
         [% IF test.type == 'selenium' && test.results.failed %]

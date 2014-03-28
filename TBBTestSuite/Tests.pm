@@ -17,11 +17,13 @@ use Image::Magick;
 use YAML;
 use TBBTestSuite::Common qw(exit_error);
 use TBBTestSuite::Options qw($options);
+use TBBTestSuite::Tests::VirusTotal qw(virustotal_run);
 
 my %test_types = (
     tor_bootstrap => \&start_tor,
     mozmill       => \&mozmill_run,
     selenium      => \&selenium_run,
+    virustotal    => \&virustotal_run,
 );
 
 our @tests = (
@@ -31,6 +33,11 @@ our @tests = (
         descr  => 'Check that we can bootstrap tor',
         fatal  => 1,
         always => 1,
+    },
+    {
+        name   => 'virustotal',
+        type   => 'virustotal',
+        descr  => 'Analyze files on virustotal.com',
     },
     {
         name => 'screenshots',
@@ -138,6 +145,9 @@ sub extract_tbb {
         copy($tbbfile, "$tmpdir/$f");
         system('7z', 'x', $f);
         $tbbinfos->{tbbdir} = "$tmpdir/\$_OUTDIR";
+        foreach my $file (glob "$tmpdir/*.exe") {
+            move($file, "$tmpdir/\$_OUTDIR/");
+        }
     }
 }
 
