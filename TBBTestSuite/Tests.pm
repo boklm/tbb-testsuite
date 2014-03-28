@@ -85,27 +85,28 @@ sub list_tests {
 }
 
 sub get_tbbfile {
-    my ($tbbinfos, $tbbfile) = @_;
-    if ($tbbfile =~ m/^https?:\/\//) {
-        my (undef, undef, $file) = File::Spec->splitpath($tbbfile);
+    my ($tbbinfos) = @_;
+    $tbbinfos->{tbbfile_orig} = $tbbinfos->{tbbfile};
+    if ($tbbinfos->{tbbfile} =~ m/^https?:\/\//) {
+        my (undef, undef, $file) = File::Spec->splitpath($tbbinfos->{tbbfile});
         my $output = $options->{'download-dir'} ?
                 "$options->{'download-dir'}/$file" : "$tbbinfos->{tmpdir}/$file";
         return $output if -f $output;
-        print "Downloading $tbbfile\n";
+        print "Downloading $tbbinfos->{tbbfile}\n";
         my $ua = LWP::UserAgent->new;
-        my $resp = $ua->get($tbbfile, ':content_file' => $output);
-        exit_error "Error downloading $tbbfile:\n" . $resp->status_line
+        my $resp = $ua->get($tbbinfos->{tbbfile}, ':content_file' => $output);
+        exit_error "Error downloading $tbbinfos->{tbbfile}:\n" . $resp->status_line
                 unless $resp->is_success;
-        return $output;
+        $tbbinfos->{tbbfile} = $output;
     }
-    exit_error "File $tbbfile does not exist" unless -f $tbbfile;
-    return $tbbfile;
+    exit_error "File $tbbinfos->{tbbfile} does not exist"
+                unless -f $tbbinfos->{tbbfile};
 }
 
 sub tbb_filename_infos {
     my ($tbbfile) = @_;
     my (undef, undef, $file) = File::Spec->splitpath($tbbfile);
-    my %res = (filename => $file);
+    my %res = (filename => $file, tbbfile => $tbbfile);
     if ($file =~ m/^tor-browser-linux(..)-([^_]+)_(.+)\.tar\.xz$/) {
         @res{qw(type os version language)} = ('tbbfile', 'Linux', $2, $3);
         $res{arch} = $1 eq '64' ? 'x86_64' : 'x86';
@@ -124,9 +125,9 @@ sub tbb_filename_infos {
 }
 
 sub extract_tbb {
-    my ($tbbinfos, $tbbfile) = @_;
-    exit_error "Can't open file $tbbfile" unless -f $tbbfile;
-    $tbbfile = File::Spec->rel2abs($tbbfile);
+    my ($tbbinfos) = @_;
+    exit_error "Can't open file $tbbinfos->{tbbfile}" unless -f $tbbinfos->{tbbfile};
+    my $tbbfile = File::Spec->rel2abs($tbbinfos->{tbbfile});
     my $tmpdir = $tbbinfos->{tmpdir};
     chdir $tmpdir;
     if ($tbbinfos->{os} eq 'Linux') {
@@ -341,17 +342,17 @@ sub test_tbb {
     return test_sha($report, $tbbfile) if $tbbinfos->{type} eq 'sha256sum';
     my $tmpdir = File::Temp::newdir('XXXXXX', DIR => $options->{tmpdir});
     $tbbinfos->{tmpdir} = $tmpdir->dirname;
-    $tbbfile = get_tbbfile($tbbinfos, $tbbfile);
-    if ($sha256sum && $sha256sum ne sha256_hex(read_file($tbbfile))) {
-        exit_error "Wrong sha256sum for $tbbfile";
+    get_tbbfile($tbbinfos);
+    if ($sha256sum && $sha256sum ne sha256_hex(read_file($tbbinfos->{tbbfile}))) {
+        exit_error "Wrong sha256sum for $tbbinfos->{tbbfile}";
     }
     $tbbinfos->{sha256sum} = $sha256sum ? $sha256sum
-                                        : sha256_hex(read_file($tbbfile));
+                                : sha256_hex(read_file($tbbinfos->{tbbfile}));
     $tbbinfos->{tests} = [ map { { %$_ } } @tests ];
     $tbbinfos->{'results-dir'} =
         "$options->{'report-dir'}/results-$tbbinfos->{filename}";
     mkdir $tbbinfos->{'results-dir'};
-    extract_tbb($tbbinfos, $tbbfile);
+    extract_tbb($tbbinfos);
     chdir $tbbinfos->{tbbdir} || exit_error "Can't enter directory $tbbinfos->{tbbdir}";
     $ENV{TBB_BIN} = "$tbbinfos->{tbbdir}/Browser/firefox";
     $ENV{TBB_PROFILE} = "$tbbinfos->{tbbdir}/Data/Browser/profile.default";
