@@ -1,0 +1,4 @@
+#!/bin/sh
+cd $(dirname $0)/..
+./tools/pull
+./tbb-testsuite --config receive-reports --action update_authkeys
