@@ -159,4 +159,5 @@ following actions are available:
   update_authkeys::
         Update the ssh authorized_keys file with users defined in the
         'uploaders' option. You need to run this on a user account that
-        will be receiving tests reports.
+        will be receiving tests reports. See config/receive-reports for
+        an example of config file which defines ssh keys.
