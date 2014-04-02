@@ -17,7 +17,8 @@ BEGIN {
     @EXPORT_OK = qw(virustotal_run);
 }
 
-my $apikey = read_file($options->{'virustotal-api-key-file'});
+my $apikey = read_file($options->{'virustotal-api-key-file'})
+        if -f $options->{'virustotal-api-key-file'};
 
 my %urls = (
     report => 'https://www.virustotal.com/vtapi/v2/file/report',
