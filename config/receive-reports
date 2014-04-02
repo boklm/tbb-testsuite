@@ -1,0 +1,18 @@
+# vim: filetype=perl expandtab
+use strict;
+(
+    uploaders => {
+        ubuntuprecise => {
+            key => 'ssh-rsa AAAAB3NzaC1yc2EAAAADAQABAAABAQDU/BUtV+koS1jVskVFrUL4yA0bVwPOU+Of0k9RfFQtpNI6MCyfm7Ig8vGxFiQas53IwBKFFyc+HIQD6ET5F+5rDs6evb5JK9ptj+0iwGRBIUrlmcWemA1E6Eq8BqseY4O2XTn7IBfGPYAGyXsupT2M3Cn811/Q/78UYIpz8Ke3vbqOlPdHT+nsmwHYeUP/bfrROVGM9yNEDNEAQuG02AfjNSrf66oS+3h136R8qGcfFy9HzU+MHI4XzK3riFOGO5Yh+abYdY9lMQA6BBTwnb+PgIfWWVkQ2XGL7rrVrs3B8tiLi/0kkJziVV1oDPlds+QNCd7/YfY/yD4RB9/G1qb3',
+        },
+        fedora20 => {
+            key => 'ssh-rsa AAAAB3NzaC1yc2EAAAADAQABAAABAQDHBLfNjADvgfgKV7TgfwU108yV1HMZcLSHJB8GfUd0nZUwUdLruhP2+tdPP+kI7CpE56dGySMeL6vh7UwLoPSSmBu5B2/hyYGZlhUUBrTocvLGDz05NjlrEQc8C733W8i08y7JXPyv8Q9PxNzunsKigErPS4pTkDucARGHWAvWgbTnAbgzcGKMY9+SNT+EhINXT+r7Z+bUEsFxXEikju5oAbxhg+2W9UjQ3t9/1Ngj360ISmys/Om472PFtDvPuLcupz+uGZ7pKy5A0g0ccKr22BQw68qNUXRoR+iMkHVehjw8EYz/UdzYn5OA1xlfZ40vJbhZ8m9S1P9ncrDpnGVT',
+        },
+        debianwheezy => {
+            key => 'ssh-rsa AAAAB3NzaC1yc2EAAAADAQABAAABAQCpwyuA6XBXOKzbZu3W2Z0R61BZGADlL9oP1GT8uXl8hmogPP50/0Uaso0SofPieXl3pMl/rnVS4t0HiQqRFjyDRi32LwP6yOprY/JIbjQby0IUj7U1dY6eDrA1c1Q12qde8bkr0gAuGxqcSGD8RN7qms91D0lIftMCMXqrb90FB4MkqRmlWIHLQ2p0O4Lf4UnMJWvofmzu5+MQ5Zh+uq0LWbMouLiRtF6hFHtcvPowJNFwBHCvOSpdEuzn9KixjD9/Frmwy9HlNzhtZAEliujWFWPVWv10AB9y5Hmom6hbDBq9vL2MepySP51yQxV+hphfQ83Qd+ord6L6hxeT99hH',
+        },
+        centos6 => {
+            key => 'ssh-rsa AAAAB3NzaC1yc2EAAAABIwAAAQEAuSxzoiDEzDLs7ajk8dsh5gfoVoX0kBzQbOx5UWoS0oF/PIGgCy+uHaDDkPbeqni05MxKDxHG1d9dlkFsdXZxMZbDQnV2Xv8fWi4oT/thh2iplCnBLhzW03+hsUHakPUb8rltqQdrpsdQW7VN3tzQfjEoXKMB21I6+hAr+eJ7VXnXUy7usY2VNJUfnoGveirreiX6t7l96ayopGYoXzEKV8qs93KPEZS9C1u8yyaW9N2fGR4Gvzdkuu8pSC/vW2BUk3/gYE9da160AnGGWtIyYUGriGRJWmUh80XsnYVljjNI2tvbZoAP245SWLMMqpA4gyOnO2eo6I228Gev9TeERQ==',
+        },
+    },
+);
