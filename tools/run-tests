@@ -1,5 +1,5 @@
 #!/bin/sh
 cd $(dirname $0)/..
 ./tools/pull
-./tbb-testsuite --config=release
-./tbb-testsuite --config=linus-nightly
+./tbb-testsuite --config=release "$@"
+./tbb-testsuite --config=linus-nightly "$@"
