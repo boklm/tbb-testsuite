@@ -1,0 +1,5 @@
+#!/bin/sh
+set -e
+[ $# -eq 1 ] || exit 1
+dest_dir="$1"
+torsocks rsync -aH --delete rsync://puxd7ujgulhyykcw.onion/tbbreports/ "$dest_dir"/
