@@ -1,0 +1,5 @@
+#!/bin/sh
+cd $(dirname $0)/..
+./tools/pull
+./tbb-testsuite --config=release-virustotal "$@"
+./tbb-testsuite --config=linus-nightly-virustotal "$@"
