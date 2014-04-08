@@ -1,0 +1,35 @@
+# vim: filetype=perl expandtab
+
+use strict;
+use Data::Dump qw(dd);
+use LWP::Simple;
+use TBBTestSuite::Common;
+
+my $version = '3.5.4';
+my $system_infos = TBBTestSuite::Common::system_infos;
+my $user = 'boklm';
+my $shaurl = "https://people.torproject.org/~$user/builds/$version/sha256sums.txt";
+my $name = "$version-win32-virustotal";
+
+if (-d "$options->{'reports-dir'}/r/$name") {
+    print "Doing nothing: $name already done\n";
+    return ( args => [] );
+}
+
+if (!get($shaurl)) {
+    print "Doing nothing: cannot download $shaurl\n";
+    return ( args => [] );
+}
+
+(
+    name       => $name,
+    keyring    => "$user.gpg",
+    args       => [ $shaurl ],
+    tbbversion => $version,
+    virustotal => 1,
+    os      => 'Windows',
+    arch    => 'x86',
+    starttor => 0,
+    mozmill  => 0,
+    selenium => 0,
+);
