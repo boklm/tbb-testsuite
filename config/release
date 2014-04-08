@@ -5,10 +5,11 @@ use Data::Dump qw(dd);
 use LWP::Simple;
 use TBBTestSuite::Common;
 
-my $version = '3.5.3';
+my $version = '3.5.4';
 my $system_infos = TBBTestSuite::Common::system_infos;
 my $osname = $system_infos->{osname} . '-' . $system_infos->{arch};
-my $shaurl = "https://people.torproject.org/~mikeperry/builds/$version/sha256sums.txt";
+my $user = 'boklm';
+my $shaurl = "https://people.torproject.org/~$user/builds/$version/sha256sums.txt";
 my $name = "$version-$osname";
 
 if (-d "$options->{'reports-dir'}/r/$name") {
@@ -23,7 +24,7 @@ if (!get($shaurl)) {
 
 (
     name       => $name,
-    keyring    => 'mikeperry.gpg',
+    keyring    => "$user.gpg",
     args       => [ $shaurl ],
     tbbversion => $version,
 );
