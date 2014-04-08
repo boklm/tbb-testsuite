@@ -145,9 +145,7 @@ sub extract_tbb {
         copy($tbbfile, "$tmpdir/$f");
         system('7z', 'x', $f);
         $tbbinfos->{tbbdir} = "$tmpdir/\$_OUTDIR";
-        foreach my $file (glob "$tmpdir/*.exe") {
-            move($file, "$tmpdir/\$_OUTDIR/");
-        }
+        move ("$tmpdir/Start Tor Browser.exe", "$tmpdir/\$_OUTDIR/");
     }
 }
 
