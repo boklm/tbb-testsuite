@@ -1,6 +1,18 @@
 #!/bin/sh
 set -e
 
+cpan_install() {
+   local perlmod="$1"
+   perl -M"$perlmod" -e '1;' > /dev/null 2>&1 && echo "$perlmod already installed"
+   perl -M"$perlmod" -e '1;' > /dev/null 2>&1 || cpan install "$perlmod"
+}
+
+perlmodules='
+Cwd Data::Dump Digest::SHA File::Path File::Slurp File::Spec File::Temp
+FindBin Getopt::Long IO::CaptureOutput IO::Socket::INET Image::Magick
+JSON LWP::UserAgent LWP::Protocol::https Template YAML DateTime
+'
+
 if [ -f /etc/debian_version ]
 then
    apt-get install -y xvfb python-virtualenv
@@ -17,10 +29,7 @@ fi
 if [ -f /etc/redhat-release ] && which yum > /dev/null 2>&1
 then
     yum install -y redhat-lsb-core xorg-x11-server-Xvfb python-virtualenv
-    for perlmodule in Cwd Data::Dump Digest::SHA File::Path File::Slurp \
-        File::Spec File::Temp FindBin Getopt::Long IO::CaptureOutput \
-        IO::Socket::INET Image::Magick JSON LWP::UserAgent LWP::Protocol::https \
-        Template YAML DateTime
+    for perlmodule in $perlmodules
     do
         yum install -y "perl($perlmodule)"
     done
@@ -30,4 +39,12 @@ then
     else
         yum install -y libgtk-x11-2.0.so.0
     fi
+fi
+
+if [ a$(uname -o) = aCygwin ]
+then
+    for perlmod in $perlmodules
+    do
+        cpan_install $perlmod
+    done
 fi
