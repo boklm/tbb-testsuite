@@ -5,10 +5,10 @@ use Data::Dump qw(dd);
 use LWP::Simple;
 use TBBTestSuite::Common;
 
-my $version = '3.5.4';
+my $version = '3.6-beta-2';
+my $user = 'mikeperry';
 my $system_infos = TBBTestSuite::Common::system_infos;
 my $osname = $system_infos->{osname} . '-' . $system_infos->{arch};
-my $user = 'boklm';
 my $shaurl = "https://people.torproject.org/~$user/builds/$version/sha256sums.txt";
 my $name = "$version-$osname";
 
