@@ -7,9 +7,10 @@ use TBBTestSuite::Common;
 
 my $version = '3.6-beta-2';
 my $user = 'mikeperry';
+my $buildnum = '3';
 my $system_infos = TBBTestSuite::Common::system_infos;
 my $shaurl = "https://people.torproject.org/~$user/builds/$version/sha256sums.txt";
-my $name = "$version-win32-virustotal";
+my $name = "$version-build$buildnum-win32-virustotal";
 
 if (-d "$options->{'reports-dir'}/r/$name") {
     print "Doing nothing: $name already done\n";
