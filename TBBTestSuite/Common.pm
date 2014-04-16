@@ -46,7 +46,8 @@ sub system_infos {
         chomp $release;
         $res{osname} = $id . $release;
     } else {
-        $res{osname} = 'Linux';
+        ($res{osname}) = capture_exec('uname', '-s');
+        chomp $res{osname};
     }
     return \%res;
 }
