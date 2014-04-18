@@ -121,6 +121,30 @@ our @tests = (
         type  => 'mozmill',
         descr => 'Check that some important settings are correctly set',
     },
+        {
+        name => 'fp_screen_dimensions',
+        type  => 'selenium',
+        descr => 'Check that screen dimensions are spoofed correctly',
+    },
+    {
+        name => 'fp_screen_coords',
+        type  => 'selenium',
+        descr => 'Check that screenX, screenY, screenLeft, screenTop, mozInnerScreenX, mozInnerScreenY are 0',
+    },
+    {
+        name => 'fp_plugins',
+        type  => 'selenium',
+        descr => 'Check that plugins are disabled',
+    },
+    {
+        name => 'fp_useragent',
+        type  => 'selenium',
+        descr => 'Check that userAgent is as expected',
+    },        {
+        name => 'fp_navigator',
+        type  => 'selenium',
+        descr => 'Check that navigator properties are as expected',
+    },
 );
 
 sub toggle_https_everywhere {
