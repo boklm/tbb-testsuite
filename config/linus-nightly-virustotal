@@ -31,4 +31,6 @@ if (!get($shaurl)) {
     starttor => 0,
     mozmill  => 0,
     selenium => 0,
+    'email-from' => 'TBB Nightly Tests <boklm@torproject.org>',
+    'email-to'   => [ 'boklm@mars-attacks.org', ],
 );

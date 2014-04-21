@@ -26,4 +26,6 @@ if (!get($shaurl)) {
     name    => $name,
     keyring => 'linus-nightly.gpg',
     args    => [ $shaurl ],
+    'email-from' => 'TBB Nightly Tests <boklm@torproject.org>',
+    'email-to'   => [ 'boklm@mars-attacks.org', ],
 );
