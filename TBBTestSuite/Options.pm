@@ -33,6 +33,9 @@ my %default_options = (
     xvfb       => 1,
     virustotal => 0,
     'virustotal-api-key-file' => "$ENV{HOME}/.virustotal.api-key",
+    'email-to' => [],
+    'email-from' => 'TBB Test Report <tbbtest@example.com>',
+    'email-subject' => '[test result: [% success ? "ok" : "failed" %]] [% options.name %]',
 );
 
 
@@ -41,7 +44,7 @@ sub get_options {
                      tor-socks-port=i reports-dir=s gpgcheck! keyring=s
                      virtualenv=s xvfb! name=s download-dir=s config=s
                      action=s enable-tests=s upload-to=s os=s arch=s
-                     virustotal!);
+                     virustotal! email-to=s@ email-from=s email-subject=s);
     my (%cli, %config);
     Getopt::Long::GetOptionsFromArray(\@_, \%cli, @options) || exit 1;
     $cli{args} = \@_ if @_;

@@ -111,6 +111,18 @@ Available options
         Enable upload of files for analysis on virustotal.com. It is
         disabled by default.
 
+--email-from::
+        Set the From header that will be used when sending reports by
+        email.
+
+--email-to::
+        Enable sending of reports by email to the selected email
+        address. This option can be used multiple time to send to multiple
+        people.
+
+--email-subject::
+        Set the template used to create the subject of the reports emails.
+
 
 Configuration Files
 -------------------
@@ -161,3 +173,9 @@ following actions are available:
         'uploaders' option. You need to run this on a user account that
         will be receiving tests reports. See config/receive-reports for
         an example of config file which defines ssh keys.
+
+  email_report::
+        Send a text version of the report by email. The report name is
+        selected with the --name option, the recipient with the --email-to,
+        the sender with the --email-from and the subject template with
+        the --email-subject options.

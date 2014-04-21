@@ -1,0 +1,21 @@
+Summary
+
+[% FOREACH tbbfile IN tbbfiles.keys -%]
+  - [% tbbfile %]: [% tbbfiles.$tbbfile.success ? 'ok' : 'failed' %]
+[% END %]
+
+
+Details
+
+[% FILTER indent(1) %]
+[% FOREACH tbbfile IN tbbfiles.keys -%]
+[% SET s='='; GET s.repeat(tbbfile.length + 4) %]
+= [% tbbfile %] =
+[% SET s='='; GET s.repeat(tbbfile.length + 4) %]
+
+result: [% tbbfiles.$tbbfile.success ? 'ok' : 'failed' %]
+
+[% INCLUDE report.txt | indent(2) %]
+
+[% END %]
+[% END %]

@@ -11,6 +11,8 @@ use YAML;
 use TBBTestSuite::Common qw(exit_error);
 use TBBTestSuite::Options qw($options);
 use TBBTestSuite::Tests;
+use Email::Simple;
+use Email::Sender::Simple qw(try_to_sendmail);
 
 sub set_report_dir {
     my ($report) = @_;
@@ -80,6 +82,35 @@ sub make_reports_index {
                 @{$reports_by_tbbversion{$tbbver}};
         $template->process('reports_index.html',
             { %$vars, reports_list => \@s }, "tbbversion_$tbbver.html");
+    }
+}
+
+sub email_report {
+    my ($report) = @_;
+    exit_error 'email-to is not defined' unless @{$options->{'email-to'}};
+    my ($subject, $body);
+    my $template = Template->new(
+        ENCODING => 'utf8',
+        INCLUDE_PATH => "$FindBin::Bin/tmpl",
+    );
+    $template->process(\$options->{'email-subject'}, $report, \$subject,
+                       binmode => ':utf8')
+                || exit_error "Template Error:\n" . $template->error;
+    $template->process('testrun_report.txt', $report, \$body,
+                       binmode => ':utf8')
+                || exit_error "Template Error:\n" . $template->error;
+    foreach my $email_to (@{$options->{'email-to'}}) {
+        my $email = Email::Simple->create(
+            header => [
+                From    => $options->{'email-from'},
+                To      => $email_to,
+                Subject => $subject,
+            ],
+            body => $body,
+        );
+        if (!try_to_sendmail($email)) {
+            print STDERR "Warning: Error sending email to $email_to\n";
+        }
     }
 }
 

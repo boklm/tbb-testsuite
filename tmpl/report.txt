@@ -1,0 +1,14 @@
+Bundle infos
+  Filename: [% tbbfiles.$tbbfile.filename %]
+  Version: [% tbbfiles.$tbbfile.version %]
+  Language: [% tbbfiles.$tbbfile.language %]
+  OS: [% tbbfiles.$tbbfile.os %]
+  Architecture: [% tbbfiles.$tbbfile.arch %]
+  sha256sum: [% tbbfiles.$tbbfile.sha256sum %]
+
+Results
+[% FOREACH test IN tbbfiles.$tbbfile.tests -%]
+[% IF test.results -%]
+  [% test.name %]: [% test.results.success ? 'ok' : 'failed' %]
+[% END -%]
+[% END %]

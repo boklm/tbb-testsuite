@@ -44,18 +44,28 @@ sub run_tests {
     TBBTestSuite::Reports::Send::send_report if $options->{'upload-to'};
 }
 
-sub make_report {
+sub load_report_from_file {
     exit_error "--name is not set" unless $options->{name};
     my $report = { options => $options };
     TBBTestSuite::Reports::set_report_dir($report);
     $report = YAML::LoadFile("$options->{'report-dir'}/report.yml");
     $report->{options} = { %{$report->{options}}, %$options };
+    return $report;
+}
+
+sub make_report {
+    my $report = load_report_from_file;
     TBBTestSuite::Reports::make_report($report);
 }
 
 sub receive_report {
     TBBTestSuite::Reports::Receive::receive_report;
     TBBTestSuite::Reports::make_reports_index;
+}
+
+sub email_report {
+    my $report = load_report_from_file;
+    TBBTestSuite::Reports::email_report($report);
 }
 
 my %actions = (
@@ -66,6 +76,7 @@ my %actions = (
     send_report => \&TBBTestSuite::Reports::Send::send_report,
     receive_report => \&receive_report,
     update_authkeys => \&TBBTestSuite::Reports::Receive::update_authkeys,
+    email_report => \&email_report,
 );
 
 exit_error "Unknow action $options->{action}" unless $actions{$options->{action}};
