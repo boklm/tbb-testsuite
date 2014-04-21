@@ -10,6 +10,7 @@ use File::Slurp;
 use FindBin;
 use TBBTestSuite::Common qw(exit_error);
 use TBBTestSuite::Options qw($options);
+use TBBTestSuite::Reports;
 
 sub receive_report {
     my $tmpdir = File::Temp->newdir() || exit_error 'Error creating tmp dir';
@@ -25,6 +26,9 @@ sub receive_report {
     exit_error 'Report already exist' if -d "$options->{'reports-dir'}/r/$name";
     $tmpdir->unlink_on_destroy(0);
     system('mv', $tmpdir, "$options->{'reports-dir'}/r/$name");
+    $report->{options} = { %$options, %{$report->{options}} };
+    TBBTestSuite::Reports::email_report($report)
+                if @{$report->{options}{'email-to'}};
 }
 
 sub update_authkeys {

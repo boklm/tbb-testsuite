@@ -87,22 +87,22 @@ sub make_reports_index {
 
 sub email_report {
     my ($report) = @_;
-    exit_error 'email-to is not defined' unless @{$options->{'email-to'}};
+    exit_error 'email-to is not defined' unless @{$report->{options}{'email-to'}};
     my ($subject, $body);
     my $template = Template->new(
         ENCODING => 'utf8',
         INCLUDE_PATH => "$FindBin::Bin/tmpl",
     );
-    $template->process(\$options->{'email-subject'}, $report, \$subject,
+    $template->process(\$report->{options}{'email-subject'}, $report, \$subject,
                        binmode => ':utf8')
                 || exit_error "Template Error:\n" . $template->error;
     $template->process('testrun_report.txt', $report, \$body,
                        binmode => ':utf8')
                 || exit_error "Template Error:\n" . $template->error;
-    foreach my $email_to (@{$options->{'email-to'}}) {
+    foreach my $email_to (@{$report->{options}{'email-to'}}) {
         my $email = Email::Simple->create(
             header => [
-                From    => $options->{'email-from'},
+                From    => $report->{options}{'email-from'},
                 To      => $email_to,
                 Subject => $subject,
             ],
