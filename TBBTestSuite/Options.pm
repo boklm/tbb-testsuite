@@ -2,6 +2,7 @@ package TBBTestSuite::Options;
 
 use warnings;
 use strict;
+use English;
 use FindBin;
 use Getopt::Long;
 use File::Slurp;
@@ -30,7 +31,7 @@ my %default_options = (
     'reports-dir'      => "$FindBin::Bin/reports",
     virtualenv => "$FindBin::Bin/virtualenv",
     resolution => '1024x768',
-    xvfb       => 1,
+    xvfb       => $OSNAME ne 'cygwin',
     virustotal => 0,
     'virustotal-api-key-file' => "$ENV{HOME}/.virustotal.api-key",
     'email-to' => [],
