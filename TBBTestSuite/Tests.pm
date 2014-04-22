@@ -2,6 +2,7 @@ package TBBTestSuite::Tests;
 
 use warnings;
 use strict;
+use English;
 use FindBin;
 use Cwd qw(getcwd);
 use File::Spec;
@@ -13,11 +14,24 @@ use IO::CaptureOutput qw(capture_exec);
 use IO::Socket::INET;
 use JSON;
 use File::Copy;
-use Image::Magick;
 use YAML;
 use TBBTestSuite::Common qw(exit_error);
 use TBBTestSuite::Options qw($options);
 use TBBTestSuite::Tests::VirusTotal qw(virustotal_run);
+
+my $screenshot_thumbnail;
+BEGIN {
+    # For some reason that I did not understand yet, Image::Magick does
+    # not work on Windows, so we're not creating thumbnails if we're
+    # on Windows. In that case, the thumbnails should be created by the
+    # server that receives the results.
+    if ($OSNAME ne 'cygwin') {
+        require TBBTestSuite::Thumbnail;
+        $screenshot_thumbnail = \&TBBTestSuite::Thumbnail::screenshot_thumbnail;
+    } else {
+        $screenshot_thumbnail = sub { };
+    }
+}
 
 my %test_types = (
     tor_bootstrap => \&start_tor,
@@ -220,14 +234,6 @@ sub stop_tor {
     kill 9, $tbbinfos->{torpid} if $tbbinfos->{torpid};
 }
 
-sub screenshot_thumbnail {
-    my ($dir, $name) = @_;
-    my $image = Image::Magick->new;
-    $image->Read("$dir/$name");
-    $image->Scale(geometry => '600x600');
-    $image->Write("$dir/t-$name");
-}
-
 sub xvfb_run {
     my ($test) = @_;
     return () unless $options->{xvfb};
@@ -251,7 +257,7 @@ sub mozmill_run {
     my $i = 0;
     for my $screenshot_file (reverse sort glob "$screenshots_tmp/*.png") {
         move($screenshot_file, "$tbbinfos->{'results-dir'}/$test->{name}-$i.png");
-        screenshot_thumbnail($tbbinfos->{'results-dir'}, "$test->{name}-$i.png");
+        $screenshot_thumbnail->($tbbinfos->{'results-dir'}, "$test->{name}-$i.png");
         push @{$test->{screenshots}}, "$test->{name}-$i.png";
         $i++;
     }
