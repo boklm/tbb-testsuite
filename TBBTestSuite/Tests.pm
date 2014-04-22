@@ -15,7 +15,7 @@ use IO::Socket::INET;
 use JSON;
 use File::Copy;
 use YAML;
-use TBBTestSuite::Common qw(exit_error);
+use TBBTestSuite::Common qw(exit_error winpath);
 use TBBTestSuite::Options qw($options);
 use TBBTestSuite::Tests::VirusTotal qw(virustotal_run);
 
@@ -203,7 +203,7 @@ sub start_tor {
     $ENV{TOR_SOCKS_PORT} = $options->{'tor-socks-port'};
     $ENV{TOR_CONTROL_PORT} = $options->{'tor-control-port'};
     $ENV{TOR_CONTROL_HOST} = '127.0.0.1';
-    $ENV{TOR_CONTROL_COOKIE_AUTH_FILE} = "$cwd/Data/Tor/control_auth_cookie";
+    $ENV{TOR_CONTROL_COOKIE_AUTH_FILE} = winpath("$cwd/Data/Tor/control_auth_cookie");
     my ($hashed_password, undef, $success) =
         capture_exec("$cwd/Tor/tor", '--quiet', '--hash-password', $control_passwd);
     exit_error "Error running tor --hash-password" unless $success;
@@ -214,10 +214,12 @@ sub start_tor {
         s/^SocksPort .*/SocksPort $options->{'tor-socks-port'}/;
     }
     write_file('Data/Tor/torrc-defaults', @torrc);
-    my @cmd = ("$cwd/Tor/tor", '--defaults-torrc', "$cwd/Data/Tor/torrc-defaults",
-        '-f', "$cwd/Data/Tor/torrc", 'DataDirectory', "$cwd/Data/Tor",
-        'GeoIPFile', "$cwd/Data/Tor/geoip", '__OwningControllerProcess', $$,
-        'HashedControlPassword', $hashed_password);
+    my @cmd = ("$cwd/Tor/tor", '--defaults-torrc', 
+        winpath("$cwd/Data/Tor/torrc-defaults"),
+        '-f', winpath("$cwd/Data/Tor/torrc"), 'DataDirectory',
+        winpath("$cwd/Data/Tor"), 'GeoIPFile', winpath("$cwd/Data/Tor/geoip"),
+        '__OwningControllerProcess', $$, 'HashedControlPassword',
+        $hashed_password);
     $tbbinfos->{torpid} = fork;
     if ($tbbinfos->{torpid} == 0) {
         my $logfile = "$tbbinfos->{'results-dir'}/tor.log";
