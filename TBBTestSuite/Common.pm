@@ -2,6 +2,7 @@ package TBBTestSuite::Common;
 
 use warnings;
 use strict;
+use English;
 use FindBin;
 use IO::CaptureOutput qw(capture_exec);
 use File::Slurp;
@@ -10,7 +11,7 @@ our (@ISA, @EXPORT_OK);
 BEGIN {
     require Exporter;
     @ISA       = qw(Exporter);
-    @EXPORT_OK = qw(exit_error system_infos run_alone rm_pidfile);
+    @EXPORT_OK = qw(exit_error system_infos run_alone rm_pidfile winpath);
 }
 
 sub exit_error {
@@ -50,6 +51,14 @@ sub system_infos {
         chomp $res{osname};
     }
     return \%res;
+}
+
+sub winpath {
+    my ($path) = @_;
+    return $path unless $OSNAME eq 'cygwin';
+    my ($res) = capture_exec('cygpath', '-aw', $path);
+    chomp $res;
+    return $res;
 }
 
 1;
