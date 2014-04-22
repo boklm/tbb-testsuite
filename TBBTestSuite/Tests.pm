@@ -213,13 +213,13 @@ sub start_tor {
         s/^ControlPort .*/ControlPort $options->{'tor-control-port'}/;
         s/^SocksPort .*/SocksPort $options->{'tor-socks-port'}/;
     }
+    push @torrc, "HashedControlPassword $hashed_password\n";
     write_file('Data/Tor/torrc-defaults', @torrc);
     my @cmd = ("$cwd/Tor/tor", '--defaults-torrc', 
         winpath("$cwd/Data/Tor/torrc-defaults"),
         '-f', winpath("$cwd/Data/Tor/torrc"), 'DataDirectory',
         winpath("$cwd/Data/Tor"), 'GeoIPFile', winpath("$cwd/Data/Tor/geoip"),
-        '__OwningControllerProcess', $$, 'HashedControlPassword',
-        $hashed_password);
+        '__OwningControllerProcess', $$);
     $tbbinfos->{torpid} = fork;
     if ($tbbinfos->{torpid} == 0) {
         my $logfile = "$tbbinfos->{'results-dir'}/tor.log";
