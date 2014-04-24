@@ -244,18 +244,32 @@ sub xvfb_run {
     return ('xvfb-run', '--auto-servernum', '-s', "-screen 0 ${resolution}x24");
 }
 
+sub mozmill_cmd {
+    if ($OSNAME eq 'cygwin') {
+        return ( "$options->{'mozmill-dir'}\\run.cmd", 'mozmill' );
+    }
+    return ("$options->{virtualenv}/bin/mozmill");
+}
+
+sub ffbin_path {
+    my ($tbbinfos) = @_;
+    if ($OSNAME eq 'cygwin') {
+        return winpath("$tbbinfos->{tbbdir}/Browser/firefox.exe");
+    }
+    return "$tbbinfos->{tbbdir}/Browser/firefox";
+}
+
 sub mozmill_run {
     my ($tbbinfos, $test) = @_;
     return unless $options->{mozmill};
     $test->{screenshots} = [];
     my $screenshots_tmp = File::Temp::newdir('XXXXXX', DIR => $options->{tmpdir});
-    $ENV{'MOZMILL_SCREENSHOTS'} = $screenshots_tmp;
+    $ENV{'MOZMILL_SCREENSHOTS'} = winpath($screenshots_tmp);
     my $results_file = "$tbbinfos->{'results-dir'}/$test->{name}.json";
-    system(xvfb_run($test), "$options->{virtualenv}/bin/mozmill", '-b',
-        "$tbbinfos->{tbbdir}/Browser/firefox", '-p',
-        "$tbbinfos->{tbbdir}/Data/Browser/profile.default", '-t',
-        "$FindBin::Bin/mozmill-tests/tbb-tests/$test->{name}.js",
-        '--report', "file://$results_file");
+    system(xvfb_run($test), mozmill_cmd(), '-b', ffbin_path($tbbinfos),
+        '-p', winpath("$tbbinfos->{tbbdir}/Data/Browser/profile.default"),
+        '-t', winpath("$FindBin::Bin/mozmill-tests/tbb-tests/$test->{name}.js"),
+        '--report', 'file://' . winpath($results_file));
     my $i = 0;
     for my $screenshot_file (reverse sort glob "$screenshots_tmp/*.png") {
         move($screenshot_file, "$tbbinfos->{'results-dir'}/$test->{name}-$i.png");

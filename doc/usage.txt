@@ -123,6 +123,10 @@ Available options
 --email-subject::
         Set the template used to create the subject of the reports emails.
 
+--mozmill-dir::
+        On windows this sets the directory where mozmill-env has been
+        installed. The default is c:\tbbtestsuite\mozmill-env.
+
 
 Configuration Files
 -------------------
