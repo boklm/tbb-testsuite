@@ -68,6 +68,10 @@ sub email_report {
     TBBTestSuite::Reports::email_report($report);
 }
 
+sub dump_options {
+    dd $options;
+}
+
 my %actions = (
     run_tests => \&run_tests,
     list_tests => \&TBBTestSuite::Tests::list_tests,
@@ -77,6 +81,7 @@ my %actions = (
     receive_report => \&receive_report,
     update_authkeys => \&TBBTestSuite::Reports::Receive::update_authkeys,
     email_report => \&email_report,
+    dump_options => \&dump_options,
 );
 
 exit_error "Unknow action $options->{action}" unless $actions{$options->{action}};

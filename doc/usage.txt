@@ -183,3 +183,8 @@ following actions are available:
         selected with the --name option, the recipient with the --email-to,
         the sender with the --email-from and the subject template with
         the --email-subject options.
+
+  dump_options::
+        Dump on stdout all the options and their values. This can be
+        useful to check what options are actually used when you have a
+        config file, command line options and default options.
