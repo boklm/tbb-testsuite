@@ -33,4 +33,5 @@ if (!get($shaurl)) {
     starttor => 0,
     mozmill  => 0,
     selenium => 0,
+    'reports-url' => 'https://people.torproject.org/~boklm/tbbtests/',
 );
