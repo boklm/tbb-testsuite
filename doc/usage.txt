@@ -184,6 +184,10 @@ following actions are available:
         the sender with the --email-from and the subject template with
         the --email-subject options.
 
+  show_report::
+        Show a text version of the report, as it would be sent by email.
+        The report name is selected with the --name option.
+
   dump_options::
         Dump on stdout all the options and their values. This can be
         useful to check what options are actually used when you have a

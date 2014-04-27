@@ -85,6 +85,19 @@ sub make_reports_index {
     }
 }
 
+sub text_report {
+    my ($report) = @_;
+    my $res;
+    my $template = Template->new(
+        ENCODING => 'utf8',
+        INCLUDE_PATH => "$FindBin::Bin/tmpl",
+    );
+    $template->process('testrun_report.txt', $report, \$res,
+                       binmode => ':utf8')
+                || exit_error "Template Error:\n" . $template->error;
+    return $res;
+}
+
 sub email_report {
     my ($report) = @_;
     exit_error 'email-to is not defined' unless @{$report->{options}{'email-to'}};

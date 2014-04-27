@@ -68,6 +68,11 @@ sub email_report {
     TBBTestSuite::Reports::email_report($report);
 }
 
+sub show_report {
+    my $report = load_report_from_file;
+    print TBBTestSuite::Reports::text_report($report);
+}
+
 sub dump_options {
     dd $options;
 }
@@ -81,6 +86,7 @@ my %actions = (
     receive_report => \&receive_report,
     update_authkeys => \&TBBTestSuite::Reports::Receive::update_authkeys,
     email_report => \&email_report,
+    show_report  => \&show_report,
     dump_options => \&dump_options,
 );
 
