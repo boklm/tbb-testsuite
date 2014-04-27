@@ -69,6 +69,10 @@ Available options
 --reports-dir=<directory>::
         Directory where the tests reports are saved.
 
+--reports-url=<url>::
+        URL where the tests reports can be accessed. This is used when
+        sending a report by email, to add a reference to the full report.
+
 --name=<name>::
         The name of the tests run. This is used as directory name to
         save the results inside the reports-dir. If not set, a random

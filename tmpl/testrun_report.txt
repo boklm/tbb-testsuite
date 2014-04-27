@@ -3,6 +3,10 @@ Summary
 [% FOREACH tbbfile IN tbbfiles.keys -%]
   - [% tbbfile %]: [% tbbfiles.$tbbfile.success ? 'ok' : 'failed' %]
 [% END %]
+[% SET ru = 'reports-url';
+   IF options.$ru -%]
+  URL: [% options.$ru %]r/[% options.name %]/
+[% END -%]
 
 
 Details
