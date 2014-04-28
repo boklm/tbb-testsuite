@@ -16,7 +16,7 @@ Email::Simple Email::Sender
 
 if [ -f /etc/debian_version ]
 then
-   apt-get install -y xvfb python-virtualenv
+   apt-get install -y ntp xvfb python-virtualenv
    apt-get install -y libdata-dump-perl libdigest-sha-perl libfile-slurp-perl \
 	   libfile-spec-perl libio-captureoutput-perl perlmagick libjson-perl \
 	    libwww-perl libtemplate-perl libyaml-perl libdatetime-perl \
@@ -30,7 +30,7 @@ fi
 
 if [ -f /etc/redhat-release ] && which yum > /dev/null 2>&1
 then
-    yum install -y redhat-lsb-core xorg-x11-server-Xvfb python-virtualenv
+    yum install -y ntp redhat-lsb-core xorg-x11-server-Xvfb python-virtualenv
     for perlmodule in $perlmodules
     do
         yum install -y "perl($perlmodule)"
@@ -40,6 +40,14 @@ then
         yum install -y 'libgtk-x11-2.0.so.0()(64bit)'
     else
         yum install -y libgtk-x11-2.0.so.0
+    fi
+    if which systemctl > /dev/null 2>&1
+    then
+        systemctl enable ntpd.service
+        systemctl is-active -q ntpd.service || systemctl start ntpd.service
+    else
+        chkconfig ntpd on
+        service ntpd status > /dev/null 2>&1 || service ntpd start
     fi
 fi
 
