@@ -33,7 +33,8 @@ then
     yum install -y ntp redhat-lsb-core xorg-x11-server-Xvfb python-virtualenv
     for perlmodule in $perlmodules
     do
-        yum install -y "perl($perlmodule)"
+        rpm --quiet -q --whatprovides "perl($perlmodule)" \
+            || yum install -y "perl($perlmodule)"
     done
     if [ "$(uname -m)" == "x86_64" ]
     then
