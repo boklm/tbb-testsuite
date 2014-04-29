@@ -7,7 +7,7 @@ use TBBTestSuite::Common;
 
 my $version = '3.6';
 my $user = 'mikeperry';
-my $buildnum = '2';
+my $buildnum = '4';
 my $system_infos = TBBTestSuite::Common::system_infos;
 my $shaurl = "https://people.torproject.org/~$user/builds/$version/sha256sums.txt";
 my $name = "$version-build$buildnum-win32-virustotal";
