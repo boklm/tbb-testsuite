@@ -1,0 +1,12 @@
+<ul>
+    [% SET stests = test.results.total_tests - test.results.failed.size %]
+    <li><b>Passed tests:</b> [% stests %]/[% test.results.total_tests %]</li>
+    <li><a href="results-[% tbbfile %]/[% test.name %].json">json results</a></li>
+</ul>
+
+[% IF test.results.failed %]
+  [% FOREACH f IN test.results.failed %]
+    <b>Failed test:</b> [% f.id %]<br />
+    <pre>[% f.error %]</pre><br />
+  [% END %]
+[% END %]

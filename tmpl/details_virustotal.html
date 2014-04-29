@@ -1,0 +1,9 @@
+<ul>
+    [% FOREACH file IN test.results.files.keys %]
+    <li>virustotal report:
+    <span [% IF test.results.files.$file.positives %]class="text_red"[% END %]>
+        <a href="[% test.results.files.$file.permalink %]">[% file %]</a>
+    </span>
+    </li>
+    [% END %]
+</ul>

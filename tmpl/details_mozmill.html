@@ -1,0 +1,14 @@
+<ul>
+    <li><b>Passed tests:</b>
+    [% GET test.results.results.0.passed %]/[% GET test.results.results.0.passed + test.results.results.0.failed %]
+    </li>
+    <li><a href="results-[% tbbfile %]/[% test.name %].json">json results</a></li>
+</ul>
+[% IF test.results.results.0.failed %]
+  [% FOREACH f IN test.results.results.0.fails %]
+    [% FOREACH v IN f.values %]
+      <b>Error:</b> [% v.name %]<br />
+      <pre>[% v.message %]</pre><br />
+    [% END %]
+  [% END %]
+[% END %]

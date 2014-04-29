@@ -39,42 +39,8 @@
         </ul>
         <h3>Details</h3>
         <p>
-        <ul>
-            [% IF test.type == 'mozmill' %]
-                    <li><b>Passed tests:</b>
-                    [% GET test.results.results.0.passed %]/[% GET test.results.results.0.passed + test.results.results.0.failed %]
-                    </li>
-                    <li><a href="results-[% tbbfile %]/[% test.name %].json">json results</a></li>
-            [% ELSIF test.type == 'selenium' %]
-                    [% SET stests = test.results.total_tests - test.results.failed.size %]
-                    <li><b>Passed tests:</b> [% stests %]/[% test.results.total_tests %]</li>
-                    <li><a href="results-[% tbbfile %]/[% test.name %].json">json results</a></li>
-            [% ELSIF test.type == 'tor_bootstrap' %]
-                    <li><a href="results-[% tbbfile %]/tor.log">tor daemon logs</a></li>
-            [% ELSIF test.type == 'virustotal' %]
-                    [% FOREACH file IN test.results.files.keys %]
-                    <li>virustotal report:
-                    <span [% IF test.results.files.$file.positives %]class="text_red"[% END %]>
-                        <a href="[% test.results.files.$file.permalink %]">[% file %]</a>
-                    </span>
-                    </li>
-                    [% END %]
-            [% END %]
-        </ul>
-        [% IF test.type == 'selenium' && test.results.failed %]
-                [% FOREACH f IN test.results.failed %]
-                        <b>Failed test:</b> [% f.id %]<br />
-                        <pre>[% f.error %]</pre><br />
-                [% END %]
-        [% ELSIF test.type == 'mozmill' && test.results.results.0.failed %]
-                [% FOREACH f IN test.results.results.0.fails %]
-                        [% FOREACH v IN f.values %]
-                                <b>Error:</b> [% v.name %]<br />
-                                <pre>[% v.message %]</pre><br />
-                        [% END %]
-                [% END %]
-        [% END %]
-        </>
+        [% SET type = test.type; INCLUDE "details_${type}.html" %]
+        </p>
         [% END %]
 
         <hr>
