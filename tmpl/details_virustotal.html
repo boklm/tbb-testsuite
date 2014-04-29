@@ -4,6 +4,13 @@
     <span [% IF test.results.files.$file.positives %]class="text_red"[% END %]>
         <a href="[% test.results.files.$file.permalink %]">[% file %]</a>
     </span>
+    <ul>
+        [% FOREACH av IN test.results.files.$file.scans.keys %]
+          [% IF test.results.files.$file.scans.$av.result %]
+                <li>[% av %]: [% test.results.files.$file.scans.$av.result %]</li>
+          [% END %]
+        [% END %]
+    </ul>
     </li>
     [% END %]
 </ul>
