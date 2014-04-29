@@ -26,7 +26,7 @@
         <h1>Results</h1>
         [% FOREACH test IN tbbfiles.$tbbfile.tests %]
         [% IF ! test.results; NEXT; END %]
-        <h3>[% test.name %]</h3>
+        <h2>[% test.name %]</h2>
         <ul>
             <li><b>Test type:</b> [% test.type %]</li>
             <li><b>Status:</b>
@@ -36,6 +36,10 @@
                 <span class="test_notok">NOT OK</span>
             [% END %]
             </li>
+        </ul>
+        <h3>Details</h3>
+        <p>
+        <ul>
             [% IF test.type == 'mozmill' %]
                     <li><b>Passed tests:</b>
                     [% GET test.results.results.0.passed %]/[% GET test.results.results.0.passed + test.results.results.0.failed %]
@@ -70,6 +74,7 @@
                         [% END %]
                 [% END %]
         [% END %]
+        </>
         [% END %]
 
         <hr>
