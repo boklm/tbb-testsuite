@@ -31,6 +31,8 @@ if (!get($shaurl)) {
         'boklm@mars-attacks.org',
         'gk@torproject.org',
         'mikeperry@torproject.org',
+        'brade@pearlcrescent.com',
+        'mcs@pearlcrescent.com',
     ],
     'reports-url' => 'https://people.torproject.org/~boklm/tbbtests/',
 );
