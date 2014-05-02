@@ -1,34 +1,25 @@
 # vim: filetype=perl expandtab
 
 use strict;
-use Data::Dump qw(dd);
-use LWP::Simple;
 use TBBTestSuite::Common;
+use TBBTestSuite::TBBVersion;
 
-my $version = '3.6';
-my $user = 'mikeperry';
-my $buildnum = '4';
 my $system_infos = TBBTestSuite::Common::system_infos;
 my $osname = $system_infos->{osname} . '-' . $system_infos->{arch};
-my $shaurl = "https://people.torproject.org/~$user/builds/$version/sha256sums.txt";
-my $name = "$version-build$buildnum-$osname";
 
-if (-d "$options->{'reports-dir'}/r/$name") {
-    print "Doing nothing: $name already done\n";
-    return ( args => [] );
+my @latest_builds = TBBTestSuite::TBBVersion::latest_builds($options);
+foreach my $build (@latest_builds) {
+    my $id = substr($build->{shasha}, 0, 5);
+    my $name = "$build->{version}-$id-$osname";
+    next if -d "$options->{'reports-dir'}/r/$name";
+    return (
+        name => $name,
+        keyring => "$build->{user}.gpg",
+        args => [ $build->{url} ],
+        tbbversion => "$build->{version}-$build->{build}",
+        'reports-url' => 'https://people.torproject.org/~boklm/tbbtests/',
+        'email-from'  => 'TBB Tests <boklm@torproject.org>',
+        'email-to'    => [ 'tor-qa@lists.torproject.org', 'boklm@mars-attacks.org', ],
+    );
 }
-
-if (!get($shaurl)) {
-    print "Doing nothing: cannot download $shaurl\n";
-    return ( args => [] );
-}
-
-(
-    name       => $name,
-    keyring    => "$user.gpg",
-    args       => [ $shaurl ],
-    tbbversion => $version,
-    'reports-url' => 'https://people.torproject.org/~boklm/tbbtests/',
-    'email-from'  => 'TBB Tests <boklm@torproject.org>',
-    'email-to'    => [ 'tor-qa@lists.torproject.org', 'boklm@mars-attacks.org', ],
-);
+return ( args => [] );
