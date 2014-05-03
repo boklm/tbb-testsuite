@@ -63,15 +63,34 @@ sub start_tor {
         capture_exec("$cwd/Tor/tor", '--quiet', '--hash-password', $control_passwd);
     exit_error "Error running tor --hash-password" unless $success;
     chomp $hashed_password;
-    my @torrc = read_file('Data/Tor/torrc-defaults');
-    foreach (@torrc) {
-        s/^ControlPort .*/ControlPort $options->{'tor-control-port'}/;
-        s/^SocksPort .*/SocksPort $options->{'tor-socks-port'}/;
+    my $torrc_file;
+    if ($test->{use_default_config}) {
+        my @torrc = read_file('Data/Tor/torrc-defaults');
+        foreach (@torrc) {
+            s/^ControlPort .*/ControlPort $options->{'tor-control-port'}/;
+            s/^SocksPort .*/SocksPort $options->{'tor-socks-port'}/;
+        }
+        push @torrc, "HashedControlPassword $hashed_password\n";
+        write_file('Data/Tor/torrc-defaults', @torrc);
+        $torrc_file = "$cwd/Data/Tor/torrc-defaults";
+    } else {
+        my $template = Template->new(
+            ENCODING => 'utf8',
+            INCLUDE_PATH => "$FindBin::Bin/tor-config",
+        );
+        my $vars = {
+            test => $test,
+            options => $options,
+            hashed_control_password => $hashed_password,
+        };
+        my $config;
+        $template->process("$test->{name}.conf", $vars, \$config,
+            binmode => ':utf8')
+                || exit_error "Template Error:\n" . $template->error;
+        $torrc_file = File::Temp->new;
+        write_file($torrc_file, $config);
     }
-    push @torrc, "HashedControlPassword $hashed_password\n";
-    write_file('Data/Tor/torrc-defaults', @torrc);
-    my @cmd = ("$cwd/Tor/tor", '--defaults-torrc', 
-        winpath("$cwd/Data/Tor/torrc-defaults"),
+    my @cmd = ("$cwd/Tor/tor", '--defaults-torrc', winpath($torrc_file),
         '-f', winpath("$cwd/Data/Tor/torrc"), 'DataDirectory',
         winpath("$cwd/Data/Tor"), 'GeoIPFile', winpath("$cwd/Data/Tor/geoip"),
         '__OwningControllerProcess', $$);
@@ -84,6 +103,7 @@ sub start_tor {
     }
     my $res = monitor_bootstrap($tbbinfos, $test, $control_passwd);
     fetch($tbbinfos, $test) if $res;
+    stop_tor($tbbinfos) unless $test->{no_kill};
     return $res;
 }
 

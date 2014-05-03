@@ -47,6 +47,8 @@ our @tests = (
         descr  => 'Check that we can bootstrap tor',
         fatal  => 1,
         always => 1,
+        use_default_config => 1,
+        no_kill => 1,
     },
     {
         name   => 'virustotal',
