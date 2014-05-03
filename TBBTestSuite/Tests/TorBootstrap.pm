@@ -81,6 +81,7 @@ sub start_tor {
         my $vars = {
             test => $test,
             options => $options,
+            tbbinfos => $tbbinfos,
             hashed_control_password => $hashed_password,
         };
         my $config;

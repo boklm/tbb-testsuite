@@ -47,6 +47,11 @@ our @tests = (
         descr  => 'Access tor using a bridge',
     },
     {
+        name   => 'tor_obfs3',
+        type   => 'tor_bootstrap',
+        descr  => 'Access tor using obfs3',
+    },
+    {
         name   => 'tor_bootstrap',
         type   => 'tor_bootstrap',
         descr  => 'Check that we can bootstrap tor',
