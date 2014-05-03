@@ -42,6 +42,11 @@ my %test_types = (
 
 our @tests = (
     {
+        name   => 'tor_bridge',
+        type   => 'tor_bootstrap',
+        descr  => 'Access tor using a bridge',
+    },
+    {
         name   => 'tor_bootstrap',
         type   => 'tor_bootstrap',
         descr  => 'Check that we can bootstrap tor',
