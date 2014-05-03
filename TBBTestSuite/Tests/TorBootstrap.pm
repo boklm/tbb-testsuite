@@ -67,7 +67,7 @@ sub start_tor {
         '__OwningControllerProcess', $$);
     $tbbinfos->{torpid} = fork;
     if ($tbbinfos->{torpid} == 0) {
-        my $logfile = "$tbbinfos->{'results-dir'}/tor.log";
+        my $logfile = "$tbbinfos->{'results-dir'}/$test->{name}.log";
         open(STDOUT, '>', $logfile);
         open(STDERR, '>', $logfile);
         exec @cmd;
