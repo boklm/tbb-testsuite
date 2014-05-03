@@ -52,6 +52,11 @@ our @tests = (
         descr  => 'Access tor using obfs3',
     },
     {
+        name   => 'tor_fte',
+        type   => 'tor_bootstrap',
+        descr  => 'Access tor using fteproxy',
+    },
+    {
         name   => 'tor_bootstrap',
         type   => 'tor_bootstrap',
         descr  => 'Check that we can bootstrap tor',
