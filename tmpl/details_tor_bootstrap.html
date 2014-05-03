@@ -1,3 +1,7 @@
 <ul>
     <li><a href="results-[% tbbfile %]/[% test.name %].log">tor daemon logs</a></li>
 </ul>
+[% IF test.results.fetch_error %]
+Error fetching a page:
+<pre>[% test.results.fetch_error %]</pre><br />
+[% END %]

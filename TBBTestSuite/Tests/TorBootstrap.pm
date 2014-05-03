@@ -38,6 +38,16 @@ sub monitor_bootstrap {
     return 3;
 }
 
+sub fetch {
+    my ($tbbinfos, $test) = @_;
+    my (undef, $err, $success) = capture_exec('curl', '-sS', '--socks5',
+        "localhost:$options->{'tor-socks-port'}", 'http://www.yahoo.com/');
+    if (!$success) {
+        $test->{results}{success} = 0;
+        $test->{results}{fetch_error} = $err;
+    }
+}
+
 # TODO: In the future, we should start tor using tor-launcher
 sub start_tor {
     my ($tbbinfos, $test) = @_;
@@ -72,7 +82,9 @@ sub start_tor {
         open(STDERR, '>', $logfile);
         exec @cmd;
     }
-    return monitor_bootstrap($tbbinfos, $test, $control_passwd);
+    my $res = monitor_bootstrap($tbbinfos, $test, $control_passwd);
+    fetch($tbbinfos, $test) if $res;
+    return $res;
 }
 
 sub stop_tor {
