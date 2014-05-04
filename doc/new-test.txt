@@ -7,13 +7,14 @@ The list of tests to be run by the test suite is defined in file
 Each test is defined with the following properties:
 
 name::
-        The name of the test. For 'mozmill' and 'selenium' tests this
-        name is used to find the test filename.
+        The name of the test. For 'mozmill', 'selenium' and 'tor_bootstrap'
+        tests this name is used to find the test filename.
 
 type::
-        The type of tests. This can be 'mozmill', 'selenium', or
-        something else if you want to write the test in perl. In the
-        later case, you need to define it in the '%test_types' variable.
+        The type of tests. This can be 'mozmill', 'selenium',
+        'tor_bootstrap', or something else if you want to write the test
+        in perl. In the later case, you need to define it in the
+        '%test_types' variable.
 
 descr::
         A short description.
