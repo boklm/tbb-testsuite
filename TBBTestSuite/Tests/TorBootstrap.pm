@@ -16,7 +16,10 @@ sub monitor_bootstrap {
         PeerPort => $options->{'tor-control-port'},
         Proto => 'tcp',
     );
-    exit_error "Error connecting to control port: $!\n" unless $sock;
+    if (!$sock) {
+        $test->{results}{success} = 0;
+        return 0;
+    }
     print $sock 'AUTHENTICATE "', $control_passwd, "\"\n";
     my $r = <$sock>;
     exit_error "Authentication error: $r" unless $r =~ m/^250 OK/;
