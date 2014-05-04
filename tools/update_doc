@@ -1,0 +1,6 @@
+#!/bin/sh
+set -e
+cd $(dirname $0)/../doc
+make clean
+make html
+torsocks rsync -avH ./ people.torproject.org:public_html/tbbtests-doc/
