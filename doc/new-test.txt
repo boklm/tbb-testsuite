@@ -31,6 +31,10 @@ post::
         A reference to a perl subroutine that will be run after the
         test.
 
+enable::
+        A reference to a perl subroutine that should return false when
+        the test should be skipped.
+
 
 Adding a mozmill test
 ---------------------

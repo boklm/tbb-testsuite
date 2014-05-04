@@ -245,6 +245,9 @@ sub run_tests {
             && ! grep { $test->{name} eq $_ } @enable_tests) {
             next;
         }
+        if ($test->{enable} && !$test->{enable}->($tbbinfos, $test)) {
+            next;
+        }
         $test->{pre}->($test) if $test->{pre};
         $test_types{$test->{type}}->($tbbinfos, $test)
                 if $test_types{$test->{type}};
