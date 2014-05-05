@@ -23,10 +23,23 @@
             <li><b>Architecture:</b> [% tbbfiles.$tbbfile.arch %]</li>
             <li><b>sha256sum:</b> [% tbbfiles.$tbbfile.sha256sum %]</li>
         </ul>
+        <h1>Summary</h1>
+        [% FOREACH test IN tbbfiles.$tbbfile.tests %]
+           [% IF test.results %]
+              <a href="#[% test.name %]">
+              [% IF test.results.success %]
+                 <img src="../../static/ok-small.png" />
+              [% ELSE %]
+                 <img src="../../static/failed-small.png" />
+              [% END %]
+              [% test.name %]</a><br />
+          [% END %]
+        [% END %]
+
         <h1>Results</h1>
         [% FOREACH test IN tbbfiles.$tbbfile.tests %]
         [% IF ! test.results; NEXT; END %]
-        <h2>[% test.name %]</h2>
+        <h2><a name="[% test.name %]">[% test.name %]</a></h2>
         <ul>
             <li><b>Test type:</b> [% test.type %]</li>
             <li><b>Status:</b>
