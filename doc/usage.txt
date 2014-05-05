@@ -131,6 +131,10 @@ Available options
         On windows this sets the directory where mozmill-env has been
         installed. The default is c:\tbbtestsuite\mozmill-env.
 
+--http-proxy-port::
+        Select the port used to start an http proxy, for tor_bootstrap
+        tests that require an http proxy.
+
 
 Configuration Files
 -------------------

@@ -1,0 +1,2 @@
+HTTPProxy localhost:[% SET opt = 'http-proxy-port'; options.$opt %]
+HTTPSProxy localhost:[% SET opt = 'http-proxy-port'; options.$opt %]

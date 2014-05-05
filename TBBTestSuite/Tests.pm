@@ -42,9 +42,21 @@ my %test_types = (
 
 our @tests = (
     {
+        name      => 'tor_httpproxy',
+        type      => 'tor_bootstrap',
+        descr     => 'Access tor using an http proxy',
+        httpproxy => 1,
+    },
+    {
         name   => 'tor_bridge',
         type   => 'tor_bootstrap',
         descr  => 'Access tor using a bridge',
+    },
+    {
+        name      => 'tor_bridge_httpproxy',
+        type      => 'tor_bootstrap',
+        descr     => 'Access tor using a bridge and an http proxy',
+        httpproxy => 1,
     },
     {
         name   => 'tor_obfs3',
@@ -52,9 +64,21 @@ our @tests = (
         descr  => 'Access tor using obfs3',
     },
     {
+        name      => 'tor_obfs3_httpproxy',
+        type      => 'tor_bootstrap',
+        descr     => 'Access tor using obfs3 and an http proxy',
+        httpproxy => 1,
+    },
+    {
         name   => 'tor_fte',
         type   => 'tor_bootstrap',
         descr  => 'Access tor using fteproxy',
+    },
+    {
+        name      => 'tor_fte_httpproxy',
+        type      => 'tor_bootstrap',
+        descr     => 'Access tor using fteproxy and an http proxy',
+        httpproxy => 1,
     },
     {
         name   => 'tor_bootstrap',

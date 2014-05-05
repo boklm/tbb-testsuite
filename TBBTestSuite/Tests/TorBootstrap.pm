@@ -8,6 +8,29 @@ use TBBTestSuite::Options qw($options);
 use IO::CaptureOutput qw(capture_exec);
 use IO::Socket::INET;
 
+my $httpproxy_pid;
+
+sub has_ncat {
+    my (undef, undef, $success) = capture_exec('which', 'ncat');
+    return $success;
+}
+
+sub start_httpproxy {
+    my ($tbbinfos, $test) = @_;
+    return if $httpproxy_pid = fork;
+    exec 'ncat', '-l', '--proxy-type', 'http', 'localhost',
+         $options->{'http-proxy-port'};
+}
+
+sub stop_httpproxy {
+    kill 15, $httpproxy_pid if $httpproxy_pid;
+    $httpproxy_pid = undef;
+}
+
+END {
+    stop_httpproxy;
+}
+
 sub monitor_bootstrap {
     my ($tbbinfos, $test, $control_passwd) = @_;
     sleep 10;
@@ -55,8 +78,12 @@ sub fetch {
 sub start_tor {
     my ($tbbinfos, $test) = @_;
     return unless $options->{starttor};
+    if ($test->{httpproxy} && !has_ncat) {
+        return;
+    }
     my $control_passwd = map { ('a'..'z', 'A'..'Z', 0..9)[rand 62] } 0..8;
     my $cwd = getcwd;
+    start_httpproxy($tbbinfos, $test) if $test->{httpproxy};
     $ENV{LD_LIBRARY_PATH} = "$cwd/Tor/";
     $ENV{TOR_SOCKS_PORT} = $options->{'tor-socks-port'};
     $ENV{TOR_CONTROL_PORT} = $options->{'tor-control-port'};
@@ -107,14 +134,15 @@ sub start_tor {
     }
     my $res = monitor_bootstrap($tbbinfos, $test, $control_passwd);
     fetch($tbbinfos, $test) if $res;
-    stop_tor($tbbinfos) unless $test->{no_kill};
+    stop_tor($tbbinfos, $test) unless $test->{no_kill};
     return $res;
 }
 
 sub stop_tor {
-    my ($tbbinfos) = @_;
+    my ($tbbinfos, $test) = @_;
     return unless $options->{starttor};
     kill 9, $tbbinfos->{torpid} if $tbbinfos->{torpid};
+    stop_httpproxy($tbbinfos, $test) if $test->{httpproxy};
 }
 
 1;

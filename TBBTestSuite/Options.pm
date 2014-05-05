@@ -38,6 +38,7 @@ my %default_options = (
     'email-from' => 'TBB Test Report <tbbtest@example.com>',
     'email-subject' => '[test result: [% success ? "ok" : "failed" %]] [% options.name %]',
     'mozmill-dir' => 'c:\tbbtestsuite\mozmill-env',
+    'http-proxy-port' => '8888',
 );
 
 
@@ -47,7 +48,7 @@ sub get_options {
                      virtualenv=s xvfb! name=s download-dir=s config=s
                      action=s enable-tests=s upload-to=s os=s arch=s
                      virustotal! email-to=s@ email-from=s email-subject=s
-                     mozmill-dir=s reports-url=s);
+                     mozmill-dir=s reports-url=s http-proxy-port=i);
     my (%cli, %config);
     Getopt::Long::GetOptionsFromArray(\@_, \%cli, @options) || exit 1;
     $cli{args} = \@_ if @_;
