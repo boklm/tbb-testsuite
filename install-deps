@@ -22,6 +22,7 @@ then
 	    libwww-perl libtemplate-perl libyaml-perl libdatetime-perl \
             libemail-sender-perl libemail-simple-perl
    apt-get install -y libgtk2.0-0
+   apt-get install -y nmap
    if lsb_release -i | grep -q Debian
    then
        apt-get install iceweasel
@@ -31,6 +32,12 @@ fi
 if [ -f /etc/redhat-release ] && which yum > /dev/null 2>&1
 then
     yum install -y ntp redhat-lsb-core xorg-x11-server-Xvfb python-virtualenv
+    if lsb_release -i | grep -q Fedora
+    then
+        yum install -y nmap-ncat
+    else
+        yum install -y nmap
+    fi
     for perlmodule in $perlmodules
     do
         rpm --quiet -q --whatprovides "perl($perlmodule)" \
