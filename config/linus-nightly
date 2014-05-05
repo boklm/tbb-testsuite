@@ -33,6 +33,7 @@ if (!get($shaurl)) {
         'mikeperry@torproject.org',
         'brade@pearlcrescent.com',
         'mcs@pearlcrescent.com',
+        'gunes.acar@esat.kuleuven.be',
     ],
     'reports-url' => 'https://people.torproject.org/~boklm/tbbtests/',
 );
