@@ -1,5 +1,6 @@
 *~
 *.pyc
+clones
 virtualenv
 reports
 tmp
