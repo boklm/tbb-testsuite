@@ -41,6 +41,7 @@
         [% IF ! test.results; NEXT; END %]
         <h2><a name="[% test.name %]">[% test.name %]</a></h2>
         <ul>
+            <li><b>Description:</b> [% test.descr %]</li>
             <li><b>Test type:</b> [% test.type %]</li>
             <li><b>Status:</b>
             [% IF test.results.success %]
