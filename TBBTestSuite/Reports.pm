@@ -5,6 +5,7 @@ use strict;
 use FindBin;
 use File::Temp;
 use File::Path qw(make_path);
+use File::Copy;
 use Template;
 use File::Spec;
 use YAML;
@@ -31,8 +32,19 @@ sub set_report_dir {
                 = File::Spec->splitpath($report->{options}{'report-dir'});
 }
 
+sub copy_static {
+    my $staticdir = "$options->{'reports-dir'}/static";
+    mkdir $staticdir unless -d $staticdir;
+    foreach my $file_src (glob "$FindBin::Bin/static/*") {
+        my (undef, undef, $file) = File::Spec->splitpath($file_src);
+        my $file_dst = "$staticdir/$file";
+        copy($file_src, $file_dst) unless -f $file_dst;
+    }
+}
+
 sub make_report {
     my ($report) = @_;
+    copy_static;
     my $template = Template->new(
         ENCODING => 'utf8',
         INCLUDE_PATH => "$FindBin::Bin/tmpl",
