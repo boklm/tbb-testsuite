@@ -62,6 +62,7 @@ sub make_report {
 }
 
 sub make_reports_index {
+    copy_static;
     my $template = Template->new(
         ENCODING => 'utf8',
         INCLUDE_PATH => "$FindBin::Bin/tmpl",
