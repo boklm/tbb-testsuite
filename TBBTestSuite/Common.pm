@@ -11,7 +11,7 @@ our (@ISA, @EXPORT_OK);
 BEGIN {
     require Exporter;
     @ISA       = qw(Exporter);
-    @EXPORT_OK = qw(exit_error system_infos run_alone rm_pidfile winpath);
+    @EXPORT_OK = qw(exit_error system_infos run_alone rm_pidfile winpath has_bin);
 }
 
 sub exit_error {
@@ -59,6 +59,12 @@ sub winpath {
     my ($res) = capture_exec('cygpath', '-aw', $path);
     chomp $res;
     return $res;
+}
+
+sub has_bin {
+    my ($bin) = @_;
+    my (undef, undef, $success) = capture_exec('which', $bin);
+    return $success;
 }
 
 1;

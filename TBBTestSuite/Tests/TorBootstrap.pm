@@ -3,17 +3,12 @@ package TBBTestSuite::Tests::TorBootstrap;
 use strict;
 use File::Slurp;
 use Cwd qw(getcwd);
-use TBBTestSuite::Common qw(exit_error winpath);
+use TBBTestSuite::Common qw(exit_error winpath has_bin);
 use TBBTestSuite::Options qw($options);
 use IO::CaptureOutput qw(capture_exec);
 use IO::Socket::INET;
 
 my $httpproxy_pid;
-
-sub has_ncat {
-    my (undef, undef, $success) = capture_exec('which', 'ncat');
-    return $success;
-}
 
 sub start_httpproxy {
     my ($tbbinfos, $test) = @_;
@@ -78,7 +73,7 @@ sub fetch {
 sub start_tor {
     my ($tbbinfos, $test) = @_;
     return unless $options->{starttor};
-    if ($test->{httpproxy} && !has_ncat) {
+    if ($test->{httpproxy} && !has_bin('ncat')) {
         return;
     }
     my $control_passwd = map { ('a'..'z', 'A'..'Z', 0..9)[rand 62] } 0..8;
