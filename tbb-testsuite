@@ -90,6 +90,16 @@ my %actions = (
     dump_options => \&dump_options,
 );
 
+sub usage {
+    print STDERR "$0 [--action=action_name] [OPTIONS...]\n\n";
+    print STDERR "Possible actions:\n";
+    foreach my $act (keys %actions) {
+        print STDERR " - $act\n";
+    }
+    exit 1;
+}
+
+usage unless @ARGV;
 exit_error "Unknow action $options->{action}" unless $actions{$options->{action}};
 run_alone;
 make_path($options->{tmpdir});
