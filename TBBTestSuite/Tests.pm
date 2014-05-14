@@ -51,14 +51,12 @@ our @tests = (
         name   => 'tor_bridge',
         type   => 'tor_bootstrap',
         descr  => 'Access tor using a bridge',
-        enable => sub { 0; },
     },
     {
         name      => 'tor_bridge_httpproxy',
         type      => 'tor_bootstrap',
         descr     => 'Access tor using a bridge and an http proxy',
         httpproxy => 1,
-        enable    => sub { 0; },
     },
     {
         name   => 'tor_obfs3',
