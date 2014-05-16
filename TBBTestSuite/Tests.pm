@@ -244,12 +244,42 @@ sub mozmill_cmd {
     return ("$options->{virtualenv}/bin/mozmill");
 }
 
+sub check_opened_connections {
+    my ($tbbinfos, $test) = @_;
+    my $mbox_log = "$tbbinfos->{'results-dir'}/$test->{name}.mbox.log";
+    $test->{results}{connections} = {};
+    foreach my $line (read_file($mbox_log)) {
+        next unless $line =~ m/ > \[\d+\] -> (.+)/;
+        $test->{results}{connections}{$1}++;
+    }
+}
+
+sub ff_mbox_wrapper {
+    my ($tbbinfos, $test) = @_;
+    mkdir "$tbbinfos->{'results-dir'}/$test->{name}.sandbox";
+    my $wrapper = <<EOF;
+#!/bin/sh
+set -e
+echo log file: $tbbinfos->{'results-dir'}/$test->{name}.mbox.log
+exec mbox -i -r \'$tbbinfos->{'results-dir'}/$test->{name}.sandbox\' \\
+        -o \'$tbbinfos->{'results-dir'}/$test->{name}.mbox.log\' \\
+        -s -p $FindBin::Bin/mbox.profile \\
+        -- \\
+        \'$tbbinfos->{tbbdir}/Browser/firefox\' "\$@"
+EOF
+    my $wrapper_file = "$tbbinfos->{tbbdir}/ff_$test->{name}";
+    write_file($wrapper_file, $wrapper);
+    chmod 0700, $wrapper_file;
+    return $wrapper_file;
+}
+
 sub ffbin_path {
-    my ($tbbinfos) = @_;
+    my ($tbbinfos, $test) = @_;
     if ($OSNAME eq 'cygwin') {
         return winpath("$tbbinfos->{tbbdir}/Browser/firefox.exe");
     }
-    return "$tbbinfos->{tbbdir}/Browser/firefox";
+    return $options->{mbox} ? ff_mbox_wrapper($tbbinfos, $test)
+           : "$tbbinfos->{tbbdir}/Browser/firefox";
 }
 
 sub mozmill_run {
@@ -259,7 +289,7 @@ sub mozmill_run {
     my $screenshots_tmp = File::Temp::newdir('XXXXXX', DIR => $options->{tmpdir});
     $ENV{'MOZMILL_SCREENSHOTS'} = winpath($screenshots_tmp);
     my $results_file = "$tbbinfos->{'results-dir'}/$test->{name}.json";
-    system(xvfb_run($test), mozmill_cmd(), '-b', ffbin_path($tbbinfos),
+    system(xvfb_run($test), mozmill_cmd(), '-b', ffbin_path($tbbinfos, $test),
         '-p', winpath("$tbbinfos->{tbbdir}/Data/Browser/profile.default"),
         '-t', winpath("$FindBin::Bin/mozmill-tests/tbb-tests/$test->{name}.js"),
         '--report', 'file://' . winpath($results_file));
@@ -271,6 +301,7 @@ sub mozmill_run {
         $i++;
     }
     $test->{results} = decode_json(read_file($results_file));
+    check_opened_connections($tbbinfos, $test);
     $test->{results}{success} = !$test->{results}{results}->[0]->{failed};
 }
 

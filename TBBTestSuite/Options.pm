@@ -6,7 +6,7 @@ use English;
 use FindBin;
 use Getopt::Long;
 use File::Slurp;
-use TBBTestSuite::Common qw(exit_error);
+use TBBTestSuite::Common qw(exit_error has_bin);
 use Data::Dump qw(pp);
 
 our (@ISA, @EXPORT_OK);
@@ -32,6 +32,7 @@ my %default_options = (
     virtualenv => "$FindBin::Bin/virtualenv",
     resolution => '1024x768',
     xvfb       => $OSNAME ne 'cygwin',
+    mbox       => has_bin('mbox'),
     virustotal => 0,
     'virustotal-api-key-file' => "$ENV{HOME}/.virustotal.api-key",
     'email-to' => [],
