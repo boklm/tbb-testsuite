@@ -8,6 +8,22 @@ Summary
   URL: [% options.$ru %]r/[% options.name %]/
 [% END -%]
 
+[% IF success -%]
+  Everything OK
+[% ELSE -%]
+  Failed tests
+
+
+  [%- FOREACH test IN failed_tests.keys.sort -%]
+    - [% test %]:
+
+    [%- FOREACH tbbfile IN failed_tests.$test.sort -%]
+        [% tbbfile %]
+
+    [%- END -%]
+  [%- END -%]
+[% END -%]
+
 
 Details
 

@@ -15,10 +15,15 @@ use TBBTestSuite::Tests;
 sub set_report_success {
     my ($report) = @_;
     $report->{success} = 1;
-    foreach my $tbbfile (values %{$report->{tbbfiles}}) {
-        if (!$tbbfile->{success}) {
-            $report->{success} = 0;
-            last;
+    $report->{failed_tests} = {};
+    foreach my $tbbfile_name (keys %{$report->{tbbfiles}}) {
+        my $tbbfile = $report->{tbbfiles}{$tbbfile_name};
+        next if $tbbfile->{success};
+        $report->{success} = 0;
+        foreach my $test (@{$tbbfile->{tests}}) {
+            if ($test->{results} && !$test->{results}{success}) {
+                push @{$report->{failed_tests}{$test->{name}}}, $tbbfile_name;
+            }
         }
     }
 }

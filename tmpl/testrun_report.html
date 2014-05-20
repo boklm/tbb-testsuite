@@ -25,6 +25,23 @@
         </li>
         [% END %]
         </ul>
+        <h1>Summary</h1>
+        [% IF success %]
+        Everything OK.
+        [% ELSE %]
+        List of failed tests:
+          <ul>
+          [% FOREACH test IN failed_tests.keys.sort %]
+                <li>[% test %]
+                <ul>
+                    [% FOREACH tbbfile IN failed_tests.$test.sort %]
+                    <li><a href="[% tbbfile %].html#[% test %]">[% tbbfile %]</a></li>
+                    [% END %]
+                </ul>
+                </li>
+          [% END %]
+          </ul>
+        [% END %]
         <hr>
         <a href="screenshots.html">screenshots</a>
     </body>
