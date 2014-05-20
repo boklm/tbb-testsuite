@@ -1,6 +1,6 @@
 Summary
 
-[% FOREACH tbbfile IN tbbfiles.keys -%]
+[% FOREACH tbbfile IN tbbfiles.keys.sort -%]
   - [% tbbfile %]: [% tbbfiles.$tbbfile.success ? 'ok' : 'failed' %]
 [% END %]
 [% SET ru = 'reports-url';
@@ -28,7 +28,7 @@ Summary
 Details
 
 [% FILTER indent(1) %]
-[% FOREACH tbbfile IN tbbfiles.keys -%]
+[% FOREACH tbbfile IN tbbfiles.keys.sort -%]
 [% SET s='='; GET s.repeat(tbbfile.length + 4) %]
 = [% tbbfile %] =
 [% SET s='='; GET s.repeat(tbbfile.length + 4) %]
