@@ -54,6 +54,15 @@ our @tests = (
         enable       => sub { $options->{os} eq 'Linux' },
     },
     {
+        name         => 'readelf_stack_canary',
+        type         => 'command',
+        descr        => 'Check for stack canary support',
+        files        => \&tbb_binfiles,
+        command      => [ 'readelf', '-s' ],
+        check_output => sub { $_[0] =~ m/__stack_chk_fail/ },
+        enable       => sub { $options->{os} eq 'Linux' },
+    },
+    {
         name      => 'tor_httpproxy',
         type      => 'tor_bootstrap',
         descr     => 'Access tor using an http proxy',
