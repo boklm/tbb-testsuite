@@ -49,8 +49,9 @@ our @tests = (
         type         => 'command',
         descr        => 'Check if binaries are RELocation Read-Only',
         files        => \&tbb_binfiles,
-        command      => [ 'readelf', '-l' ],
-        check_output => sub { $_[0] =~ m/GNU_RELRO/ },
+        command      => [ 'readelf', '-ld' ],
+        check_output => sub { ( $_[0] =~ m/GNU_RELRO/ )
+                                && ( $_[0] =~ m/\(BIND_NOW\)/ ) },
         enable       => sub { $options->{os} eq 'Linux' },
     },
     {
