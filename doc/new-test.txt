@@ -12,9 +12,9 @@ name::
 
 type::
         The type of tests. This can be 'mozmill', 'selenium',
-        'tor_bootstrap', or something else if you want to write the test
-        in perl. In the later case, you need to define it in the
-        '%test_types' variable.
+        'tor_bootstrap', 'command', or something else if you want to
+        write the test in perl. In the later case, you need to define
+        it in the '%test_types' variable.
 
 descr::
         A short description.
@@ -72,4 +72,28 @@ like this in 'TBBTestSuite/Tests.pm':
 The selenium test files are stored in the directory 'selenium-tests'.
 The name of the file that will be executed is 'test_$name.py' (with
 $name replaced by the test name).
+
+
+Adding a command test
+---------------------
+
+To run a command on some files, and check the output. You will add
+something like this in 'TBBTestSuite/Tests.pm':
+
+----
+    {
+        name         => 'readelf_RELRO',
+        type         => 'command',
+        descr        => 'Check if binaries are RELocation Read-Only',
+        files        => [ 'Browser/firefox', 'Tor/tor', ],
+        command      => [ 'readelf', '-l' ],
+        check_output => sub { $_[0] =~ m/GNU_RELRO/ },
+    },
+----
+
+The 'command' option is the command that should be run. The 'files'
+option is the list of files on which it should be run. The 'check_output'
+is optional and is a reference to a subroutine that checks the output
+of the command. The test will fail if the command returns non-zero, or
+the check_output sub returns false, on any of the files.
 

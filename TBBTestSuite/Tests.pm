@@ -38,6 +38,7 @@ my %test_types = (
     mozmill       => \&mozmill_run,
     selenium      => \&selenium_run,
     virustotal    => \&virustotal_run,
+    command       => \&command_run,
 );
 
 our @tests = (
@@ -313,6 +314,22 @@ sub selenium_run {
     system(xvfb_run($test), "$options->{virtualenv}/bin/python",
         "$FindBin::Bin/selenium-tests/run_test", $test->{name});
     $test->{results} = decode_json(read_file($result_file));
+}
+
+sub command_run {
+    my ($tbbinfos, $test) = @_;
+    $test->{results}{success} = 1;
+    for my $file (@{$test->{files}}) {
+        my ($out, $err, $success) = capture_exec(@{$test->{command}}, $file);
+        if ($success && $test->{check_output}) {
+            $success = $test->{check_output}($out);
+        }
+        if (!$success) {
+            $test->{results}{success} = 0;
+            push @{$test->{results}{failed}}, $file;
+            next;
+        }
+    }
 }
 
 sub run_tests {

@@ -1,0 +1,10 @@
+[% IF ! test.results.success %]
+  Failed files:
+  <ul>
+  [% FOREACH f IN test.results.failed.sort %]
+     <li>[% f %]</li>
+  [% END %]
+  </ul>
+[% ELSE %]
+OK
+[% END %]
