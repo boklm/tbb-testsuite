@@ -357,6 +357,7 @@ sub command_run {
         }
         if (!$success) {
             $test->{results}{success} = 0;
+            $file =~ s/^$tbbinfos->{tbbdir}\///;
             push @{$test->{results}{failed}}, $file;
             next;
         }
