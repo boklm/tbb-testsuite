@@ -63,6 +63,15 @@ our @tests = (
         enable       => sub { $options->{os} eq 'Linux' },
     },
     {
+        name         => 'readelf_NX',
+        type         => 'command',
+        descr        => 'Check for NX support',
+        files        => \&tbb_binfiles,
+        command      => [ 'readelf', '-W', '-l' ],
+        check_output => sub { ! ($_[0] =~ m/GNU_STACK.+RWE/) },
+        enable       => sub { $options->{os} eq 'Linux' },
+    },
+    {
         name      => 'tor_httpproxy',
         type      => 'tor_bootstrap',
         descr     => 'Access tor using an http proxy',
