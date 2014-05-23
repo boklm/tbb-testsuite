@@ -91,6 +91,15 @@ our @tests = (
         enable       => sub { $options->{os} eq 'Linux' },
     },
     {
+        name         => 'readelf_no_runpath',
+        type         => 'command',
+        descr        => 'Check for no runpath',
+        files        => \&tbb_binfiles,
+        command      => [ 'readelf', '-d' ],
+        check_output => sub { ! ( $_[0] =~ m/runpath/ ) },
+        enable       => sub { $options->{os} eq 'Linux' },
+    },
+    {
         name      => 'tor_httpproxy',
         type      => 'tor_bootstrap',
         descr     => 'Access tor using an http proxy',
