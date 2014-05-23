@@ -73,6 +73,15 @@ our @tests = (
         enable       => sub { $options->{os} eq 'Linux' },
     },
     {
+        name         => 'readelf_PIE',
+        type         => 'command',
+        descr        => 'Check for PIE support',
+        files        => \&tbb_binfiles,
+        command      => [ 'readelf', '-h' ],
+        check_output => sub { $_[0] =~ m/Type:\s+DYN/ },
+        enable       => sub { $options->{os} eq 'Linux' },
+    },
+    {
         name      => 'tor_httpproxy',
         type      => 'tor_bootstrap',
         descr     => 'Access tor using an http proxy',
