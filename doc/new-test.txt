@@ -92,8 +92,10 @@ something like this in 'TBBTestSuite/Tests.pm':
 ----
 
 The 'command' option is the command that should be run. The 'files'
-option is the list of files on which it should be run. The 'check_output'
-is optional and is a reference to a subroutine that checks the output
-of the command. The test will fail if the command returns non-zero, or
-the check_output sub returns false, on any of the files.
+option is the list of files on which it should be run. If 'files' is a
+reference to a subroutine, then it is expected to return an array
+reference containing the files list. The 'check_output' is optional and
+is a reference to a subroutine that checks the output of the command.
+The test will fail if the command returns non-zero, or the check_output
+sub returns false, on any of the files.
 

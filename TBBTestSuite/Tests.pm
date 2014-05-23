@@ -5,6 +5,8 @@ use strict;
 use English;
 use FindBin;
 use Cwd qw(getcwd);
+use File::Type;
+use File::Find;
 use File::Spec;
 use File::Temp;
 use File::Slurp;
@@ -41,14 +43,12 @@ my %test_types = (
     command       => \&command_run,
 );
 
-my $elf_files = [ 'Browser/firefox', 'Tor/tor', ];
-
 our @tests = (
     {
         name         => 'readelf_RELRO',
         type         => 'command',
         descr        => 'Check if binaries are RELocation Read-Only',
-        files        => $elf_files,
+        files        => \&tbb_binfiles,
         command      => [ 'readelf', '-l' ],
         check_output => sub { $_[0] =~ m/GNU_RELRO/ },
         enable       => sub { $options->{os} eq 'Linux' },
@@ -174,6 +174,24 @@ sub toggle_https_everywhere {
         }
     }
     write_file($prefs, @f);
+}
+
+sub tbb_binfiles {
+    my ($tbbinfos, $test) = @_;
+    return $tbbinfos->{binfiles} if $tbbinfos->{binfiles};
+    my %binfiles = (
+        "$tbbinfos->{tbbdir}/Browser/firefox" => 1,
+        "$tbbinfos->{tbbdir}/Tor/tor" => 1,
+    );
+    my $wanted = sub {
+        return unless -f $File::Find::name;
+        return unless -x $File::Find::name;
+        my $type = File::Type->new->checktype_filename($File::Find::name);
+        return unless $type eq 'application/x-executable-file';
+        $binfiles{$File::Find::name} = 1;
+    };
+    find($wanted, $tbbinfos->{tbbdir});
+    return $tbbinfos->{binfiles} = [ keys %binfiles ];
 }
 
 sub list_tests {
@@ -330,7 +348,9 @@ sub selenium_run {
 sub command_run {
     my ($tbbinfos, $test) = @_;
     $test->{results}{success} = 1;
-    for my $file (@{$test->{files}}) {
+    my $files = $test->{files};
+    $files = $files->($tbbinfos, $test) if ref $files eq 'CODE';
+    for my $file (@$files) {
         my ($out, $err, $success) = capture_exec(@{$test->{command}}, $file);
         if ($success && $test->{check_output}) {
             $success = $test->{check_output}($out);
