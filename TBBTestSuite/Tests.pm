@@ -41,7 +41,18 @@ my %test_types = (
     command       => \&command_run,
 );
 
+my $elf_files = [ 'Browser/firefox', 'Tor/tor', ];
+
 our @tests = (
+    {
+        name         => 'readelf_RELRO',
+        type         => 'command',
+        descr        => 'Check if binaries are RELocation Read-Only',
+        files        => $elf_files,
+        command      => [ 'readelf', '-l' ],
+        check_output => sub { $_[0] =~ m/GNU_RELRO/ },
+        enable       => sub { $options->{os} eq 'Linux' },
+    },
     {
         name      => 'tor_httpproxy',
         type      => 'tor_bootstrap',
