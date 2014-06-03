@@ -338,7 +338,7 @@ sub ff_mbox_wrapper {
 set -e
 echo log file: $tbbinfos->{'results-dir'}/$test->{name}.mbox.log
 exec mbox -i -r \'$tbbinfos->{'results-dir'}/$test->{name}.sandbox\' \\
-        -o \'$tbbinfos->{'results-dir'}/$test->{name}.mbox.log\' \\
+        -o \'!cat >> $tbbinfos->{'results-dir'}/$test->{name}.mbox.log\' \\
         -s -p $FindBin::Bin/mbox.profile \\
         -- \\
         \'$tbbinfos->{tbbdir}/Browser/firefox\' "\$@"
