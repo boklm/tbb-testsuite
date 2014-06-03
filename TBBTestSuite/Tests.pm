@@ -386,7 +386,7 @@ sub selenium_run {
     return unless $options->{selenium};
     my $result_file = $ENV{SELENIUM_TEST_RESULT_FILE} =
         "$tbbinfos->{'results-dir'}/$test->{name}.json";
-    $ENV{TBB_BIN} = "$tbbinfos->{tbbdir}/Browser/firefox";
+    $ENV{TBB_BIN} = ffbin_path($tbbinfos, $test);
     $ENV{TBB_PROFILE} = "$tbbinfos->{tbbdir}/Data/Browser/profile.default";
     system(xvfb_run($test), "$options->{virtualenv}/bin/python",
         "$FindBin::Bin/selenium-tests/run_test", $test->{name});
