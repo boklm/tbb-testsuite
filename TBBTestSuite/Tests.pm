@@ -386,6 +386,8 @@ sub selenium_run {
     return unless $options->{selenium};
     my $result_file = $ENV{SELENIUM_TEST_RESULT_FILE} =
         "$tbbinfos->{'results-dir'}/$test->{name}.json";
+    $ENV{TBB_BIN} = "$tbbinfos->{tbbdir}/Browser/firefox";
+    $ENV{TBB_PROFILE} = "$tbbinfos->{tbbdir}/Data/Browser/profile.default";
     system(xvfb_run($test), "$options->{virtualenv}/bin/python",
         "$FindBin::Bin/selenium-tests/run_test", $test->{name});
     $test->{results} = decode_json(read_file($result_file));
@@ -506,8 +508,6 @@ sub test_tbb {
     mkdir $tbbinfos->{'results-dir'};
     extract_tbb($tbbinfos);
     chdir $tbbinfos->{tbbdir} || exit_error "Can't enter directory $tbbinfos->{tbbdir}";
-    $ENV{TBB_BIN} = "$tbbinfos->{tbbdir}/Browser/firefox";
-    $ENV{TBB_PROFILE} = "$tbbinfos->{tbbdir}/Data/Browser/profile.default";
     $ENV{TOR_SKIP_LAUNCH} = 1;
     run_tests($tbbinfos);
     TBBTestSuite::Tests::TorBootstrap::stop_tor($tbbinfos);
