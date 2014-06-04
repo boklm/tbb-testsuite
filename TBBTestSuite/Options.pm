@@ -34,6 +34,7 @@ my %default_options = (
     xvfb       => $OSNAME ne 'cygwin',
     mbox       => has_bin('mbox'),
     virustotal => 0,
+    newlayout  => 1,
     'virustotal-api-key-file' => "$ENV{HOME}/.virustotal.api-key",
     'email-to' => [],
     'email-from' => 'TBB Test Report <tbbtest@example.com>',
@@ -49,7 +50,8 @@ sub get_options {
                      virtualenv=s xvfb! name=s download-dir=s config=s
                      action=s enable-tests=s upload-to=s os=s arch=s
                      virustotal! email-to=s@ email-from=s email-subject=s
-                     mozmill-dir=s reports-url=s http-proxy-port=i);
+                     mozmill-dir=s reports-url=s http-proxy-port=i
+                     newlayout!);
     my (%cli, %config);
     Getopt::Long::GetOptionsFromArray(\@_, \%cli, @options) || exit 1;
     $cli{args} = \@_ if @_;

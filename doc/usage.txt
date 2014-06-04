@@ -135,6 +135,9 @@ Available options
         Select the port used to start an http proxy, for tor_bootstrap
         tests that require an http proxy.
 
+--no-newlayout::
+        Disable the use of the new layout introduced with ticket #11641.
+
 
 Configuration Files
 -------------------

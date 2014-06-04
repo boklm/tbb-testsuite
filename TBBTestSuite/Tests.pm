@@ -171,8 +171,8 @@ our @tests = (
         name  => 'https-everywhere-disabled',
         type  => 'mozmill',
         descr => 'Check that https everywhere is not doing anything when disabled',
-        pre   => sub { toggle_https_everywhere(0) },
-        post  => sub { toggle_https_everywhere(1) },
+        pre   => sub { toggle_https_everywhere($_[0], 0) },
+        post  => sub { toggle_https_everywhere($_[0], 1) },
     },
     {
         name  => 'settings',
@@ -206,9 +206,9 @@ our @tests = (
 );
 
 sub toggle_https_everywhere {
-    my ($t) = @_;
-    my $prefs = 'Data/Browser/profile.default/extensions/' .
-        'https-everywhere@eff.org/defaults/preferences/preferences.js';
+    my ($tbbinfos, $t) = @_;
+    my $prefs = $tbbinfos->{ffprofiledir} . '/extensions/'
+        . 'https-everywhere@eff.org/defaults/preferences/preferences.js';
     my @f = read_file($prefs);
     foreach (@f) {
         if ($t) {
@@ -226,8 +226,8 @@ sub tbb_binfiles {
     my ($tbbinfos, $test) = @_;
     return $tbbinfos->{binfiles} if $tbbinfos->{binfiles};
     my %binfiles = (
-        "$tbbinfos->{tbbdir}/Browser/firefox" => 1,
-        "$tbbinfos->{tbbdir}/Tor/tor" => 1,
+        $tbbinfos->{ffbin} => 1,
+        "$tbbinfos->{tordir}/tor" => 1,
     );
     my $wanted = sub {
         return unless -f $File::Find::name;
@@ -295,6 +295,7 @@ sub extract_tbb {
     if ($tbbinfos->{os} eq 'Linux') {
         system('tar', 'xf', $tbbfile);
         $tbbinfos->{tbbdir} = "$tmpdir/tor-browser_$tbbinfos->{language}";
+        $tbbinfos->{tbbdir} .= '/Browser' if $options->{newlayout};
     } elsif ($tbbinfos->{os} eq 'Windows') {
         my (undef, undef, $f) = File::Spec->splitpath($tbbfile);
         copy($tbbfile, "$tmpdir/$f");
@@ -341,7 +342,7 @@ exec mbox -i -r \'$tbbinfos->{'results-dir'}/$test->{name}.sandbox\' \\
         -o \'!cat >> $tbbinfos->{'results-dir'}/$test->{name}.mbox.log\' \\
         -s -p $FindBin::Bin/mbox.profile \\
         -- \\
-        \'$tbbinfos->{tbbdir}/Browser/firefox\' "\$@"
+        \'$tbbinfos->{ffbin}\' "\$@"
 EOF
     my $wrapper_file = "$tbbinfos->{tbbdir}/ff_$test->{name}";
     write_file($wrapper_file, $wrapper);
@@ -352,10 +353,10 @@ EOF
 sub ffbin_path {
     my ($tbbinfos, $test) = @_;
     if ($OSNAME eq 'cygwin') {
-        return winpath("$tbbinfos->{tbbdir}/Browser/firefox.exe");
+        return winpath("$tbbinfos->{ffbin}.exe");
     }
     return $options->{mbox} ? ff_mbox_wrapper($tbbinfos, $test)
-           : "$tbbinfos->{tbbdir}/Browser/firefox";
+           : $tbbinfos->{ffbin};
 }
 
 sub mozmill_run {
@@ -366,7 +367,7 @@ sub mozmill_run {
     $ENV{'MOZMILL_SCREENSHOTS'} = winpath($screenshots_tmp);
     my $results_file = "$tbbinfos->{'results-dir'}/$test->{name}.json";
     system(xvfb_run($test), mozmill_cmd(), '-b', ffbin_path($tbbinfos, $test),
-        '-p', winpath("$tbbinfos->{tbbdir}/Data/Browser/profile.default"),
+        '-p', winpath($tbbinfos->{ffprofiledir}),
         '-t', winpath("$FindBin::Bin/mozmill-tests/tbb-tests/$test->{name}.js"),
         '--report', 'file://' . winpath($results_file));
     my $i = 0;
@@ -387,7 +388,7 @@ sub selenium_run {
     my $result_file = $ENV{SELENIUM_TEST_RESULT_FILE} =
         "$tbbinfos->{'results-dir'}/$test->{name}.json";
     $ENV{TBB_BIN} = ffbin_path($tbbinfos, $test);
-    $ENV{TBB_PROFILE} = "$tbbinfos->{tbbdir}/Data/Browser/profile.default";
+    $ENV{TBB_PROFILE} = $tbbinfos->{ffprofiledir};
     system(xvfb_run($test), "$options->{virtualenv}/bin/python",
         "$FindBin::Bin/selenium-tests/run_test", $test->{name});
     $test->{results} = decode_json(read_file($result_file));
@@ -424,10 +425,10 @@ sub run_tests {
         if ($test->{enable} && !$test->{enable}->($tbbinfos, $test)) {
             next;
         }
-        $test->{pre}->($test) if $test->{pre};
+        $test->{pre}->($tbbinfos, $test) if $test->{pre};
         $test_types{$test->{type}}->($tbbinfos, $test)
                 if $test_types{$test->{type}};
-        $test->{post}->($test) if $test->{post};
+        $test->{post}->($tbbinfos, $test) if $test->{post};
         if ($test->{fatal} && $test->{results} &&
             !$test->{results}{success}) {
             last;
@@ -489,6 +490,22 @@ sub test_sha {
     }
 }
 
+sub set_tbbpaths {
+    my ($tbbinfos) = @_;
+    if ($options->{newlayout}) {
+        $tbbinfos->{ffbin} = "$tbbinfos->{tbbdir}/firefox";
+        $tbbinfos->{tordir} = "$tbbinfos->{tbbdir}/TorBrowser/Tor";
+        $tbbinfos->{datadir} = "$tbbinfos->{tbbdir}/TorBrowser/Data";
+    } else {
+        $tbbinfos->{ffbin} =  "$tbbinfos->{tbbdir}/Browser/firefox";
+        $tbbinfos->{tordir} = "$tbbinfos->{tbbdir}/Tor";
+        $tbbinfos->{datadir} = "$tbbinfos->{tbbdir}/Data";
+    }
+    $tbbinfos->{torbin} = "$tbbinfos->{tordir}/tor";
+    $tbbinfos->{ptdir} = "$tbbinfos->{tordir}/PluggableTransports";
+    $tbbinfos->{ffprofiledir} = "$tbbinfos->{datadir}/Browser/profile.default";
+}
+
 sub test_tbb {
     my ($report, $tbbfile, $sha256sum) = @_;
     my $oldcwd = getcwd;
@@ -507,6 +524,7 @@ sub test_tbb {
         "$options->{'report-dir'}/results-$tbbinfos->{filename}";
     mkdir $tbbinfos->{'results-dir'};
     extract_tbb($tbbinfos);
+    set_tbbpaths($tbbinfos);
     chdir $tbbinfos->{tbbdir} || exit_error "Can't enter directory $tbbinfos->{tbbdir}";
     $ENV{TOR_SKIP_LAUNCH} = 1;
     run_tests($tbbinfos);

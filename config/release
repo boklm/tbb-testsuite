@@ -20,6 +20,7 @@ foreach my $build (@latest_builds) {
         'reports-url' => 'https://people.torproject.org/~boklm/tbbtests/',
         'email-from'  => 'TBB Tests <boklm@torproject.org>',
         'email-to'    => [ 'tor-qa@lists.torproject.org', 'boklm@mars-attacks.org', ],
+        newlayout     => 0,
     );
 }
 return ( args => [] );

@@ -79,25 +79,25 @@ sub start_tor {
     my $control_passwd = map { ('a'..'z', 'A'..'Z', 0..9)[rand 62] } 0..8;
     my $cwd = getcwd;
     start_httpproxy($tbbinfos, $test) if $test->{httpproxy};
-    $ENV{LD_LIBRARY_PATH} = "$cwd/Tor/";
+    $ENV{LD_LIBRARY_PATH} = $tbbinfos->{tordir};
     $ENV{TOR_SOCKS_PORT} = $options->{'tor-socks-port'};
     $ENV{TOR_CONTROL_PORT} = $options->{'tor-control-port'};
     $ENV{TOR_CONTROL_HOST} = '127.0.0.1';
-    $ENV{TOR_CONTROL_COOKIE_AUTH_FILE} = winpath("$cwd/Data/Tor/control_auth_cookie");
+    $ENV{TOR_CONTROL_COOKIE_AUTH_FILE} = winpath("$tbbinfos->{datadir}/Tor/control_auth_cookie");
     my ($hashed_password, undef, $success) =
-        capture_exec("$cwd/Tor/tor", '--quiet', '--hash-password', $control_passwd);
+        capture_exec($tbbinfos->{torbin}, '--quiet', '--hash-password', $control_passwd);
     exit_error "Error running tor --hash-password" unless $success;
     chomp $hashed_password;
     my $torrc_file;
     if ($test->{use_default_config}) {
-        my @torrc = read_file('Data/Tor/torrc-defaults');
+        $torrc_file = "$tbbinfos->{datadir}/Tor/torrc-defaults";
+        my @torrc = read_file($torrc_file);
         foreach (@torrc) {
             s/^ControlPort .*/ControlPort $options->{'tor-control-port'}/;
             s/^SocksPort .*/SocksPort $options->{'tor-socks-port'}/;
         }
         push @torrc, "HashedControlPassword $hashed_password\n";
-        write_file('Data/Tor/torrc-defaults', @torrc);
-        $torrc_file = "$cwd/Data/Tor/torrc-defaults";
+        write_file($torrc_file, @torrc);
     } else {
         my $template = Template->new(
             ENCODING => 'utf8',
@@ -116,9 +116,10 @@ sub start_tor {
         $torrc_file = File::Temp->new;
         write_file($torrc_file, $config);
     }
-    my @cmd = ("$cwd/Tor/tor", '--defaults-torrc', winpath($torrc_file),
-        '-f', winpath("$cwd/Data/Tor/torrc"), 'DataDirectory',
-        winpath("$cwd/Data/Tor"), 'GeoIPFile', winpath("$cwd/Data/Tor/geoip"),
+    my @cmd = ($tbbinfos->{torbin}, '--defaults-torrc', winpath($torrc_file),
+        '-f', winpath("$tbbinfos->{datadir}/Tor/torrc"),
+        'DataDirectory', winpath("$tbbinfos->{datadir}/Tor"),
+        'GeoIPFile', winpath("$tbbinfos->{datadir}/Tor/geoip"),
         '__OwningControllerProcess', $$);
     $tbbinfos->{torpid} = fork;
     if ($tbbinfos->{torpid} == 0) {
