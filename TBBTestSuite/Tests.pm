@@ -323,6 +323,7 @@ sub mozmill_cmd {
 
 sub check_opened_connections {
     my ($tbbinfos, $test) = @_;
+    return unless $options->{mbox};
     my $mbox_log = "$tbbinfos->{'results-dir'}/$test->{name}.mbox.log";
     $test->{results}{connections} = {};
     foreach my $line (read_file($mbox_log)) {
