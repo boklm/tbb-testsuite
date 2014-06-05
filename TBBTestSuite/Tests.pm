@@ -393,6 +393,7 @@ sub selenium_run {
     system(xvfb_run($test), "$options->{virtualenv}/bin/python",
         "$FindBin::Bin/selenium-tests/run_test", $test->{name});
     $test->{results} = decode_json(read_file($result_file));
+    check_opened_connections($tbbinfos, $test);
 }
 
 sub command_run {

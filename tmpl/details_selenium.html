@@ -10,3 +10,11 @@
     <pre>[% f.error %]</pre><br />
   [% END %]
 [% END %]
+[% IF test.results.connections.size %]
+<b>List of opened connections:</b>
+<ul>
+    [% FOREACH con IN test.results.connections.nsort.reverse %]
+    <li>[% con %]: [% test.results.connections.$con %] connections</li>
+    [% END %]
+</ul>
+[% END %]
