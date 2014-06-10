@@ -33,7 +33,8 @@ sub git_clone_pull {
         system('git', 'clone', $tbbgit_url, $clone_dir) == 0
                 || exit_error "Error cloning $tbbgit_url";
     }
-    git_cmd('git', 'pull');
+    git_cmd('git', 'checkout', '--detach');
+    git_cmd('git', 'fetch', '-p', 'origin', '+refs/heads/*:refs/heads/*');
 }
 
 sub set_gpgwrapper {
@@ -54,9 +55,8 @@ EOF
 }
 
 sub latest_tagged_version {
-    git_clone_pull;
-    set_gpgwrapper;
-    my ($d) = git_cmd('git', 'describe', '--long', '--match=tbb-*', 'master');
+    my ($branch) = @_;
+    my ($d) = git_cmd('git', 'describe', '--long', '--match=tbb-*', $branch);
     my @t = split /-/, $d;
     pop @t;
     pop @t;
@@ -68,22 +68,34 @@ sub latest_tagged_version {
     return ($t[1], $t[2]);
 }
 
+sub branch_list {
+    my $oldcwd = getcwd;
+    chdir "$clone_dir/.git/refs/heads";
+    my @res = glob '*';
+    chdir $oldcwd;
+    return @res;
+}
+
 sub latest_builds {
-    ($options) = @_;
-    my ($version, $build) = latest_tagged_version;
+    $options = shift;
     my @res;
-    foreach my $user (@tbb_builders) {
-        my $url = "https://people.torproject.org/~$user/builds/$version/sha256sums.txt";
-        my $sha = get($url);
-        next unless $sha;
-        my $shasha = sha256_hex($sha);
-        push @res, {
-            version => $version,
-            build => $build,
-            url => $url,
-            user => $user,
-            shasha => $shasha,
-        };
+    git_clone_pull;
+    set_gpgwrapper;
+    foreach my $branch (branch_list) {
+        my ($version, $build) = latest_tagged_version($branch);
+        foreach my $user (@tbb_builders) {
+            my $url = "https://people.torproject.org/~$user/builds/$version/sha256sums.txt";
+            my $sha = get($url);
+            next unless $sha;
+            my $shasha = sha256_hex($sha);
+            push @res, {
+                version => $version,
+                build => $build,
+                url => $url,
+                user => $user,
+                shasha => $shasha,
+            };
+        }
     }
     return @res;
 }
