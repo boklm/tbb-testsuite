@@ -138,6 +138,10 @@ Available options
 --no-newlayout::
         Disable the use of the new layout introduced with ticket #11641.
 
+--no-mbox::
+        Disable the use of mbox sandboxing to run the Tor Browser. By
+        default, mbox is used if it is installed.
+
 
 Configuration Files
 -------------------
