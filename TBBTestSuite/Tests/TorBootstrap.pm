@@ -7,6 +7,7 @@ use TBBTestSuite::Common qw(exit_error winpath has_bin);
 use TBBTestSuite::Options qw($options);
 use IO::CaptureOutput qw(capture_exec);
 use IO::Socket::INET;
+use POSIX ":sys_wait_h";
 
 my $httpproxy_pid;
 
@@ -146,7 +147,14 @@ sub start_tor {
 sub stop_tor {
     my ($tbbinfos, $test) = @_;
     return unless $options->{starttor};
-    kill 9, $tbbinfos->{torpid} if $tbbinfos->{torpid};
+    kill 15, $tbbinfos->{torpid};
+    my ($kid, $i) = (0, 5);
+    while ($kid == 0 && $i) {
+        $i--;
+        $kid = waitpid($tbbinfos->{torpid}, WNOHANG);
+        sleep 1 if $kid == 0;
+    }
+    kill 9, $tbbinfos->{torpid} if $kid == 0;
     stop_httpproxy($tbbinfos, $test) if $test->{httpproxy};
 }
 
