@@ -69,6 +69,15 @@ sub fetch {
     }
 }
 
+sub tor_capture_exec {
+    my ($tbbinfos) = shift;
+    my $ld_lib = $ENV{LD_LIBRARY_PATH};
+    $ENV{LD_LIBRARY_PATH} = $tbbinfos->{tordir};
+    my @res = capture_exec(@_);
+    $ENV{LD_LIBRARY_PATH} = $ld_lib;
+    return @res;
+}
+
 # TODO: In the future, we should start tor using tor-launcher
 sub start_tor {
     my ($tbbinfos, $test) = @_;
@@ -79,13 +88,12 @@ sub start_tor {
     my $control_passwd = map { ('a'..'z', 'A'..'Z', 0..9)[rand 62] } 0..8;
     my $cwd = getcwd;
     start_httpproxy($tbbinfos, $test) if $test->{httpproxy};
-    $ENV{LD_LIBRARY_PATH} = $tbbinfos->{tordir};
     $ENV{TOR_SOCKS_PORT} = $options->{'tor-socks-port'};
     $ENV{TOR_CONTROL_PORT} = $options->{'tor-control-port'};
     $ENV{TOR_CONTROL_HOST} = '127.0.0.1';
     $ENV{TOR_CONTROL_COOKIE_AUTH_FILE} = winpath("$tbbinfos->{datadir}/Tor/control_auth_cookie");
-    my ($hashed_password, undef, $success) =
-        capture_exec($tbbinfos->{torbin}, '--quiet', '--hash-password', $control_passwd);
+    my ($hashed_password, undef, $success) = tor_capture_exec($tbbinfos,
+        $tbbinfos->{torbin}, '--quiet', '--hash-password', $control_passwd);
     exit_error "Error running tor --hash-password" unless $success;
     chomp $hashed_password;
     my $torrc_file;
@@ -123,6 +131,7 @@ sub start_tor {
         '__OwningControllerProcess', $$);
     $tbbinfos->{torpid} = fork;
     if ($tbbinfos->{torpid} == 0) {
+        $ENV{LD_LIBRARY_PATH} = $tbbinfos->{tordir};
         my $logfile = "$tbbinfos->{'results-dir'}/$test->{name}.log";
         open(STDOUT, '>', $logfile);
         open(STDERR, '>', $logfile);

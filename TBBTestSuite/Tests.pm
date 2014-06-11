@@ -332,9 +332,25 @@ sub check_opened_connections {
     }
 }
 
+sub ff_wrapper {
+    my ($tbbinfos, $test) = @_;
+    my $wrapper_file = "$tbbinfos->{tbbdir}/ff_wrapper";
+    return $wrapper_file if -f $wrapper_file;
+    my $wrapper = <<EOF;
+#!/bin/sh
+set -e
+export LD_LIBRARY_PATH="$tbbinfos->{tordir}"
+exec \'$tbbinfos->{ffbin}\' "\$@"
+EOF
+    write_file($wrapper_file, $wrapper);
+    chmod 0700, $wrapper_file;
+    return $wrapper_file;
+}
+
 sub ff_mbox_wrapper {
     my ($tbbinfos, $test) = @_;
     mkdir "$tbbinfos->{'results-dir'}/$test->{name}.sandbox";
+    my $ff_wrapper = ff_wrapper($tbbinfos, $test);
     my $wrapper = <<EOF;
 #!/bin/sh
 set -e
@@ -343,7 +359,7 @@ exec mbox -i -r \'$tbbinfos->{'results-dir'}/$test->{name}.sandbox\' \\
         -o \'!cat >> $tbbinfos->{'results-dir'}/$test->{name}.mbox.log\' \\
         -s -p $FindBin::Bin/mbox.profile \\
         -- \\
-        \'$tbbinfos->{ffbin}\' "\$@"
+        \'$ff_wrapper\' "\$@"
 EOF
     my $wrapper_file = "$tbbinfos->{tbbdir}/ff_$test->{name}";
     write_file($wrapper_file, $wrapper);
@@ -357,7 +373,7 @@ sub ffbin_path {
         return winpath("$tbbinfos->{ffbin}.exe");
     }
     return $options->{mbox} ? ff_mbox_wrapper($tbbinfos, $test)
-           : $tbbinfos->{ffbin};
+           : ff_wrapper($tbbinfos, $test);
 }
 
 sub mozmill_run {
