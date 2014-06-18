@@ -7,6 +7,13 @@ cpan_install() {
    perl -M"$perlmod" -e '1;' > /dev/null 2>&1 || cpan install "$perlmod"
 }
 
+yum_install() {
+    for package in "$@"
+    do
+        rpm --quiet -q --whatprovides "$package" || yum install -y "$package"
+    done
+}
+
 perlmodules='
 Cwd Data::Dump Digest::SHA File::Path File::Slurp File::Spec File::Temp
 FindBin Getopt::Long IO::CaptureOutput IO::Socket::INET Image::Magick
@@ -31,23 +38,22 @@ fi
 
 if [ -f /etc/redhat-release ] && which yum > /dev/null 2>&1
 then
-    yum install -y ntp redhat-lsb-core xorg-x11-server-Xvfb python-virtualenv
+    yum_install ntp redhat-lsb-core xorg-x11-server-Xvfb python-virtualenv
     if lsb_release -i | grep -q Fedora
     then
-        yum install -y nmap-ncat
+        yum_install nmap-ncat
     else
-        yum install -y nmap
+        yum_install nmap
     fi
     for perlmodule in $perlmodules
     do
-        rpm --quiet -q --whatprovides "perl($perlmodule)" \
-            || yum install -y "perl($perlmodule)"
+        yum_install "perl($perlmodule)"
     done
     if [ "$(uname -m)" == "x86_64" ]
     then
-        yum install -y 'libgtk-x11-2.0.so.0()(64bit)'
+        yum_install 'libgtk-x11-2.0.so.0()(64bit)'
     else
-        yum install -y libgtk-x11-2.0.so.0
+        yum_install libgtk-x11-2.0.so.0
     fi
     if which systemctl > /dev/null 2>&1
     then
