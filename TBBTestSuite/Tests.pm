@@ -268,7 +268,8 @@ sub get_tbbfile {
 sub tbb_filename_infos {
     my ($tbbfile) = @_;
     my (undef, undef, $file) = File::Spec->splitpath($tbbfile);
-    my %res = (filename => $file, tbbfile => $tbbfile);
+    my %res = (filename => $file, tbbfile => $tbbfile,
+        pre_tests => \&pre_tests, post_tests => \&post_tests);
     if ($file =~ m/^tor-browser-linux(..)-([^_]+)_(.+)\.tar\.xz$/) {
         @res{qw(type os version language)} = ('tbbfile', 'Linux', $2, $3);
         $res{arch} = $1 eq '64' ? 'x86_64' : 'x86';
@@ -547,6 +548,25 @@ sub set_tbbpaths {
     $tbbinfos->{ffprofiledir} = "$tbbinfos->{datadir}/Browser/profile.default";
 }
 
+sub pre_tests {
+    my ($tbbinfos) = @_;
+    get_tbbfile($tbbinfos);
+    if ($tbbinfos->{sha256sum} &&
+        $tbbinfos->{sha256sum} ne sha256_hex(read_file($tbbinfos->{tbbfile}))) {
+        exit_error "Wrong sha256sum for $tbbinfos->{tbbfile}";
+    }
+    $tbbinfos->{sha256sum} //= sha256_hex(read_file($tbbinfos->{tbbfile}));
+    extract_tbb($tbbinfos);
+    set_tbbpaths($tbbinfos);
+    chdir $tbbinfos->{tbbdir} || exit_error "Can't enter directory $tbbinfos->{tbbdir}";
+    $ENV{TOR_SKIP_LAUNCH} = 1;
+}
+
+sub post_tests {
+    my ($tbbinfos) = @_;
+    TBBTestSuite::Tests::TorBootstrap::stop_tor($tbbinfos);
+}
+
 sub test_tbb {
     my ($report, $tbbfile, $sha256sum) = @_;
     my $oldcwd = getcwd;
@@ -554,22 +574,16 @@ sub test_tbb {
     return test_sha($report, $tbbfile) if $tbbinfos->{type} eq 'sha256sum';
     my $tmpdir = File::Temp::newdir('XXXXXX', DIR => $options->{tmpdir});
     $tbbinfos->{tmpdir} = $tmpdir->dirname;
-    get_tbbfile($tbbinfos);
-    if ($sha256sum && $sha256sum ne sha256_hex(read_file($tbbinfos->{tbbfile}))) {
-        exit_error "Wrong sha256sum for $tbbinfos->{tbbfile}";
-    }
-    $tbbinfos->{sha256sum} = $sha256sum ? $sha256sum
-                                : sha256_hex(read_file($tbbinfos->{tbbfile}));
+    $tbbinfos->{sha256sum} = $sha256sum if $sha256sum;
     $tbbinfos->{tests} = [ map { { %$_ } } @tests ];
     $tbbinfos->{'results-dir'} =
         "$options->{'report-dir'}/results-$tbbinfos->{filename}";
     mkdir $tbbinfos->{'results-dir'};
-    extract_tbb($tbbinfos);
-    set_tbbpaths($tbbinfos);
-    chdir $tbbinfos->{tbbdir} || exit_error "Can't enter directory $tbbinfos->{tbbdir}";
-    $ENV{TOR_SKIP_LAUNCH} = 1;
+    $tbbinfos->{pre_tests}($tbbinfos);
+    delete $tbbinfos->{pre_tests};
     run_tests($tbbinfos);
-    TBBTestSuite::Tests::TorBootstrap::stop_tor($tbbinfos);
+    $tbbinfos->{post_tests}($tbbinfos);
+    delete $tbbinfos->{post_tests};
     chdir $oldcwd;
     $tbbinfos->{success} = is_success($tbbinfos->{tests});
     $report->{tbbfiles}{$tbbinfos->{filename}} = $tbbinfos;
