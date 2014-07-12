@@ -35,13 +35,13 @@ BEGIN {
     }
 }
 
-my %test_types = (
+my $test_types = {
     tor_bootstrap => \&TBBTestSuite::Tests::TorBootstrap::start_tor,
     mozmill       => \&mozmill_run,
     selenium      => \&selenium_run,
     virustotal    => \&virustotal_run,
     command       => \&command_run,
-);
+};
 
 our @tests = (
     {
@@ -269,7 +269,8 @@ sub tbb_filename_infos {
     my ($tbbfile) = @_;
     my (undef, undef, $file) = File::Spec->splitpath($tbbfile);
     my %res = (filename => $file, tbbfile => $tbbfile,
-        pre_tests => \&pre_tests, post_tests => \&post_tests);
+        pre_tests => \&pre_tests, post_tests => \&post_tests,
+        test_types => $test_types);
     if ($file =~ m/^tor-browser-linux(..)-([^_]+)_(.+)\.tar\.xz$/) {
         @res{qw(type os version language)} = ('tbbfile', 'Linux', $2, $3);
         $res{arch} = $1 eq '64' ? 'x86_64' : 'x86';
@@ -459,6 +460,7 @@ sub run_tests {
     my ($tbbinfos) = @_;
     my @enable_tests = $options->{'enable-tests'}
                 ? split(',', $options->{'enable-tests'}) : ();
+    my $test_types = $tbbinfos->{test_types};
     foreach my $test (@{$tbbinfos->{tests}}) {
         if (@enable_tests && !$test->{always}
             && ! grep { $test->{name} eq $_ } @enable_tests) {
@@ -468,8 +470,8 @@ sub run_tests {
             next;
         }
         $test->{pre}->($tbbinfos, $test) if $test->{pre};
-        $test_types{$test->{type}}->($tbbinfos, $test)
-                if $test_types{$test->{type}};
+        $test_types->{$test->{type}}->($tbbinfos, $test)
+                if $test_types->{$test->{type}};
         $test->{post}->($tbbinfos, $test) if $test->{post};
         if ($test->{fatal} && $test->{results} &&
             !$test->{results}{success}) {
@@ -585,6 +587,7 @@ sub test_start {
     run_tests($tbbinfos);
     $tbbinfos->{post_tests}($tbbinfos);
     delete $tbbinfos->{post_tests};
+    delete $tbbinfos->{test_types};
     chdir $oldcwd;
     $tbbinfos->{success} = is_success($tbbinfos->{tests});
     $report->{tbbfiles}{$tbbinfos->{filename}} = $tbbinfos;
