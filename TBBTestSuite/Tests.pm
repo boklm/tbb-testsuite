@@ -30,10 +30,13 @@ sub run_tests {
         if ($test->{enable} && !$test->{enable}->($tbbinfos, $test)) {
             next;
         }
+        $test->{start_time} = time;
         $test->{pre}->($tbbinfos, $test) if $test->{pre};
         $test_types->{$test->{type}}->($tbbinfos, $test)
                 if $test_types->{$test->{type}};
         $test->{post}->($tbbinfos, $test) if $test->{post};
+        $test->{finish_time} = time;
+        $test->{run_time} = $test->{finish_time} - $test->{start_time};
         if ($test->{fatal} && $test->{results} &&
             !$test->{results}{success}) {
             last;
