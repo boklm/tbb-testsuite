@@ -576,7 +576,7 @@ sub test_start {
                 if $tbbinfos->{type} eq 'sha256sum';
     my $tmpdir = File::Temp::newdir('XXXXXX', DIR => $options->{tmpdir});
     $tbbinfos->{tmpdir} = $tmpdir->dirname;
-    $tbbinfos->{tests} = [ map { { %$_ } } @tests ];
+    $tbbinfos->{tests} //= [ map { { %$_ } } @tests ];
     $tbbinfos->{'results-dir'} =
         "$options->{'report-dir'}/results-$tbbinfos->{filename}";
     mkdir $tbbinfos->{'results-dir'};
