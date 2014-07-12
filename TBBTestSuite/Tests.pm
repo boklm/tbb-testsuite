@@ -530,7 +530,7 @@ sub test_sha {
     foreach my $file (@files) {
         my $tbbinfos = tbb_filename_infos("$dir/$file->[0]");
         $tbbinfos->{sha256sum} = $file->[1];
-        test_tbb($report, $tbbinfos);
+        test_start($report, $tbbinfos);
     }
 }
 
@@ -569,7 +569,7 @@ sub post_tests {
     TBBTestSuite::Tests::TorBootstrap::stop_tor($tbbinfos);
 }
 
-sub test_tbb {
+sub test_start {
     my ($report, $tbbinfos) = @_;
     my $oldcwd = getcwd;
     return test_sha($report, $tbbinfos->{tbbfile})
