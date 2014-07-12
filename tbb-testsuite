@@ -39,7 +39,8 @@ sub run_tests {
     };
     TBBTestSuite::Reports::set_report_dir($report);
     foreach my $tbbfile (@{$options->{args}}) {
-        TBBTestSuite::Tests::test_tbb($report, $tbbfile);
+        my $tbbinfos = TBBTestSuite::Tests::tbb_filename_infos($tbbfile);
+        TBBTestSuite::Tests::test_tbb($report, $tbbinfos);
     }
     set_report_success($report);
     print "Report directory: $options->{'report-dir'}\n";

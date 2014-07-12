@@ -528,7 +528,9 @@ sub test_sha {
     my @files = map { [ reverse split /  /, $_ ] } split /\n/, $content;
     @files = grep { matching_tbbfile($_->[0]) } @files;
     foreach my $file (@files) {
-        test_tbb($report, "$dir/$file->[0]", $file->[1]);
+        my $tbbinfos = tbb_filename_infos("$dir/$file->[0]");
+        $tbbinfos->{sha256sum} = $file->[1];
+        test_tbb($report, $tbbinfos);
     }
 }
 
@@ -568,13 +570,12 @@ sub post_tests {
 }
 
 sub test_tbb {
-    my ($report, $tbbfile, $sha256sum) = @_;
+    my ($report, $tbbinfos) = @_;
     my $oldcwd = getcwd;
-    my $tbbinfos = tbb_filename_infos($tbbfile);
-    return test_sha($report, $tbbfile) if $tbbinfos->{type} eq 'sha256sum';
+    return test_sha($report, $tbbinfos->{tbbfile})
+                if $tbbinfos->{type} eq 'sha256sum';
     my $tmpdir = File::Temp::newdir('XXXXXX', DIR => $options->{tmpdir});
     $tbbinfos->{tmpdir} = $tmpdir->dirname;
-    $tbbinfos->{sha256sum} = $sha256sum if $sha256sum;
     $tbbinfos->{tests} = [ map { { %$_ } } @tests ];
     $tbbinfos->{'results-dir'} =
         "$options->{'report-dir'}/results-$tbbinfos->{filename}";
