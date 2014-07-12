@@ -11,6 +11,7 @@ use TBBTestSuite::Reports;
 use TBBTestSuite::Reports::Receive;
 use TBBTestSuite::Reports::Send;
 use TBBTestSuite::Tests;
+use TBBTestSuite::BrowserBundleTests qw(tbb_filename_infos);
 
 sub set_report_success {
     my ($report) = @_;
@@ -39,7 +40,7 @@ sub run_tests {
     };
     TBBTestSuite::Reports::set_report_dir($report);
     foreach my $tbbfile (@{$options->{args}}) {
-        my $tbbinfos = TBBTestSuite::Tests::tbb_filename_infos($tbbfile);
+        my $tbbinfos = tbb_filename_infos($tbbfile);
         TBBTestSuite::Tests::test_start($report, $tbbinfos);
     }
     set_report_success($report);
@@ -85,7 +86,7 @@ sub dump_options {
 
 my %actions = (
     run_tests => \&run_tests,
-    list_tests => \&TBBTestSuite::Tests::list_tests,
+    list_tests => \&TBBTestSuite::BrowserBundleTests::list_tests,
     reports_index => \&TBBTestSuite::Reports::make_reports_index,
     make_report => \&make_report,
     send_report => \&TBBTestSuite::Reports::Send::send_report,
