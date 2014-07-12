@@ -20,3 +20,19 @@
     [% END %]
 </ul>
 [% END %]
+[% IF test.results.modified_files.size %]
+<b>List of modified files:</b>
+<ul>
+    [% FOREACH file IN test.results.modified_files.sort %]
+    <li><a href="results-[% tbbfile %]/[% test.name %].sandbox/[% IF ! file.match('^/'); GET tbbfiles.$tbbfile.tbbdir _ '/'; END; %][% file %]">[% file %]</a></li>
+    [% END %]
+</ul>
+[% END %]
+[% IF test.results.removed_files.size %]
+<b>List of removed files:</b>
+<ul>
+    [% FOREACH file IN test.results.removed_files.sort %]
+    <li>[% file %]</li>
+    [% END %]
+</ul>
+[% END %]

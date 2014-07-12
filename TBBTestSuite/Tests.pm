@@ -332,6 +332,28 @@ sub check_opened_connections {
     }
 }
 
+sub check_modified_files {
+    my ($tbbinfos, $test) = @_;
+    return unless $options->{mbox};
+    my $sandbox_dir = "$tbbinfos->{'results-dir'}/$test->{name}.sandbox";
+    return unless -d $sandbox_dir;
+    my $add_modified_file = sub {
+        return if -d $File::Find::name;
+        my $fname = $File::Find::name;
+        $fname =~ s{^\Q$sandbox_dir\E}{};
+        $fname =~ s{^\Q$tbbinfos->{tbbdir}\E/}{};
+        push @{$test->{results}{modified_files}}, $fname;
+    };
+    find($add_modified_file, $sandbox_dir);
+    foreach my $meta (read_file("$sandbox_dir.meta")) {
+        if ($meta =~ m/^D:(.*):1$/) {
+            my $fname = $1;
+            $fname =~ s{^\Q$tbbinfos->{tbbdir}\E/}{};
+            push @{$test->{results}{removed_files}}, $fname;
+        }
+    }
+}
+
 sub ff_wrapper {
     my ($tbbinfos, $test) = @_;
     my $wrapper_file = "$tbbinfos->{tbbdir}/ff_wrapper";
@@ -396,6 +418,7 @@ sub mozmill_run {
     }
     $test->{results} = decode_json(read_file($results_file));
     check_opened_connections($tbbinfos, $test);
+    check_modified_files($tbbinfos, $test);
     $test->{results}{success} = !$test->{results}{results}->[0]->{failed};
 }
 
@@ -410,6 +433,7 @@ sub selenium_run {
         "$FindBin::Bin/selenium-tests/run_test", $test->{name});
     $test->{results} = decode_json(read_file($result_file));
     check_opened_connections($tbbinfos, $test);
+    check_modified_files($tbbinfos, $test);
 }
 
 sub command_run {
