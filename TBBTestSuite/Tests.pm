@@ -20,6 +20,9 @@ sub run_tests {
                 ? split(',', $options->{'enable-tests'}) : ();
     my $test_types = $tbbinfos->{test_types};
     foreach my $test (@{$tbbinfos->{tests}}) {
+        print "\n", '*' x (17 + length($test->{name})), "\n";
+        print "* Running test $test->{name} *\n";
+        print '*' x (17 + length($test->{name})), "\n\n";
         if (@enable_tests && !$test->{always}
             && ! grep { $test->{name} eq $_ } @enable_tests) {
             next;
