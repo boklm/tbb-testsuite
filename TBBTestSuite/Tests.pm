@@ -16,7 +16,7 @@ use IO::CaptureOutput qw(capture_exec);
 use JSON;
 use File::Copy;
 use YAML;
-use TBBTestSuite::Common qw(exit_error winpath);
+use TBBTestSuite::Common qw(exit_error winpath get_var);
 use TBBTestSuite::Options qw($options);
 use TBBTestSuite::Tests::VirusTotal qw(virustotal_run);
 use TBBTestSuite::Tests::TorBootstrap;
@@ -415,8 +415,7 @@ sub selenium_run {
 sub command_run {
     my ($tbbinfos, $test) = @_;
     $test->{results}{success} = 1;
-    my $files = $test->{files};
-    $files = $files->($tbbinfos, $test) if ref $files eq 'CODE';
+    my $files = get_var($test->{files}, $tbbinfos, $test);
     for my $file (@$files) {
         my ($out, $err, $success) = capture_exec(@{$test->{command}}, $file);
         if ($success && $test->{check_output}) {

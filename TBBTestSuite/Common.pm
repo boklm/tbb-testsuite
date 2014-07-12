@@ -11,7 +11,8 @@ our (@ISA, @EXPORT_OK);
 BEGIN {
     require Exporter;
     @ISA       = qw(Exporter);
-    @EXPORT_OK = qw(exit_error system_infos run_alone rm_pidfile winpath has_bin);
+    @EXPORT_OK = qw(exit_error system_infos run_alone rm_pidfile winpath
+                    has_bin get_var);
 }
 
 sub exit_error {
@@ -65,6 +66,11 @@ sub has_bin {
     my ($bin) = @_;
     my (undef, undef, $success) = capture_exec('which', $bin);
     return $success;
+}
+
+sub get_var {
+    my ($var, @arg) = @_;
+    return ref $var eq 'CODE' ? $var->(@arg) : $var;
 }
 
 1;
