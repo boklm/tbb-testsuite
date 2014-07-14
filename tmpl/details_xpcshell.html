@@ -1,0 +1,10 @@
+[% IF test.results.failed.size %]
+Failed tests:
+<ul>
+[% FOREACH f IN test.results.failed %]
+<li>[% f %]</li>
+[% END %]
+</ul>
+[% END %]
+<a href="javascript:togglecontent('logs_[% test.name %]');">xpcshell logs</a>
+<pre id="logs_[% test.name %]" style="display:none">[% test.results.out %]</pre>
