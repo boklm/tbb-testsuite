@@ -40,7 +40,8 @@ sub run_tests {
     };
     TBBTestSuite::Reports::set_report_dir($report);
     foreach my $tbbfile (@{$options->{args}}) {
-        my $tbbinfos = tbb_filename_infos($tbbfile);
+        my $tbbinfos = ref $tbbfile eq 'HASH' ? $tbbfile
+                         : tbb_filename_infos($tbbfile);
         TBBTestSuite::Tests::test_start($report, $tbbinfos);
     }
     set_report_success($report);
