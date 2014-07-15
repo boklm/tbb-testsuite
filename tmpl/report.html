@@ -41,6 +41,7 @@
             <li><b>Architecture:</b> [% tbbfiles.$tbbfile.arch %]</li>
             <li><b>sha256sum:</b> [% tbbfiles.$tbbfile.sha256sum %]</li>
             [% END %]
+            <li><b>Total run time:</b> [% tbbfiles.$tbbfile.run_time %] seconds</li>
         </ul>
         <h1>Summary</h1>
         [% FOREACH test IN tbbfiles.$tbbfile.tests %]

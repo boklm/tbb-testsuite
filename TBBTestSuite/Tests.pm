@@ -113,7 +113,10 @@ sub test_start {
     mkdir $tbbinfos->{'results-dir'};
     $tbbinfos->{pre_tests}($tbbinfos);
     delete $tbbinfos->{pre_tests};
+    $tbbinfos->{start_time} = time;
     run_tests($tbbinfos);
+    $tbbinfos->{finish_time} = time;
+    $tbbinfos->{run_time} = $tbbinfos->{finish_time} - $tbbinfos->{start_time};
     $tbbinfos->{post_tests}($tbbinfos);
     delete $tbbinfos->{post_tests};
     delete $tbbinfos->{test_types};
