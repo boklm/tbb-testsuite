@@ -4,6 +4,7 @@ use strict;
 use IO::CaptureOutput qw(capture_exec);
 use File::Spec;
 use File::Find;
+use TBBTestSuite::Common qw(exit_error);
 
 my $test_types = {
     xpcshell => \&xpcshell_test,
@@ -16,7 +17,7 @@ sub get_tbbinfos {
         pre_tests => \&pre_tests,
         post_tests => \&post_tests,
         type => 'browser',
-        filename => 'browser',
+        filename => "browser-$infos->{commit}",
         test_types => $test_types,
         tests => [],
     );
@@ -27,6 +28,20 @@ sub get_tbbinfos {
 sub pre_tests {
     my ($tbbinfos) = @_;
     chdir $tbbinfos->{browserdir};
+    system('git', 'checkout', $tbbinfos->{commit}) == 0
+        or exit_error "Error checking out $tbbinfos->{commit}";
+    my ($out, $err, $success) = capture_exec('git', 'show', '-s',
+        '--abbrev=20', '--format=%p', $tbbinfos->{commit});
+    exit_error "Error checking parents of $tbbinfos->{commit}" unless $success;
+    $tbbinfos->{parent_commits} = [ split(' ', $out) ];
+    ($out, $err, $success) = capture_exec('git', 'show', '-s',
+        '--format=%s', $tbbinfos->{commit});
+    exit_error "Error getting commit subject" unless $success;
+    $tbbinfos->{commit_subject} = $out;
+    ($out, $err, $success) = capture_exec('git', 'show', '-s',
+        '--format=%an', $tbbinfos->{commit});
+    exit_error "Error getting commit author" unless $success;
+    $tbbinfos->{commit_author} = $out;
 }
 
 sub post_tests {

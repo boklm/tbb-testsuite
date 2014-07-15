@@ -23,14 +23,24 @@
         </script>
     </head>
     <body>
+        [% IF tbbfiles.$tbbfile.type == 'browser' %]
+        <h1>Browser infos</h1>
+        [% ELSE %]
         <h1>Bundle infos</h1>
+        [% END %]
         <ul>
+            [% IF tbbfiles.$tbbfile.type == 'browser' %]
+            <li><b>Commit:</b> [% tbbfiles.$tbbfile.commit %]</li>
+            <li><b>Commit subject:</b> [% tbbfiles.$tbbfile.commit_subject %]</li>
+            <li><b>Commit author:</b> [% tbbfiles.$tbbfile.commit_author %]</li>
+            [% ELSE %]
             <li><b>Filename:</b> [% tbbfiles.$tbbfile.filename %]</li>
             <li><b>Version:</b> [% tbbfiles.$tbbfile.version %]</li>
             <li><b>Language:</b> [% tbbfiles.$tbbfile.language %]</li>
             <li><b>OS:</b> [% tbbfiles.$tbbfile.os %]</li>
             <li><b>Architecture:</b> [% tbbfiles.$tbbfile.arch %]</li>
             <li><b>sha256sum:</b> [% tbbfiles.$tbbfile.sha256sum %]</li>
+            [% END %]
         </ul>
         <h1>Summary</h1>
         [% FOREACH test IN tbbfiles.$tbbfile.tests %]
