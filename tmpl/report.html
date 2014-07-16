@@ -47,10 +47,10 @@
         [% FOREACH test IN tbbfiles.$tbbfile.tests %]
            [% IF test.results %]
               <a href="#[% test.name %]">
-              [% IF test.results.success %]
-                 <img src="../../static/ok-small.png" />
-              [% ELSE %]
+              [% IF is_test_error(test) %]
                  <img src="../../static/failed-small.png" />
+              [% ELSE %]
+                 <img src="../../static/ok-small.png" />
               [% END %]
               [% test.name %]</a><br />
           [% END %]

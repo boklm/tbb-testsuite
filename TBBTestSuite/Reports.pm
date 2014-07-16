@@ -15,6 +15,10 @@ use TBBTestSuite::Tests;
 use Email::Simple;
 use Email::Sender::Simple qw(try_to_sendmail);
 
+my %template_functions = (
+    is_test_error => \&TBBTestSuite::Tests::is_test_error,
+);
+
 sub set_report_dir {
     my ($report) = @_;
     my $rdir = $report->{options}{'reports-dir'} . '/r';
@@ -50,12 +54,13 @@ sub make_report {
         INCLUDE_PATH => "$FindBin::Bin/tmpl",
         OUTPUT_PATH => $report->{options}{'report-dir'},
     );
-    $template->process('screenshots.html', $report, 'screenshots.html',
+    my %r = ( %template_functions, %$report );
+    $template->process('screenshots.html', \%r, 'screenshots.html',
                        binmode => ':utf8');
-    $template->process('testrun_report.html', $report, 'index.html',
+    $template->process('testrun_report.html', \%r, 'index.html',
                        binmode => ':utf8');
     foreach my $tbbfile (keys %{$report->{tbbfiles}}) {
-        $template->process('report.html', { %$report, tbbfile => $tbbfile },
+        $template->process('report.html', { %r, tbbfile => $tbbfile },
                 "$tbbfile.html", binmode => ':utf8')
                 || exit_error "Template Error:\n" . $template->error;
     }
@@ -84,6 +89,7 @@ sub make_reports_index {
         push @{$reports_by_tbbversion{$tbbver}}, $report if $tbbver;
     }
     my $vars = {
+        %template_functions,
         reports => \%reports,
         reports_list => \@reports_by_time,
     };
@@ -105,8 +111,8 @@ sub text_report {
         ENCODING => 'utf8',
         INCLUDE_PATH => "$FindBin::Bin/tmpl",
     );
-    $template->process('testrun_report.txt', $report, \$res,
-                       binmode => ':utf8')
+    $template->process('testrun_report.txt', { %template_functions, %$report },
+                        \$res, binmode => ':utf8')
                 || exit_error "Template Error:\n" . $template->error;
     return $res;
 }
@@ -119,10 +125,11 @@ sub email_report {
         ENCODING => 'utf8',
         INCLUDE_PATH => "$FindBin::Bin/tmpl",
     );
-    $template->process(\$report->{options}{'email-subject'}, $report, \$subject,
+    my %r = ( %template_functions, %$report );
+    $template->process(\$report->{options}{'email-subject'}, \%r, \$subject,
                        binmode => ':utf8')
                 || exit_error "Template Error:\n" . $template->error;
-    $template->process('testrun_report.txt', $report, \$body,
+    $template->process('testrun_report.txt', \%r, \$body,
                        binmode => ':utf8')
                 || exit_error "Template Error:\n" . $template->error;
     foreach my $email_to (@{$report->{options}{'email-to'}}) {
