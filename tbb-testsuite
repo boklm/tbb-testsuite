@@ -22,7 +22,7 @@ sub set_report_success {
         next if $tbbfile->{success};
         $report->{success} = 0;
         foreach my $test (@{$tbbfile->{tests}}) {
-            if ($test->{results} && !$test->{results}{success}) {
+            if (TBBTestSuite::Tests::is_test_error($test)) {
                 push @{$report->{failed_tests}{$test->{name}}}, $tbbfile_name;
             }
         }

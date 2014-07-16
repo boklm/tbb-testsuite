@@ -37,19 +37,21 @@ sub run_tests {
         $test->{post}->($tbbinfos, $test) if $test->{post};
         $test->{finish_time} = time;
         $test->{run_time} = $test->{finish_time} - $test->{start_time};
-        if ($test->{fatal} && $test->{results} &&
-            !$test->{results}{success}) {
+        if ($test->{fatal} && is_test_error($test)) {
             last;
         }
     }
 }
 
+sub is_test_error {
+    my ($test) = @_;
+    return $test->{results} && !$test->{results}{success};
+}
+
 sub is_success {
     my ($tests) = @_;
     foreach my $test (@$tests) {
-        if ($test->{results} && !$test->{results}{success}) {
-            return 0;
-        }
+        return 0 if is_test_error($test);
     }
     return 1;
 }
