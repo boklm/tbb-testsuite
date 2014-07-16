@@ -30,6 +30,7 @@ sub run_tests {
         if ($test->{enable} && !$test->{enable}->($tbbinfos, $test)) {
             next;
         }
+        $test->{fail_type} //= 'error';
         $test->{start_time} = time;
         $test->{pre}->($tbbinfos, $test) if $test->{pre};
         $test_types->{$test->{type}}->($tbbinfos, $test)
