@@ -37,7 +37,7 @@ sub run_tests {
         $test->{post}->($tbbinfos, $test) if $test->{post};
         $test->{finish_time} = time;
         $test->{run_time} = $test->{finish_time} - $test->{start_time};
-        if ($test->{fatal} && is_test_error($test)) {
+        if ($test->{fail_type} eq 'fatal' && is_test_error($test)) {
             last;
         }
     }
