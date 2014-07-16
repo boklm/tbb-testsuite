@@ -67,7 +67,7 @@
             [% IF test.results.success %]
                 <span class="test_ok">OK</span>
             [% ELSE %]
-                <span class="test_notok">NOT OK</span>
+                <span class="test_notok">NOT OK</span> ([% test.fail_type %])
             [% END %]
             </li>
             <li><b>Run time:</b> [% test.run_time %] seconds</li>
