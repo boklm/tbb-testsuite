@@ -55,6 +55,7 @@ sub find_xpcshell_tests {
         my (undef, $dir, $file) = File::Spec->splitpath($File::Find::name);
         return unless $file eq 'xpcshell.ini';
         $dir =~ s{^$tbbinfos->{browserdir}/}{};
+        $dir =~ s{/$}{};
         return if $dir =~ m/^obj-/;
         push @res, {
             name  => "xpcshell:$dir",
