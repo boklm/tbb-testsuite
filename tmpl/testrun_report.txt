@@ -11,13 +11,13 @@ Summary
 [% IF success -%]
   Everything OK
 [% ELSE -%]
-  Failed tests
+  Test errors
 
 
-  [%- FOREACH test IN failed_tests.keys.sort -%]
+  [%- FOREACH test IN error_tests.keys.sort -%]
     - [% test %]:
 
-    [%- FOREACH tbbfile IN failed_tests.$test.sort -%]
+    [%- FOREACH tbbfile IN error_tests.$test.sort -%]
         [% tbbfile %]
 
     [%- END -%]

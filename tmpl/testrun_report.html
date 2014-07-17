@@ -29,12 +29,12 @@
         [% IF success %]
         Everything OK.
         [% ELSE %]
-        List of failed tests:
+        List of test errors:
           <ul>
-          [% FOREACH test IN failed_tests.keys.sort %]
+          [% FOREACH test IN error_tests.keys.sort %]
                 <li>[% test %]
                 <ul>
-                    [% FOREACH tbbfile IN failed_tests.$test.sort %]
+                    [% FOREACH tbbfile IN error_tests.$test.sort %]
                     <li><a href="[% tbbfile %].html#[% test %]">[% tbbfile %]</a></li>
                     [% END %]
                 </ul>
