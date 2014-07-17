@@ -49,6 +49,8 @@
               <a href="#[% test.name %]">
               [% IF is_test_error(test) %]
                  <img src="../../static/failed-small.png" />
+              [% ELSIF is_test_warning(test) %]
+                 <img src="../../static/warning-small.png" />
               [% ELSE %]
                  <img src="../../static/ok-small.png" />
               [% END %]

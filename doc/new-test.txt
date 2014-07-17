@@ -21,7 +21,8 @@ descr::
 
 fail_type::
         The default is 'error'. If you set this to 'fatal', when this
-        test fails the following tests are not run.
+        test fails the following tests are not run. If you set this to
+        'warning', failure of this test does not fail the report.
 
 pre::
         A reference to a perl subroutine that will be run before the

@@ -17,6 +17,7 @@ use Email::Sender::Simple qw(try_to_sendmail);
 
 my %template_functions = (
     is_test_error => \&TBBTestSuite::Tests::is_test_error,
+    is_test_warning => \&TBBTestSuite::Tests::is_test_warning,
 );
 
 sub set_report_dir {

@@ -46,7 +46,16 @@ sub run_tests {
 
 sub is_test_error {
     my ($test) = @_;
+    if ($test->{fail_type} ne 'fatal' && $test->{fail_type} ne 'error') {
+        return 0;
+    }
     return $test->{results} && !$test->{results}{success};
+}
+
+sub is_test_warning {
+    my ($test) = @_;
+    return $test->{results} && $test->{fail_type} eq 'warning'
+           && !$test->{results}{success};
 }
 
 sub is_success {
