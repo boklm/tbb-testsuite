@@ -43,42 +43,40 @@
             [% END %]
             <li><b>Total run time:</b> [% tbbfiles.$tbbfile.run_time %] seconds</li>
         </ul>
-        <h1>Summary</h1>
-        [% FOREACH test IN tbbfiles.$tbbfile.tests %]
-           [% IF test.results %]
-              <a href="#[% test.name %]">
-              [% IF is_test_error(test) %]
-                 <img src="../../static/failed-small.png" />
-              [% ELSIF is_test_warning(test) %]
-                 <img src="../../static/warning-small.png" />
-              [% ELSE %]
-                 <img src="../../static/ok-small.png" />
-              [% END %]
-              [% test.name %]</a><br />
-          [% END %]
-        [% END %]
 
         <h1>Results</h1>
         [% FOREACH test IN tbbfiles.$tbbfile.tests %]
         [% IF ! test.results; NEXT; END %]
-        <h2><a name="[% test.name %]">[% test.name %]</a></h2>
-        <ul>
-            <li><b>Description:</b> [% test.descr %]</li>
-            <li><b>Test type:</b> [% test.type %]</li>
-            <li><b>Status:</b>
-            [% IF test.results.success %]
-                <span class="test_ok">OK</span>
+        <a href="javascript:togglecontent('test_[% test.name %]');">
+            [% IF is_test_error(test) %]
+              <img src="../../static/failed-small.png" />
+            [% ELSIF is_test_warning(test) %]
+              <img src="../../static/warning-small.png" />
             [% ELSE %]
-                <span class="test_notok">NOT OK</span> ([% test.fail_type %])
+              <img src="../../static/ok-small.png" />
             [% END %]
-            </li>
-            <li><b>Run time:</b> [% test.run_time %] seconds</li>
-        </ul>
-        <h3>Details</h3>
-        <p>
-        [% SET type = test.type; INCLUDE "details_${type}.html" %]
-        </p>
-        <br /><br />
+            [% test.name %]</a><br />
+
+        <div id="test_[% test.name %]" style="display:none">
+            <h2><a name="[% test.name %]">[% test.name %]</a></h2>
+            <ul>
+                <li><b>Description:</b> [% test.descr %]</li>
+                <li><b>Test type:</b> [% test.type %]</li>
+                <li><b>Status:</b>
+                [% IF test.results.success %]
+                  <span class="test_ok">OK</span>
+                [% ELSE %]
+                  <span class="test_notok">NOT OK</span> ([% test.fail_type %])
+                [% END %]
+                </li>
+                <li><b>Run time:</b> [% test.run_time %] seconds</li>
+            </ul>
+            <h3>Details</h3>
+            <p>
+            [% SET type = test.type; INCLUDE "details_${type}.html" %]
+            </p>
+            <br /><br />
+        </div>
         [% END %]
 
         <hr>
