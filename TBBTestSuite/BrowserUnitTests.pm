@@ -61,6 +61,7 @@ sub find_xpcshell_tests {
             name  => "xpcshell:$dir",
             type  => 'xpcshell',
             descr => "xpcshell test in directory $dir",
+            dir   => $dir,
         };
     };
     find($wanted, $tbbinfos->{browserdir});
@@ -70,7 +71,7 @@ sub find_xpcshell_tests {
 sub xpcshell_test {
     my ($tbbinfos, $test) = @_;
     my ($out, $err, $success) =
-                capture_exec('./mach', 'xpcshell-test', $test->{name});
+                capture_exec('./mach', 'xpcshell-test', $test->{dir});
     $test->{results}{success} = $success;
     $test->{results}{out} = $out;
     $test->{results}{failed} = [];
