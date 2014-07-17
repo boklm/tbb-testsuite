@@ -17,12 +17,16 @@ sub set_report_success {
     my ($report) = @_;
     $report->{success} = 1;
     $report->{error_tests} = {};
+    $report->{warning_tests} = {};
     foreach my $tbbfile_name (keys %{$report->{tbbfiles}}) {
         my $tbbfile = $report->{tbbfiles}{$tbbfile_name};
         $report->{success} = 0 unless $tbbfile->{success};
         foreach my $test (@{$tbbfile->{tests}}) {
             if (TBBTestSuite::Tests::is_test_error($test)) {
                 push @{$report->{error_tests}{$test->{name}}}, $tbbfile_name;
+            }
+            if (TBBTestSuite::Tests::is_test_warning($test)) {
+                push @{$report->{warning_tests}{$test->{name}}}, $tbbfile_name;
             }
         }
     }

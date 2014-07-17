@@ -8,9 +8,10 @@ Summary
   URL: [% options.$ru %]r/[% options.name %]/
 [% END -%]
 
-[% IF success -%]
+[% IF success && warning_tests.keys.size == 0 -%]
   Everything OK
-[% ELSE -%]
+[% END -%]
+[% IF error_tests.keys.size -%]
   Test errors
 
 
@@ -18,6 +19,20 @@ Summary
     - [% test %]:
 
     [%- FOREACH tbbfile IN error_tests.$test.sort -%]
+        [% tbbfile %]
+
+    [%- END -%]
+  [%- END -%]
+[% END -%]
+[% IF warning_tests.keys.size -%]
+
+  Test warnings
+
+
+  [%- FOREACH test IN warning_tests.keys.sort -%]
+    - [% test %]:
+
+    [%- FOREACH tbbfile IN warning_tests.$test.sort -%]
         [% tbbfile %]
 
     [%- END -%]
