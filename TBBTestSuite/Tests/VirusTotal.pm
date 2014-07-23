@@ -17,9 +17,6 @@ BEGIN {
     @EXPORT_OK = qw(virustotal_run);
 }
 
-my $apikey = read_file($options->{'virustotal-api-key-file'})
-        if -f $options->{'virustotal-api-key-file'};
-
 my %urls = (
     report => 'https://www.virustotal.com/vtapi/v2/file/report',
     scan   => 'https://www.virustotal.com/vtapi/v2/file/scan',
@@ -44,6 +41,7 @@ sub req {
 
 sub scan_file {
     my ($file) = @_;
+    my $apikey = read_file($options->{'virustotal-api-key-file'});
     my (undef, undef, $filename) = File::Spec->splitpath($file);
     print "Checking $filename on virustotal\n";
     my $sha = sha256_hex(read_file($file));
