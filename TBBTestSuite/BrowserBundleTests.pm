@@ -274,7 +274,7 @@ sub tbb_filename_infos {
     my (undef, undef, $file) = File::Spec->splitpath($tbbfile);
     my %res = (filename => $file, tbbfile => $tbbfile,
         pre_tests => \&pre_tests, post_tests => \&post_tests,
-        test_types => $test_types);
+        test_types => $test_types, type => 'browserbundle');
     if ($file =~ m/^tor-browser-linux(..)-([^_]+)_(.+)\.tar\.xz$/) {
         @res{qw(type os version language)} = ('tbbfile', 'Linux', $2, $3);
         $res{arch} = $1 eq '64' ? 'x86_64' : 'x86';
