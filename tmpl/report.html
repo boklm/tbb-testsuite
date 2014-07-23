@@ -32,7 +32,6 @@
             [% IF tbbfiles.$tbbfile.type == 'browser' %]
             <li><b>Commit:</b> <a href="https://gitweb.torproject.org/tor-browser.git/commit/[% tbbfiles.$tbbfile.commit %]">[% tbbfiles.$tbbfile.commit %]</a></li>
             <li><b>Commit subject:</b> [% tbbfiles.$tbbfile.commit_subject %]</li>
-            <li><b>Commit author:</b> [% tbbfiles.$tbbfile.commit_author %]</li>
             [% ELSE %]
             <li><b>Filename:</b> [% tbbfiles.$tbbfile.filename %]</li>
             <li><b>Version:</b> [% tbbfiles.$tbbfile.version %]</li>
