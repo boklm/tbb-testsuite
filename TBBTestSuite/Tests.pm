@@ -20,6 +20,9 @@ sub run_tests {
                 ? split(',', $options->{'enable-tests'}) : ();
     my $test_types = $tbbinfos->{test_types};
     foreach my $test (@{$tbbinfos->{tests}}) {
+        $test->{fail_type} //= 'error';
+    }
+    foreach my $test (@{$tbbinfos->{tests}}) {
         print "\n", '*' x (17 + length($test->{name})), "\n";
         print "* Running test $test->{name} *\n";
         print '*' x (17 + length($test->{name})), "\n\n";
@@ -30,7 +33,6 @@ sub run_tests {
         if ($test->{enable} && !$test->{enable}->($tbbinfos, $test)) {
             next;
         }
-        $test->{fail_type} //= 'error';
         $test->{start_time} = time;
         $test->{pre}->($tbbinfos, $test) if $test->{pre};
         $test_types->{$test->{type}}->($tbbinfos, $test)
