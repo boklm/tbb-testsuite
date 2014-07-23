@@ -23,13 +23,13 @@
         </script>
     </head>
     <body>
-        [% IF tbbfiles.$tbbfile.type == 'browser' %]
+        [% IF tbbfiles.$tbbfile.type == 'browserunit' %]
         <h1>Browser infos</h1>
         [% ELSE %]
         <h1>Bundle infos</h1>
         [% END %]
         <ul>
-            [% IF tbbfiles.$tbbfile.type == 'browser' %]
+            [% IF tbbfiles.$tbbfile.type == 'browserunit' %]
             <li><b>Commit:</b> <a href="https://gitweb.torproject.org/tor-browser.git/commit/[% tbbfiles.$tbbfile.commit %]">[% tbbfiles.$tbbfile.commit %]</a></li>
             <li><b>Commit subject:</b> [% tbbfiles.$tbbfile.commit_subject %]</li>
             [% ELSE %]

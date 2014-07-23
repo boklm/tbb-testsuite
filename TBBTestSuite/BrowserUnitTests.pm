@@ -19,7 +19,7 @@ sub get_tbbinfos {
         %$infos,
         pre_tests => \&pre_tests,
         post_tests => \&post_tests,
-        type => 'browser',
+        type => 'browserunit',
         filename => "browser-$infos->{commit}",
         test_types => $test_types,
         tests => [
