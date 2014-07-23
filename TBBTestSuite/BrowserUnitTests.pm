@@ -1,13 +1,16 @@
 package TBBTestSuite::BrowserUnitTests;
 
 use strict;
+use FindBin;
 use IO::CaptureOutput qw(capture_exec);
 use File::Spec;
 use File::Find;
-use TBBTestSuite::Common qw(exit_error);
+use File::Copy;
+use TBBTestSuite::Common qw(exit_error get_nbcpu run_to_file);
 
 my $test_types = {
     xpcshell => \&xpcshell_test,
+    build_firefox => \&build_firefox,
 };
 
 sub get_tbbinfos {
@@ -19,7 +22,14 @@ sub get_tbbinfos {
         type => 'browser',
         filename => "browser-$infos->{commit}",
         test_types => $test_types,
-        tests => [],
+        tests => [
+            {
+                name => 'build_firefox',
+                type => 'build_firefox',
+                fail_type => 'fatal',
+                descr => 'Build Firefox',
+            },
+        ],
     );
     push @{$tbbinfos{tests}}, find_xpcshell_tests(\%tbbinfos);
     return \%tbbinfos;
@@ -28,6 +38,8 @@ sub get_tbbinfos {
 sub pre_tests {
     my ($tbbinfos) = @_;
     chdir $tbbinfos->{browserdir};
+    system('git', 'clean', '-fxd');
+    system('git', 'reset', '--hard');
     system('git', 'checkout', $tbbinfos->{commit}) == 0
         or exit_error "Error checking out $tbbinfos->{commit}";
     my ($out, $err, $success) = capture_exec('git', 'show', '-s',
@@ -81,6 +93,17 @@ sub xpcshell_test {
             push @{$test->{results}{failed}}, $file;
         }
     }
+}
+
+sub build_firefox {
+    my ($tbbinfos, $test) = @_;
+    $test->{results}{success} = 0;
+    copy("$FindBin::Bin/data/mozconfig", '.mozconfig');
+    run_to_file("$tbbinfos->{'results-dir'}/$test->{name}.configure.txt",
+        'make', '-f', 'client.mk', 'configure') or return;
+    run_to_file("$tbbinfos->{'results-dir'}/$test->{name}.build.txt",
+        'make', '-j' . get_nbcpu, '-f', 'client.mk', 'build') or return;
+    $test->{results}{success} = 1;
 }
 
 1;
