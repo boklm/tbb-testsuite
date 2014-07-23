@@ -6,13 +6,14 @@ use English;
 use FindBin;
 use IO::CaptureOutput qw(capture_exec);
 use File::Slurp;
+use IPC::Run qw(run);
 
 our (@ISA, @EXPORT_OK);
 BEGIN {
     require Exporter;
     @ISA       = qw(Exporter);
     @EXPORT_OK = qw(exit_error system_infos run_alone rm_pidfile winpath
-                    has_bin get_var);
+                    has_bin get_var run_to_file);
 }
 
 sub exit_error {
@@ -71,6 +72,14 @@ sub has_bin {
 sub get_var {
     my ($var, @arg) = @_;
     return ref $var eq 'CODE' ? $var->(@arg) : $var;
+}
+
+sub run_to_file {
+    my ($file, @cmd) = @_;
+    open(my $out, '>', $file) or exit_error "Error opening $file";
+    my $res = run \@cmd, '>&', $out;
+    close $out;
+    return $res;
 }
 
 1;
