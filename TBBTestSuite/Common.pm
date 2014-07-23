@@ -13,7 +13,7 @@ BEGIN {
     require Exporter;
     @ISA       = qw(Exporter);
     @EXPORT_OK = qw(exit_error system_infos run_alone rm_pidfile winpath
-                    has_bin get_var run_to_file);
+                    has_bin get_var run_to_file get_nbcpu);
 }
 
 sub exit_error {
@@ -79,6 +79,14 @@ sub run_to_file {
     open(my $out, '>', $file) or exit_error "Error opening $file";
     my $res = run \@cmd, '>&', $out;
     close $out;
+    return $res;
+}
+
+sub get_nbcpu {
+    open(my $cpuinfo, '<', '/proc/cpuinfo')
+        or exit_error 'Error opening /proc/cpuinfo';
+    my $res = grep { m/^processor\s+:\s/ } <$cpuinfo>;
+    close $cpuinfo;
     return $res;
 }
 
