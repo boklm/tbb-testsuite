@@ -13,15 +13,18 @@ my $test_types = {
     build_firefox => \&build_firefox,
 };
 
+our %testsuite = (
+    test_types => $test_types,
+    pre_tests  => \&pre_tests,
+    post_tests => \&post_tests,
+);
+
 sub get_tbbinfos {
     my ($infos) = @_;
     my %tbbinfos = (
         %$infos,
-        pre_tests => \&pre_tests,
-        post_tests => \&post_tests,
         type => 'browserunit',
         filename => "browser-$infos->{commit}",
-        test_types => $test_types,
         tests => [
             {
                 name => 'build_firefox',

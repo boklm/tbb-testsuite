@@ -13,12 +13,18 @@ use YAML;
 use TBBTestSuite::Common qw(exit_error);
 use TBBTestSuite::Options qw($options);
 use TBBTestSuite::BrowserBundleTests qw(tbb_filename_infos);
+use TBBTestSuite::BrowserUnitTests;
+
+my %testsuite_types = (
+    browserunit => \%TBBTestSuite::BrowserUnitTests::testsuite,
+    browserbundle => \%TBBTestSuite::BrowserBundleTests::testsuite,
+);
 
 sub run_tests {
     my ($tbbinfos) = @_;
     my @enable_tests = $options->{'enable-tests'}
                 ? split(',', $options->{'enable-tests'}) : ();
-    my $test_types = $tbbinfos->{test_types};
+    my $test_types = $testsuite_types{$tbbinfos->{type}}->{test_types};
     foreach my $test (@{$tbbinfos->{tests}}) {
         $test->{fail_type} //= 'error';
     }
@@ -125,15 +131,13 @@ sub test_start {
     $tbbinfos->{'results-dir'} =
         "$options->{'report-dir'}/results-$tbbinfos->{filename}";
     mkdir $tbbinfos->{'results-dir'};
-    $tbbinfos->{pre_tests}($tbbinfos);
-    delete $tbbinfos->{pre_tests};
+    my $testsuite = $testsuite_types{$tbbinfos->{type}};
+    $testsuite->{pre_tests}($tbbinfos);
     $tbbinfos->{start_time} = time;
     run_tests($tbbinfos);
     $tbbinfos->{finish_time} = time;
     $tbbinfos->{run_time} = $tbbinfos->{finish_time} - $tbbinfos->{start_time};
-    $tbbinfos->{post_tests}($tbbinfos);
-    delete $tbbinfos->{post_tests};
-    delete $tbbinfos->{test_types};
+    $testsuite->{post_tests}($tbbinfos);
     chdir $oldcwd;
     $tbbinfos->{success} = is_success($tbbinfos->{tests});
     $report->{tbbfiles}{$tbbinfos->{filename}} = $tbbinfos;
