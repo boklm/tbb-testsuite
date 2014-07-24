@@ -76,7 +76,7 @@ sub is_success {
 
 sub matching_tbbfile {
     my $o = tbb_filename_infos($_[0]);
-    return $o->{type} eq 'tbbfile' && $o->{os} eq $options->{os}
+    return $o->{type} eq 'browserbundle' && $o->{os} eq $options->{os}
         && $o->{arch} eq $options->{arch};
 }
 

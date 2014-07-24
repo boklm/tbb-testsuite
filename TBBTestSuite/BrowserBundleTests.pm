@@ -278,17 +278,16 @@ sub get_tbbfile {
 sub tbb_filename_infos {
     my ($tbbfile) = @_;
     my (undef, undef, $file) = File::Spec->splitpath($tbbfile);
-    my %res = (filename => $file, tbbfile => $tbbfile,
-        type => 'browserbundle');
+    my %res = (filename => $file, tbbfile => $tbbfile);
     if ($file =~ m/^tor-browser-linux(..)-([^_]+)_(.+)\.tar\.xz$/) {
-        @res{qw(type os version language)} = ('tbbfile', 'Linux', $2, $3);
+        @res{qw(type os version language)} = ('browserbundle', 'Linux', $2, $3);
         $res{arch} = $1 eq '64' ? 'x86_64' : 'x86';
     } elsif ($file =~ m/^torbrowser-install-([^_]+)_(.+)\.exe$/) {
         @res{qw(type os arch version language)} =
-                ('tbbfile', 'Windows', 'x86', $1, $2);
+                ('browserbundle', 'Windows', 'x86', $1, $2);
     } elsif ($file =~ m/^TorBrowserBundle-(.+)-osx32_(.+)\.zip$/) {
         @res{qw(type os arch version language)} =
-                ('tbbfile', 'MacOSX', 'x86', $1, $2);
+                ('browserbundle', 'MacOSX', 'x86', $1, $2);
     } elsif ($file eq 'sha256sums.txt') {
         $res{type} = 'sha256sum';
     } else {
