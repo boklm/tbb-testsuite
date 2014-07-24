@@ -1,0 +1,43 @@
+# vim: filetype=perl expandtab
+
+use strict;
+use FindBin;
+use TBBTestSuite::Common;
+use TBBTestSuite::BrowserUnitTests;
+use TBBTestSuite::BrowserGit qw(git_clone_fetch get_commits_by_branch
+                                parent_commit);
+
+my $torbrowser_branch = 'tor-browser-24.7.0esr-3.x-1';
+my $esr_branch = 'esr24';
+
+sub commit_to_name {
+    my ($commit) = @_;
+    $commit = substr $commit, 0, 20;
+    return "browser-$commit";
+}
+
+git_clone_fetch;
+
+my @commits = get_commits_by_branch($torbrowser_branch, $esr_branch);
+
+my %res = (
+    args => [],
+    'reports-url' => 'https://people.torproject.org/~boklm/tbbtests/',
+);
+my ($previous, $p);
+for my $commit (reverse @commits) {
+    my $name = commit_to_name($commit);
+    $p = $previous ? [ $previous, $previous ] : undef;
+    $previous = $name;
+    next if -d "$options->{'reports-dir'}/r/$name";
+    $res{name} = $name;
+    my $tbbinfos = TBBTestSuite::BrowserUnitTests::get_tbbinfos({
+            browserdir => $TBBTestSuite::BrowserGit::clone_dir,
+            commit => substr($commit, 0, 20),
+            $p ? (parent_results => $p) : (),
+        });
+    $res{args} = [ $tbbinfos ],
+    return %res;
+}
+
+%res;
