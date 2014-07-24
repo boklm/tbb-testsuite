@@ -6,6 +6,7 @@ use IO::CaptureOutput qw(capture_exec);
 use File::Spec;
 use File::Find;
 use File::Copy;
+use File::Slurp;
 use TBBTestSuite::Common qw(exit_error get_nbcpu run_to_file);
 use TBBTestSuite::Reports qw(load_report);
 
@@ -168,12 +169,18 @@ sub xpcshell_test {
 
 sub build_firefox {
     my ($tbbinfos, $test) = @_;
+    my $nbcpu = get_nbcpu;
     $test->{results}{success} = 0;
     copy("$FindBin::Bin/data/mozconfig", '.mozconfig');
+    my @l = read_file('.mozconfig');
+    foreach (@l) {
+        s/MOZ_MAKE_FLAGS="-j4"/MOZ_MAKE_FLAGS="-j$nbcpu"/;
+    }
+    write_file('.mozconfig', @l);
     run_to_file("$tbbinfos->{'results-dir'}/$test->{name}.configure.txt",
         'make', '-f', 'client.mk', 'configure') or return;
     run_to_file("$tbbinfos->{'results-dir'}/$test->{name}.build.txt",
-        'make', '-j' . get_nbcpu, '-f', 'client.mk', 'build') or return;
+        'make', "-j$nbcpu", '-f', 'client.mk', 'build') or return;
     $test->{results}{success} = 1;
 }
 
