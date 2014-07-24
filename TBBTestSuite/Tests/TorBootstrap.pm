@@ -122,6 +122,7 @@ sub start_tor {
         $template->process("$test->{name}.conf", $vars, \$config,
             binmode => ':utf8')
                 || exit_error "Template Error:\n" . $template->error;
+        $test->{torrc} = $config;
         $torrc_file = File::Temp->new;
         write_file($torrc_file, $config);
     }

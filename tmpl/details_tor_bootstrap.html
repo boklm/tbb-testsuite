@@ -1,4 +1,9 @@
 <ul>
+    [% IF test.torrc %]
+    <li><a href="javascript:togglecontent('torrc_[% test.name %]')">torrc content</a>
+    <pre id="torrc_[% test.name %]" style="display:none">[% test.torrc %]</pre>
+    </li>
+    [% END %]
     <li><a href="results-[% tbbfile %]/[% test.name %].log">tor daemon logs</a></li>
 </ul>
 [% IF test.results.fetch_error %]
