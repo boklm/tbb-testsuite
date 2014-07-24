@@ -21,6 +21,7 @@ foreach my $build (@latest_builds) {
         'email-from'  => 'TBB Tests <boklm@torproject.org>',
         'email-to'    => [ 'tor-qa@lists.torproject.org', 'boklm@mars-attacks.org', ],
         newlayout     => 0,
+        mbox          => 0,
     );
 }
 return ( args => [] );
