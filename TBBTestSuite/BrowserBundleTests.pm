@@ -56,6 +56,7 @@ our %testsuite = (
 our @tests = (
     {
         name         => 'readelf_RELRO',
+        fail_type    => 'warning',
         type         => 'command',
         descr        => 'Check if binaries are RELocation Read-Only',
         files        => \&tbb_binfiles,
@@ -66,6 +67,7 @@ our @tests = (
     },
     {
         name         => 'readelf_stack_canary',
+        fail_type    => 'warning',
         type         => 'command',
         descr        => 'Check for stack canary support',
         files        => \&tbb_binfiles,
@@ -93,6 +95,7 @@ our @tests = (
     },
     {
         name         => 'readelf_no_rpath',
+        fail_type    => 'warning',
         type         => 'command',
         descr        => 'Check for no rpath',
         files        => \&tbb_binfiles,
