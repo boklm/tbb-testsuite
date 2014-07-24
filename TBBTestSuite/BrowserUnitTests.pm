@@ -155,7 +155,8 @@ sub find_xpcshell_tests {
 sub xpcshell_test {
     my ($tbbinfos, $test) = @_;
     my ($out, $err, $success) =
-                capture_exec('./mach', 'xpcshell-test', $test->{dir});
+                capture_exec('xvfb-run', '--server-args=-screen 0 1024x768x24',
+                    './mach', 'xpcshell-test', $test->{dir});
     $test->{results}{success} = $success;
     $test->{results}{out} = $out;
     $test->{results}{failed} = [];
