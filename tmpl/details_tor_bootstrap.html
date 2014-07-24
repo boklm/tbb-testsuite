@@ -4,7 +4,9 @@
     <pre id="torrc_[% test.name %]" style="display:none">[% test.torrc %]</pre>
     </li>
     [% END %]
-    <li><a href="results-[% tbbfile %]/[% test.name %].log">tor daemon logs</a></li>
+    <li><a href="javascript:togglecontent('logs_[% test.name %]')">tor daemon logs</a>
+    <pre id="logs_[% test.name %]" style="display:none">[% INSERT "results-${tbbfile}/${test.name}.log"; %]</pre>
+    </li>
 </ul>
 [% IF test.results.fetch_error %]
 Error fetching a page:

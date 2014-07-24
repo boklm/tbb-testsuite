@@ -52,7 +52,7 @@ sub make_report {
     copy_static;
     my $template = Template->new(
         ENCODING => 'utf8',
-        INCLUDE_PATH => "$FindBin::Bin/tmpl",
+        INCLUDE_PATH => "$FindBin::Bin/tmpl:$report->{options}{'report-dir'}",
         OUTPUT_PATH => $report->{options}{'report-dir'},
     );
     my %r = ( %template_functions, %$report );
