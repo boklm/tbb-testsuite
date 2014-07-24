@@ -43,6 +43,103 @@
             <li><b>Total run time:</b> [% tbbfiles.$tbbfile.run_time %] seconds</li>
         </ul>
 
+        [% IF tbbfiles.$tbbfile.type == 'browserunit' && tbbfiles.$tbbfile.parent_diff %]
+        [% SET diff = tbbfiles.$tbbfile.parent_diff %]
+        <h1>Diff with previous results</h1>
+        <ul>
+            [% SET parent_results = tbbfiles.$tbbfile.parent_results %]
+            <li>Previous results: <a href="../[% parent_results.0 %]/[% parent_results.1 %].html">[% parent_results.0 %]</a></li>
+            <li><a href="javascript:togglecontent('run_time_diff')"><b>Total run time diff:</b> [% diff.run_time %]</a>
+            <div id="run_time_diff" style="display:none">
+                <ul>
+                    [% FOREACH t IN diff.tests_time.nsort.reverse %]
+                    <li>[% t %]: [% diff.tests_time.$t %]</li>
+                    [% END %]
+                </ul>
+            </div>
+            </li>
+
+            [% IF ! diff.fail_tests.size %]
+            <li>No new failing tests</li>
+            [% ELSE %]
+            <li><a href="javascript:togglecontent('fail_tests_diff')"><b>[% diff.fail_tests.size %] new failing tests</b></a>
+            <div id="fail_tests_diff" style="display:none">
+                <ul>
+                    [% FOREACH t IN diff.fail_tests.sort %]
+                    <li>[% t %]</li>
+                    [% END %]
+                </ul>
+            </div>
+            </li>
+            [% END %]
+
+            [%
+            SET nb_js_fail = 0;
+            SET nb_js_fixed = 0;
+            FOREACH t IN diff.subtests.keys;
+              SET nb_js_fail = nb_js_fail + diff.subtests.$t.fail.size;
+              SET nb_js_fixed = nb_js_fixed + diff.subtests.$t.fixed.size;
+            END
+            %]
+
+            [% IF nb_js_fail %]
+            <li><a href="javascript:togglecontent('fail_js_diff')"><b>[% nb_js_fail %] new js files failing</b></a>
+            <div id="fail_js_diff" style="display:none">
+                <ul>
+                    [% FOREACH t IN diff.subtests.keys %]
+                    [% IF ! diff.subtests.$t.fail.size; NEXT; END %]
+                        <li>[% t %]:
+                           <ul>
+                               [% FOREACH js IN diff.subtests.$t.fail %]
+                               <li>[% js %]</li>
+                               [% END %]
+                           </ul>
+                        </li>
+                    [% END %]
+                </ul>
+            </div>
+            </li>
+            [% ELSE %]
+            <li>No new js files failing</li>
+            [% END %]
+
+            [% IF ! diff.fixed_tests.size %]
+            <li>No fixed tests</li>
+            [% ELSE %]
+            <li><a href="javascript:togglecontent('fixed_tests_diff')"><b>[% diff.fixed_tests.size %] fixed tests</b></a>
+            <div id="fixed_tests_diff" style="display:none">
+                <ul>
+                    [% FOREACH t IN diff.fixed_tests.sort %]
+                    <li>[% t %]</li>
+                    [% END %]
+                </ul>
+            </div>
+            </li>
+            [% END %]
+
+            [% IF nb_js_fixed %]
+            <li><a href="javascript:togglecontent('fixed_js_diff')"><b>[% nb_js_fixed %] new js files fixed</b></a>
+            <div id="fixed_js_diff" style="display:none">
+                <ul>
+                    [% FOREACH t IN diff.subtests.keys %]
+                    [% IF ! diff.subtests.$t.fixed.size; NEXT; END %]
+                        <li>[% t %]:
+                           <ul>
+                               [% FOREACH js IN diff.subtests.$t.fixed %]
+                               <li>[% js %]</li>
+                               [% END %]
+                           </ul>
+                        </li>
+                    [% END %]
+                </ul>
+            </div>
+            </li>
+            [% ELSE %]
+            <li>No js files fixed</li>
+            [% END %]
+        </ul>
+        [% END %]
+
         <h1>Results</h1>
         [% FOREACH test IN tbbfiles.$tbbfile.tests %]
         [% IF ! test.results; NEXT; END %]

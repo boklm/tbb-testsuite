@@ -15,6 +15,13 @@ use TBBTestSuite::Tests;
 use Email::Simple;
 use Email::Sender::Simple qw(try_to_sendmail);
 
+our (@ISA, @EXPORT_OK);
+BEGIN {
+    require Exporter;
+    @ISA       = qw(Exporter);
+    @EXPORT_OK = qw(load_report);
+}
+
 my %template_functions = (
     is_test_error => \&TBBTestSuite::Tests::is_test_error,
     is_test_warning => \&TBBTestSuite::Tests::is_test_warning,
@@ -55,6 +62,12 @@ sub make_report {
         INCLUDE_PATH => "$FindBin::Bin/tmpl:$report->{options}{'report-dir'}",
         OUTPUT_PATH => $report->{options}{'report-dir'},
     );
+    foreach my $tbbfile (keys %{$report->{tbbfiles}}) {
+        my $type = $report->{tbbfiles}{$tbbfile}{type};
+        my $testsuite = $TBBTestSuite::Tests::testsuite_types{$type};
+        $testsuite->{pre_makereport}($report, $tbbfile)
+                if $testsuite->{pre_makereport};
+    }
     my %r = ( %template_functions, %$report );
     $template->process('screenshots.html', \%r, 'screenshots.html',
                        binmode => ':utf8');
@@ -146,6 +159,13 @@ sub email_report {
             print STDERR "Warning: Error sending email to $email_to\n";
         }
     }
+}
+
+sub load_report {
+    my ($report_name) = @_;
+    my $reportfile = "$options->{'reports-dir'}/r/$report_name/report.yml";
+    return undef unless -f $reportfile;
+    return YAML::LoadFile($reportfile);
 }
 
 1;

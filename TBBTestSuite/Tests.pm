@@ -15,7 +15,7 @@ use TBBTestSuite::Options qw($options);
 use TBBTestSuite::BrowserBundleTests qw(tbb_filename_infos);
 use TBBTestSuite::BrowserUnitTests;
 
-my %testsuite_types = (
+our %testsuite_types = (
     browserunit => \%TBBTestSuite::BrowserUnitTests::testsuite,
     browserbundle => \%TBBTestSuite::BrowserBundleTests::testsuite,
 );
