@@ -22,6 +22,7 @@
                 font-size: small;
             }
         </style>
+        [% INCLUDE togglecontent.js %]
     </head>
     <body>
         <h1>Tor Browser Unit Test Reports</h1>
@@ -49,7 +50,12 @@
             <li><b>[% diff.fail_tests.size %] new failing tests</b>
                 <ul>
                     [% FOREACH t IN diff.fail_tests.sort %]
-                    <li>[% t %]</li>
+                    <li><a href="javascript:togglecontent('fail_test_[% report %]_[% t %]');">[% t %]</a>
+                    <div id="fail_test_[% report %]_[% t %]" style="display:none">
+                        [% SET test = test_by_name(tbbfiles.$tbbfile.tests, t); %]
+                        [% SET type = test.type; INCLUDE "details_${type}.html" from_index=1 %]
+                    </div>
+                    </li>
                     [% END %]
                 </ul>
             </li>
@@ -66,6 +72,11 @@
                                <li>[% js %]</li>
                                [% END %]
                            </ul>
+                           <a href="javascript:togglecontent('js_fail_test_[% report %]_[% t %]');">logs</a>
+                           <div id="js_fail_test_[% report %]_[% t %]" style="display:none">
+                               [% SET test = test_by_name(tbbfiles.$tbbfile.tests, t); %]
+                               [% SET type = test.type; INCLUDE "details_${type}.html" from_index=1 %]
+                           </div>
                         </li>
                     [% END %]
                 </ul>

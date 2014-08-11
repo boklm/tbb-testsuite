@@ -74,6 +74,14 @@ sub is_success {
     return 1;
 }
 
+sub test_by_name {
+    my ($tests, $name) = @_;
+    foreach my $test (@$tests) {
+        return $test if $test->{name} eq $name;
+    }
+    return undef;
+}
+
 sub matching_tbbfile {
     my $o = tbb_filename_infos($_[0]);
     return $o->{type} eq 'browserbundle' && $o->{os} eq $options->{os}

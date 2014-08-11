@@ -1,3 +1,4 @@
+[% IF ! from_index %]
 [% IF test.results.failed.size %]
 Failed tests:
 <ul>
@@ -7,4 +8,5 @@ Failed tests:
 </ul>
 [% END %]
 <a href="javascript:togglecontent('logs_[% test.name %]');">xpcshell logs</a>
-<pre id="logs_[% test.name %]" style="display:none">[% test.results.out %]</pre>
+[% END %]
+<pre [% IF ! from_index %]id="logs_[% report_name %][% test.name %]" style="display:none"[% END %]>[% test.results.out %]</pre>
