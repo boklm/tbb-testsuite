@@ -1,0 +1,107 @@
+[% USE date -%]
+<html>
+    <head>
+        <title>Tests reports</title>
+        <style type="text/css">
+            .test_ok {
+                color: #006600;
+                font-weight: bold;
+            }
+            .test_ok A {
+                color: #006600;
+                font-weight: bold;
+            }
+            .test_notok {
+                color: #FF0000;
+                font-weight: bold;
+            }
+            .test_notok A {
+                color: #FF0000;
+            }
+            .reportdate {
+                font-size: small;
+            }
+        </style>
+    </head>
+    <body>
+        <h1>Tor Browser Unit Test Reports</h1>
+        [% FOREACH report IN reports_list %]
+        [%
+          SET tbbfiles = reports.$report.tbbfiles;
+          SET tbbfile = reports.$report.tbbfiles.keys.0;
+          SET diff = tbbfiles.$tbbfile.parent_diff;
+        %]
+        <ul>
+            <li><b>Commit:</b> <a href="https://gitweb.torproject.org/tor-browser.git/commit/[% tbbfiles.$tbbfile.commit %]">[% tbbfiles.$tbbfile.commit %]</a></li>
+            <li><b>Subject:</b> [% tbbfiles.$tbbfile.commit_subject %]</li>
+            <li><b>Run time:</b> [% tbbfiles.$tbbfile.run_time %] seconds (diff: [% diff.run_time %])</li>
+
+            [%
+            SET nb_js_fail = 0;
+            SET nb_js_fixed = 0;
+            FOREACH t IN diff.subtests.keys;
+              SET nb_js_fail = nb_js_fail + diff.subtests.$t.fail.size;
+              SET nb_js_fixed = nb_js_fixed + diff.subtests.$t.fixed.size;
+            END
+            %]
+
+            [% IF diff.fail_tests.size %]
+            <li><b>[% diff.fail_tests.size %] new failing tests</b>
+                <ul>
+                    [% FOREACH t IN diff.fail_tests.sort %]
+                    <li>[% t %]</li>
+                    [% END %]
+                </ul>
+            </li>
+            [% END %]
+
+            [% IF nb_js_fail %]
+            <li><b>[% nb_js_fail %] new js files failing</b>
+                <ul>
+                    [% FOREACH t IN diff.subtests.keys %]
+                    [% IF ! diff.subtests.$t.fail.size; NEXT; END %]
+                        <li>[% t %]:
+                           <ul>
+                               [% FOREACH js IN diff.subtests.$t.fail %]
+                               <li>[% js %]</li>
+                               [% END %]
+                           </ul>
+                        </li>
+                    [% END %]
+                </ul>
+            </li>
+            [% END %]
+
+            [% IF diff.fixed_tests.size %]
+            <li><b>[% diff.fixed_tests.size %] fixed tests</b>
+                <ul>
+                    [% FOREACH t IN diff.fixed_tests.sort %]
+                    <li>[% t %]</li>
+                    [% END %]
+                </ul>
+            </li>
+            [% END %]
+
+            [% IF nb_js_fixed %]
+            <li><b>[% nb_js_fixed %] new js files fixed</b>
+                <ul>
+                    [% FOREACH t IN diff.subtests.keys %]
+                    [% IF ! diff.subtests.$t.fixed.size; NEXT; END %]
+                        <li>[% t %]:
+                           <ul>
+                               [% FOREACH js IN diff.subtests.$t.fixed %]
+                               <li>[% js %]</li>
+                               [% END %]
+                           </ul>
+                        </li>
+                    [% END %]
+                </ul>
+            </li>
+            [% END %]
+
+            <li><a href="r/[% report %]/[% tbbfile %].html">Details</a></li>
+        </ul>
+        <hr />
+        [% END %]
+    </body>
+</html>

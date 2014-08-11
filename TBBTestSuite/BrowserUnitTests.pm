@@ -20,6 +20,7 @@ our %testsuite = (
     pre_tests  => \&pre_tests,
     post_tests => \&post_tests,
     pre_makereport => \&pre_makereport,
+    pre_reports_index => \&pre_reports_index,
 );
 
 sub get_tbbinfos {
@@ -121,14 +122,24 @@ sub diff_results {
 }
 
 sub pre_makereport {
-    my ($report, $tbbfile) = @_;
+    my ($report, $tbbfile, $r) = @_;
     my $tbbinfos = $report->{tbbfiles}{$tbbfile};
     return unless $tbbinfos->{parent_results};
-    my $r = TBBTestSuite::Reports::load_report($tbbinfos->{parent_results}[0]);
+    $r //= TBBTestSuite::Reports::load_report($tbbinfos->{parent_results}[0]);
     return unless $r;
     my $parent = $r->{tbbfiles}{$tbbinfos->{parent_results}[1]};
     return unless $parent;
     $tbbinfos->{parent_diff} = diff_results($parent, $tbbinfos);
+}
+
+sub pre_reports_index {
+    my ($reports, $report) = @_;
+    foreach my $tbbfile (keys %{$report->{tbbfiles}}) {
+        my $tbbinfos = $report->{tbbfiles}{$tbbfile};
+        pre_makereport($report, $tbbfile,
+                       $reports->{$tbbinfos->{parent_results}[0]})
+                   if $tbbinfos->{parent_results};
+    }
 }
 
 sub find_xpcshell_tests {

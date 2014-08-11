@@ -25,41 +25,10 @@
     </head>
     <body>
         <h1>Tests Reports</h1>
-        <table>
-            <tr>
-                <th>Name</th>
-                <th>Date</th>
-                <th>Version</th>
-                <th>OS</th>
-                <th>Arch</th>
-                <th>Result</th>
-            </tr>
-            [% FOREACH report IN reports_list %]
-            <tr>
-                <td valign="top"><a href="r/[% report %]/index.html">[% report %]</a></td>
-                <td valign="top">[% date.format(reports.$report.time, '%Y-%m-%d %H:%M') %]</td>
-                <td valign="top">[% IF reports.$report.options.tbbversion %]
-                                        <a href="tbbversion_[% reports.$report.options.tbbversion %].html">[% reports.$report.options.tbbversion %]</a>
-                                 [% END %]
-                                    </td>
-                <td valign="top">[% reports.$report.system_infos.osname %]</td>
-                <td valign="top">[% reports.$report.system_infos.arch %]</td>
-                <td valign="top">
-                    [% failed = 0 %]
-                    [% FOREACH tbbfile IN reports.$report.tbbfiles.keys %]
-                      [% IF ! reports.$report.tbbfiles.$tbbfile.success %]
-                        <span class="test_notok">Failed: <a href="r/[% report %]/[% tbbfile %].html">[% tbbfile %]</a></span><br />
-                        [% failed = 1 %]
-                      [% END %]
-                    [% END %]
-                    [% IF failed == 0 %]
-                      <span class="test_ok"><a href="r/[% report %]/index.html">OK</a></span>
-                    [% END %]
-                </td>
-            </tr>
+        <ul>
+            [% FOREACH type IN reports_by_type.keys.sort %]
+            <li><a href="index-[% type %].html">[% type %] reports</a></li>
             [% END %]
-        </table>
-        <hr />
-        <a href="tests.html">Available tests</a>
+        </ul>
     </body>
 </html>

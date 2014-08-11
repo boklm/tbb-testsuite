@@ -80,6 +80,14 @@ sub make_report {
     }
 }
 
+sub report_type {
+    my ($report) = @_;
+    foreach my $tbbfile (values %{$report->{tbbfiles}}) {
+        return $tbbfile->{type} // 'browserbundle';
+    }
+    return 'browserbundle';
+}
+
 sub make_reports_index {
     copy_static;
     my $template = Template->new(
@@ -98,14 +106,21 @@ sub make_reports_index {
     my @reports_by_time =
         sort { $reports{$b}->{time} <=> $reports{$a}->{time} } keys %reports;
     my %reports_by_tbbversion;
+    my %reports_by_type;
     foreach my $report (keys %reports) {
         my $tbbver = $reports{$report}->{options}{tbbversion};
         push @{$reports_by_tbbversion{$tbbver}}, $report if $tbbver;
+        my $type = report_type($reports{$report});
+        push @{$reports_by_type{$type}}, $report;
+        my $testsuite = $TBBTestSuite::Tests::testsuite_types{$type};
+        $testsuite->{pre_reports_index}(\%reports, $reports{$report})
+                if $testsuite->{pre_reports_index};
     }
     my $vars = {
         %template_functions,
         reports => \%reports,
         reports_list => \@reports_by_time,
+        reports_by_type => \%reports_by_type,
     };
     $template->process('reports_index.html', $vars, 'index.html');
     $template->process('tests_index.html', { %$vars, tests =>
@@ -113,8 +128,14 @@ sub make_reports_index {
     foreach my $tbbver (keys %reports_by_tbbversion) {
         my @s = sort { $reports{$b}->{time} <=> $reports{$a}->{time} }
                 @{$reports_by_tbbversion{$tbbver}};
-        $template->process('reports_index.html',
+        $template->process('reports_index_browserbundle.html',
             { %$vars, reports_list => \@s }, "tbbversion_$tbbver.html");
+    }
+    foreach my $type (keys %reports_by_type) {
+        my @s = sort { $reports{$b}->{time} <=> $reports{$a}->{time} }
+                @{$reports_by_type{$type}};
+        $template->process("reports_index_$type.html",
+            { %$vars, reports_list => \@s }, "index-$type.html");
     }
 }
 
