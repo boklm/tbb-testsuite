@@ -122,20 +122,24 @@ sub make_reports_index {
         reports_list => \@reports_by_time,
         reports_by_type => \%reports_by_type,
     };
-    $template->process('reports_index.html', $vars, 'index.html');
+    $template->process('reports_index.html', $vars, 'index.html')
+                || exit_error "Template Error:\n" . $template->error;
     $template->process('tests_index.html', { %$vars, tests =>
-            \@TBBTestSuite::Tests::tests }, 'tests.html');
+            \@TBBTestSuite::Tests::tests }, 'tests.html')
+                || exit_error "Template Error:\n" . $template->error;
     foreach my $tbbver (keys %reports_by_tbbversion) {
         my @s = sort { $reports{$b}->{time} <=> $reports{$a}->{time} }
                 @{$reports_by_tbbversion{$tbbver}};
         $template->process('reports_index_browserbundle.html',
-            { %$vars, reports_list => \@s }, "tbbversion_$tbbver.html");
+            { %$vars, reports_list => \@s }, "tbbversion_$tbbver.html")
+                || exit_error "Template Error:\n" . $template->error;
     }
     foreach my $type (keys %reports_by_type) {
         my @s = sort { $reports{$b}->{time} <=> $reports{$a}->{time} }
                 @{$reports_by_type{$type}};
         $template->process("reports_index_$type.html",
-            { %$vars, reports_list => \@s }, "index-$type.html");
+            { %$vars, reports_list => \@s }, "index-$type.html")
+                || exit_error "Template Error:\n" . $template->error;
     }
 }
 
