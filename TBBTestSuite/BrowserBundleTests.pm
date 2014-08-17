@@ -11,11 +11,11 @@ use File::Type;
 use File::Copy;
 use JSON;
 use Digest::SHA qw(sha256_hex);
-use IO::CaptureOutput qw(capture_exec);
 use LWP::UserAgent;
-use TBBTestSuite::Common qw(exit_error winpath get_var);
+use TBBTestSuite::Common qw(exit_error winpath);
 use TBBTestSuite::Options qw($options);
 use TBBTestSuite::Tests::VirusTotal qw(virustotal_run);
+use TBBTestSuite::Tests::Command qw(command_run);
 use TBBTestSuite::Tests::TorBootstrap;
 
 our (@ISA, @EXPORT_OK);
@@ -447,24 +447,6 @@ sub selenium_run {
     $test->{results} = decode_json(read_file($result_file));
     check_opened_connections($tbbinfos, $test);
     check_modified_files($tbbinfos, $test);
-}
-
-sub command_run {
-    my ($tbbinfos, $test) = @_;
-    $test->{results}{success} = 1;
-    my $files = get_var($test->{files}, $tbbinfos, $test);
-    for my $file (@$files) {
-        my ($out, $err, $success) = capture_exec(@{$test->{command}}, $file);
-        if ($success && $test->{check_output}) {
-            $success = $test->{check_output}($out);
-        }
-        if (!$success) {
-            $test->{results}{success} = 0;
-            $file =~ s/^$tbbinfos->{tbbdir}\///;
-            push @{$test->{results}{failed}}, $file;
-            next;
-        }
-    }
 }
 
 sub set_tbbpaths {
