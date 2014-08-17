@@ -8,7 +8,7 @@ our (@ISA, @EXPORT_OK);
 BEGIN {
     require Exporter;
     @ISA       = qw(Exporter);
-    @EXPORT_OK = qw(command_run);
+    @EXPORT_OK = qw(command_run file_known_issue);
 }
 
 sub command_run {
@@ -27,6 +27,26 @@ sub command_run {
             next;
         }
     }
+}
+
+sub file_known_issue {
+    my %files = @_;
+    return sub {
+        my ($tbbinfos, $test) = @_;
+        my $failed;
+        my %tickets;
+        foreach my $file (@{$test->{results}{failed}}) {
+            if ($files{$file}) {
+                $tickets{$files{$file}} = 1;
+            } else {
+                $failed = 1;
+            }
+        }
+        my %res;
+        $res{fail_type} = 'known' unless $failed;
+        $res{tickets} = [ keys %tickets ] if %tickets;
+        return \%res;
+    };
 }
 
 1;
