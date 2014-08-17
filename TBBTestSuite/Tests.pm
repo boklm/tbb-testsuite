@@ -66,6 +66,12 @@ sub is_test_warning {
            && !$test->{results}{success};
 }
 
+sub is_test_known {
+    my ($test) = @_;
+    return $test->{results} && $test->{fail_type} eq 'known'
+           && !$test->{results}{success};
+}
+
 sub is_success {
     my ($tests) = @_;
     foreach my $test (@$tests) {

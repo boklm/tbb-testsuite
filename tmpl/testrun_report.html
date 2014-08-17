@@ -26,7 +26,7 @@
         [% END %]
         </ul>
         <h1>Summary</h1>
-        [% IF success && warning_tests.keys.size == 0 %]
+        [% IF success && warning_tests.keys.size == 0 && known_tests.keys.size == 0 %]
         Everything OK.
         [% END %]
         [% IF error_tests.keys.size %]
@@ -50,6 +50,21 @@
                 <li>[% test %]
                 <ul>
                     [% FOREACH tbbfile IN warning_tests.$test.sort %]
+                    <li><a href="[% tbbfile %].html#[% test %]">[% tbbfile %]</a></li>
+                    [% END %]
+                </ul>
+                </li>
+          [% END %]
+          </ul>
+
+        [% END %]
+        [% IF known_tests.keys.size %]
+        List of known test failures:
+          <ul>
+          [% FOREACH test IN known_tests.keys.sort %]
+                <li>[% test %]
+                <ul>
+                    [% FOREACH tbbfile IN known_tests.$test.sort %]
                     <li><a href="[% tbbfile %].html#[% test %]">[% tbbfile %]</a></li>
                     [% END %]
                 </ul>

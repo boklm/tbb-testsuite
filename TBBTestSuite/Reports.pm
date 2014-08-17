@@ -25,6 +25,7 @@ BEGIN {
 my %template_functions = (
     is_test_error => \&TBBTestSuite::Tests::is_test_error,
     is_test_warning => \&TBBTestSuite::Tests::is_test_warning,
+    is_test_known => \&TBBTestSuite::Tests::is_test_known,
     test_by_name => \&TBBTestSuite::Tests::test_by_name,
 );
 

@@ -28,6 +28,9 @@ sub set_report_success {
             if (TBBTestSuite::Tests::is_test_warning($test)) {
                 push @{$report->{warning_tests}{$test->{name}}}, $tbbfile_name;
             }
+            if (TBBTestSuite::Tests::is_test_known($test)) {
+                push @{$report->{known_tests}{$test->{name}}}, $tbbfile_name;
+            }
         }
     }
 }
