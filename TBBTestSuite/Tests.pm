@@ -74,6 +74,19 @@ sub is_success {
     return 1;
 }
 
+sub check_known_issues {
+    my ($tbbinfos) = @_;
+    return unless $options->{known_issues};
+    foreach my $test (@{$tbbinfos->{tests}}) {
+        next unless $test->{results};
+        next if $test->{results}{success};
+        my $issue = $options->{known_issues}{$test->{name}};
+        next unless $issue;
+        $issue = $issue->($tbbinfos, $test) if ref $issue eq 'CODE';
+        @{$test}{keys %$issue} = values %$issue;
+    }
+}
+
 sub test_by_name {
     my ($tests, $name) = @_;
     foreach my $test (@$tests) {
@@ -147,6 +160,7 @@ sub test_start {
     $tbbinfos->{run_time} = $tbbinfos->{finish_time} - $tbbinfos->{start_time};
     $testsuite->{post_tests}($tbbinfos);
     chdir $oldcwd;
+    check_known_issues($tbbinfos);
     $tbbinfos->{success} = is_success($tbbinfos->{tests});
     $report->{tbbfiles}{$tbbinfos->{filename}} = $tbbinfos;
 }
