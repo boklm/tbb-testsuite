@@ -157,6 +157,13 @@
                   <span class="test_notok">NOT OK</span> ([% test.fail_type %])
                 [% END %]
                 </li>
+                [% IF test.tickets %]
+                <li><b>Tickets:</b>
+                  [% FOREACH ticket IN test.tickets %]
+                  <a href="https://trac.torproject.org/projects/tor/ticket/[% ticket %]">#[% ticket %]</a>
+                  [% END %]
+                </li>
+                [% END %]
                 <li><b>Run time:</b> [% test.run_time %] seconds</li>
             </ul>
             <h3>Details</h3>
