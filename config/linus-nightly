@@ -5,6 +5,7 @@ use DateTime;
 use Data::Dump qw(dd);
 use LWP::Simple;
 use TBBTestSuite::Common;
+use TBBTestSuite::Tests::Command qw(file_known_issue);
 
 my $system_infos = TBBTestSuite::Common::system_infos;
 my $osname = $system_infos->{osname} . '-' . $system_infos->{arch};
@@ -36,4 +37,10 @@ if (!get($shaurl)) {
         'gunes.acar@esat.kuleuven.be',
     ],
     'reports-url' => 'https://people.torproject.org/~boklm/tbbtests/',
+    known_issues => {
+        readelf_PIE => file_known_issue(
+            'TorBrowser/Tor/PluggableTransports/meek-client' => '10935',
+            'TorBrowser/Tor/PluggableTransports/meek-client-torbrowser' => '10935',
+        ),
+    },
 );
