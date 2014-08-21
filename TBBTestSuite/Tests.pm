@@ -29,16 +29,15 @@ sub run_tests {
         $test->{fail_type} //= 'error';
     }
     foreach my $test (@{$tbbinfos->{tests}}) {
-        print "\n", '*' x (17 + length($test->{name})), "\n";
-        print "* Running test $test->{name} *\n";
-        print '*' x (17 + length($test->{name})), "\n\n";
-        if (@enable_tests && !$test->{always}
-            && ! grep { $test->{name} eq $_ } @enable_tests) {
+        if (@enable_tests && ! grep { $test->{name} eq $_ } @enable_tests) {
             next;
         }
         if ($test->{enable} && !$test->{enable}->($tbbinfos, $test)) {
             next;
         }
+        print "\n", '*' x (17 + length($test->{name})), "\n";
+        print "* Running test $test->{name} *\n";
+        print '*' x (17 + length($test->{name})), "\n\n";
         $test->{start_time} = time;
         $test->{pre}->($tbbinfos, $test) if $test->{pre};
         $test_types->{$test->{type}}->($tbbinfos, $test)

@@ -156,7 +156,6 @@ our @tests = (
         type   => 'tor_bootstrap',
         descr  => 'Check that we can bootstrap tor',
         fail_type => 'fatal',
-        always => 1,
         use_default_config => 1,
         no_kill => 1,
     },

@@ -147,7 +147,7 @@ sub start_tor {
 
 sub stop_tor {
     my ($tbbinfos, $test) = @_;
-    return unless $options->{starttor};
+    return unless ($options->{starttor} && $tbbinfos->{torpid});
     kill 15, $tbbinfos->{torpid};
     my ($kid, $i) = (0, 5);
     while ($kid == 0 && $i) {
