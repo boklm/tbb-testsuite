@@ -25,6 +25,7 @@ my %default_options = (
     selenium => $OSNAME ne 'cygwin',
     starttor => 1,
     gpgcheck => 1,
+    clean_browserdir => 1,
     keyring  => 'erinn.gpg',
     'tor-control-port' => '9551',
     'tor-socks-port'   => '9550',

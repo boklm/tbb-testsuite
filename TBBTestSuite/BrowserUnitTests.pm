@@ -9,6 +9,7 @@ use File::Copy;
 use File::Slurp;
 use TBBTestSuite::Common qw(exit_error get_nbcpu run_to_file);
 use TBBTestSuite::Reports qw(load_report);
+use TBBTestSuite::Options qw($options);
 
 my $test_types = {
     xpcshell => \&xpcshell_test,
@@ -45,8 +46,10 @@ sub get_tbbinfos {
 sub pre_tests {
     my ($tbbinfos) = @_;
     chdir $tbbinfos->{browserdir};
-    system('git', 'clean', '-fxd');
-    system('git', 'reset', '--hard');
+    if ($options->{clean_browserdir}) {
+        system('git', 'clean', '-fxd');
+        system('git', 'reset', '--hard');
+    }
     system('git', 'checkout', $tbbinfos->{commit}) == 0
         or exit_error "Error checking out $tbbinfos->{commit}";
     my ($out, $err, $success) = capture_exec('git', 'show', '-s',
