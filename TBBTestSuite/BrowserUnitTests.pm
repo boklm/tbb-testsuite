@@ -111,7 +111,9 @@ sub diff_results {
     my $r2t = tests_by_name($r2->{tests});
     foreach my $test (keys %$r2t) {
         my ($t1, $t2) = ($r1t->{$test}, $r2t->{$test});
-        $res{tests_time}->{$test} = $t2->{run_time} - $t1->{run_time};
+        if (defined $t2->{run_time} && defined $t1->{run_time}) {
+            $res{tests_time}->{$test} = $t2->{run_time} - $t1->{run_time};
+        }
         next unless defined $t1->{results};
         next unless defined $t2->{results};
         if (!$t2->{results}{success} && $t1->{results}{success}) {
