@@ -8,12 +8,17 @@ use File::Find;
 use File::Copy;
 use File::Slurp;
 use XML::LibXML '1.70';
+use JSON;
 use TBBTestSuite::Common qw(exit_error get_nbcpu run_to_file);
 use TBBTestSuite::Reports qw(load_report);
 use TBBTestSuite::Options qw($options);
 
 my $test_types = {
     xpcshell => \&xpcshell_test,
+    mochitest_plain => sub { mochitest_test('mochitest-plain', @_) },
+    mochitest_chrome => sub { mochitest_test('mochitest-chrome', @_) },
+    mochitest_browser => sub { mochitest_test('mochitest-browser', @_) },
+    mochitest_a11y => sub { mochitest_test('mochitest-a11y', @_) },
     build_firefox => \&build_firefox,
 };
 
@@ -41,6 +46,7 @@ sub get_tbbinfos {
         ],
     );
     push @{$tbbinfos{tests}}, find_xpcshell_tests(\%tbbinfos);
+    push @{$tbbinfos{tests}}, find_mochitest_tests(\%tbbinfos);
     return \%tbbinfos;
 }
 
@@ -79,11 +85,15 @@ sub tests_by_name {
     return \%res;
 }
 
-sub xpcshell_subtests_diff {
+sub xpcshell_mochitest_subtests_diff {
     my ($t1, $t2) = @_;
     my (@fail, @fixed);
-    my %f1 = %{$t1->{results}{failed}};
-    my %f2 = %{$t2->{results}{failed}};
+    my %f1 = ref $t1->{results}{failed} eq 'HASH' ?
+                %{$t1->{results}{failed}}
+               : map { $_ => 1 } @{$t1->{results}{failed}};
+    my %f2 = ref $t2->{results}{failed} eq 'HASH' ?
+                %{$t2->{results}{failed}}
+               : map { $_ => 1 } @{$t2->{results}{failed}};
     my %f = ( %f1, %f2);
     foreach my $t (keys %f) {
         if ($f2{$t} && !$f1{$t}) {
@@ -122,8 +132,8 @@ sub diff_results {
         if ($t2->{results}{success} && !$t1->{results}{success}) {
             push @{$res{fixed_tests}}, $test;
         }
-        if ($t1->{type} eq 'xpcshell') {
-            my $s = xpcshell_subtests_diff($t1, $t2);
+        if ($t1->{type} eq 'xpcshell' || $t1->{type} =~ m/^mochitest_/) {
+            my $s = xpcshell_mochitest_subtests_diff($t1, $t2);
             $res{subtests}{$test} = $s if $s;
         }
     }
@@ -172,6 +182,35 @@ sub find_xpcshell_tests {
     return @res;
 }
 
+sub find_mochitest_tests {
+    my ($tbbinfos) = @_;
+    my @res;
+    my $wanted = sub {
+        return unless -f $File::Find::name;
+        my (undef, $dir, $file) = File::Spec->splitpath($File::Find::name);
+        return unless $file eq 'Makefile.in';
+        $dir =~ s{^$tbbinfos->{browserdir}/}{};
+        $dir =~ s{/$}{};
+        return if $dir =~ m/^obj-/;
+        my @makefile = read_file $File::Find::name;
+        my @types;
+        push @types, 'plain' if grep { m/MOCHITEST_FILES/ } @makefile;
+        push @types, 'chrome' if grep { m/MOCHITEST_CHROME_FILES/ } @makefile;
+        push @types, 'browser' if grep { m/MOCHITEST_BROWSER_FILES/ } @makefile;
+        push @types, 'a11y' if grep { m/MOCHITEST_A11Y_FILES/ } @makefile;
+        foreach my $type (@types) {
+            push @res, {
+                name => "mochitest-$type:$dir",
+                type => "mochitest_$type",
+                descr => "$type mochitest in directory $dir",
+                dir => $dir,
+            };
+        }
+    };
+    find($wanted, $tbbinfos->{browserdir});
+    return @res;
+}
+
 sub xpcshell_test {
     my ($tbbinfos, $test) = @_;
     my $xunit_file = "$tbbinfos->{topobjdir}/.mozbuild/xpchsell.xunit.xml";
@@ -198,6 +237,19 @@ sub xpcshell_test {
                                                     ->textContent;
         }
     }
+}
+
+sub mochitest_test {
+    my ($mach_command, $tbbinfos, $test) = @_;
+    my $failures_file = "$tbbinfos->{topobjdir}/.mozbuild/mochitest_failures.json";
+    unlink $failures_file if -f $failures_file;
+    my ($out, $err, $success) =
+                capture_exec('xvfb-run', '--server-args=-screen 0 1024x768x24',
+                    './mach', $mach_command, $test->{dir});
+    $test->{results}{out} = $out;
+    my $failed = decode_json(scalar read_file($failures_file));
+    $test->{results}{failed} = [ keys %$failed ];
+    $test->{results}{success} = ! @{$test->{results}{failed}};
 }
 
 sub build_firefox {

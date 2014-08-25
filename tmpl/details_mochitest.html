@@ -1,0 +1,12 @@
+[% IF ! from_index %]
+[% IF test.results.failed.size %]
+Failed tests:
+<ul>
+[% FOREACH f IN test.results.failed %]
+<li>[% f %]</li>
+[% END %]
+</ul>
+[% END %]
+<a href="javascript:togglecontent('logs_[% test.name %]');">mochitest logs</a>
+[% END %]
+<pre [% IF ! from_index %]id="logs_[% report_name %][% test.name %]" style="display:none"[% END %]>[% test.results.out %]</pre>
