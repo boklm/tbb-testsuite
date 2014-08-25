@@ -1,9 +1,11 @@
 [% IF ! from_index %]
-[% IF test.results.failed.size %]
+[% IF test.results.failed.keys.size %]
 Failed tests:
 <ul>
-[% FOREACH f IN test.results.failed %]
-<li>[% f %]</li>
+[% FOREACH f IN test.results.failed.keys %]
+<li><a href="javascript:togglecontent('logs_[% test.name %]_[% f %]');">[% f %]</a>
+<pre id="logs_[% test.name %]_[% f %]" style="display:none">[% test.results.failed.$f %]</pre>
+</li>
 [% END %]
 </ul>
 [% END %]

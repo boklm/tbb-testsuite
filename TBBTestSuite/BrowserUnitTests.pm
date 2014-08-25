@@ -82,8 +82,8 @@ sub tests_by_name {
 sub xpcshell_subtests_diff {
     my ($t1, $t2) = @_;
     my (@fail, @fixed);
-    my %f1 = map { $_ => 1 } @{$t1->{results}{failed}};
-    my %f2 = map { $_ => 1 } @{$t2->{results}{failed}};
+    my %f1 = %{$t1->{results}{failed}};
+    my %f2 = %{$t2->{results}{failed}};
     my %f = ( %f1, %f2);
     foreach my $t (keys %f) {
         if ($f2{$t} && !$f1{$t}) {
@@ -178,7 +178,7 @@ sub xpcshell_test {
                 capture_exec('xvfb-run', '--server-args=-screen 0 1024x768x24',
                     './mach', 'xpcshell-test', $test->{dir});
     $test->{results}{out} = $out;
-    $test->{results}{failed} = [];
+    $test->{results}{failed} = {};
     my $root = eval {
         -f $xunit_file
                 && XML::LibXML->load_xml(location => $xunit_file)
@@ -191,7 +191,9 @@ sub xpcshell_test {
     $test->{results}{success} = ($root->getAttribute('failures') // 0)== 0;
     foreach my $testcase (@{$root->getChildrenByLocalName('testcase')}) {
         if ($testcase->getChildrenByLocalName('failure')) {
-            push @{$test->{results}{failed}}, $testcase->getAttribute('name');
+            $test->{results}{failed}{$testcase->getAttribute('name')} =
+                            ($testcase->getChildrenByLocalName('failure'))[0]
+                                                    ->textContent;
         }
     }
 }
