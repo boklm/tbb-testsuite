@@ -18,7 +18,7 @@ perlmodules='
 Cwd Data::Dump Digest::SHA File::Path File::Slurp File::Spec File::Temp
 FindBin Getopt::Long IO::CaptureOutput IO::Socket::INET Image::Magick
 JSON LWP::UserAgent LWP::Protocol::https Template YAML DateTime
-Email::Simple Email::Sender File::Type IPC::Run
+Email::Simple Email::Sender File::Type IPC::Run XML::LibXML
 '
 
 if [ -f /etc/debian_version ]
@@ -28,7 +28,7 @@ then
 	   libfile-spec-perl libio-captureoutput-perl perlmagick libjson-perl \
 	    libwww-perl libtemplate-perl libyaml-perl libdatetime-perl \
             libemail-sender-perl libemail-simple-perl libfile-type-perl \
-            libipc-run-perl
+            libipc-run-perl libxml-libxml-perl
    apt-get install -y libgtk2.0-0
    apt-get install -y nmap
    if lsb_release -i | grep -q Debian

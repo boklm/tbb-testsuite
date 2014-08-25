@@ -7,6 +7,7 @@ use File::Spec;
 use File::Find;
 use File::Copy;
 use File::Slurp;
+use XML::LibXML '1.70';
 use TBBTestSuite::Common qw(exit_error get_nbcpu run_to_file);
 use TBBTestSuite::Reports qw(load_report);
 use TBBTestSuite::Options qw($options);
@@ -64,6 +65,9 @@ sub pre_tests {
         '--format=%an', $tbbinfos->{commit});
     exit_error "Error getting commit author" unless $success;
     $tbbinfos->{commit_author} = $out;
+    my ($config_guess) = capture_exec('./build/autoconf/config.guess');
+    chomp $config_guess;
+    $tbbinfos->{topobjdir} = "obj-$config_guess";
 }
 
 sub post_tests {
@@ -168,16 +172,26 @@ sub find_xpcshell_tests {
 
 sub xpcshell_test {
     my ($tbbinfos, $test) = @_;
+    my $xunit_file = "$tbbinfos->{topobjdir}/.mozbuild/xpchsell.xunit.xml";
+    unlink $xunit_file if -f $xunit_file;
     my ($out, $err, $success) =
                 capture_exec('xvfb-run', '--server-args=-screen 0 1024x768x24',
                     './mach', 'xpcshell-test', $test->{dir});
-    $test->{results}{success} = $success;
     $test->{results}{out} = $out;
     $test->{results}{failed} = [];
-    foreach my $line (split "\n", $out) {
-        if ($line =~ m{TEST-UNEXPECTED-FAIL \| /([^\|]+) \|}) {
-            my (undef, undef, $file) = File::Spec->splitpath($1);
-            push @{$test->{results}{failed}}, $file;
+    my $root = eval {
+        -f $xunit_file
+                && XML::LibXML->load_xml(location => $xunit_file)
+                              ->documentElement();
+    };
+    if (!$root) {
+        $test->{results}{success} = 0;
+        return;
+    }
+    $test->{results}{success} = ($root->getAttribute('failures') // 0)== 0;
+    foreach my $testcase (@{$root->getChildrenByLocalName('testcase')}) {
+        if ($testcase->getChildrenByLocalName('failure')) {
+            push @{$test->{results}{failed}}, $testcase->getAttribute('name');
         }
     }
 }
