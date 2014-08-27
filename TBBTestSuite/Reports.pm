@@ -24,6 +24,8 @@ BEGIN {
     @EXPORT_OK = qw(load_report report_dir report_path save_report);
 }
 
+my %reports;
+
 my %template_functions = (
     is_test_error => \&TBBTestSuite::Tests::is_test_error,
     is_test_warning => \&TBBTestSuite::Tests::is_test_warning,
@@ -104,7 +106,6 @@ sub make_reports_index {
         INCLUDE_PATH => "$FindBin::Bin/tmpl",
         OUTPUT_PATH => $options->{'reports-dir'},
     );
-    my %reports;
     foreach my $dir (glob "$options->{'reports-dir'}/r/*") {
         my $resfile = "$dir/report.yml";
         next unless -f $resfile;
@@ -204,9 +205,10 @@ sub email_report {
 
 sub load_report {
     my ($report_name) = @_;
+    return $reports{$report_name} if exists $reports{$report_name};
     my $reportfile = "$options->{'reports-dir'}/r/$report_name/report.yml";
     return undef unless -f $reportfile;
-    return YAML::LoadFile($reportfile);
+    return $reports{$report_name} = YAML::LoadFile($reportfile);
 }
 
 sub report_summary {
