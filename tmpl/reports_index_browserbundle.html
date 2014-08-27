@@ -38,8 +38,8 @@
             <tr>
                 <td valign="top"><a href="r/[% report %]/index.html">[% report %]</a></td>
                 <td valign="top">[% date.format(reports.$report.time, '%Y-%m-%d %H:%M') %]</td>
-                <td valign="top">[% IF reports.$report.options.tbbversion %]
-                                        <a href="tbbversion_[% reports.$report.options.tbbversion %].html">[% reports.$report.options.tbbversion %]</a>
+                <td valign="top">[% IF reports.$report.options.tags %]
+                                        <a href="index-browserbundle-[% reports.$report.options.tags.0 %].html">[% reports.$report.options.tags.0 %]</a>
                                  [% END %]
                                     </td>
                 <td valign="top">[% reports.$report.system_infos.osname %]</td>
