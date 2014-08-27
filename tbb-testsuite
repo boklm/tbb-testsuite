@@ -7,7 +7,7 @@ use File::Path qw(make_path);
 use YAML;
 use TBBTestSuite::Common qw(exit_error run_alone rm_pidfile);
 use TBBTestSuite::Options qw($options);
-use TBBTestSuite::Reports;
+use TBBTestSuite::Reports qw(report_dir report_path);
 use TBBTestSuite::Reports::Receive;
 use TBBTestSuite::Reports::Send;
 use TBBTestSuite::Tests;
@@ -44,15 +44,14 @@ sub run_tests {
         system_infos => TBBTestSuite::Common::system_infos,
         report_format => '1',
     };
-    TBBTestSuite::Reports::set_report_dir($report);
     foreach my $tbbfile (@{$options->{args}}) {
         my $tbbinfos = ref $tbbfile eq 'HASH' ? $tbbfile
                          : tbb_filename_infos($tbbfile);
         TBBTestSuite::Tests::test_start($report, $tbbinfos);
     }
     set_report_success($report);
-    print "Report directory: $options->{'report-dir'}\n";
-    YAML::DumpFile("$options->{'report-dir'}/report.yml", $report);
+    print 'Report directory: ', report_dir($report), "\n";
+    YAML::DumpFile(report_path($report, 'report.yml'), $report);
     TBBTestSuite::Reports::make_report($report);
     TBBTestSuite::Reports::make_reports_index;
     TBBTestSuite::Reports::Send::send_report if $options->{'upload-to'};
@@ -61,8 +60,7 @@ sub run_tests {
 sub load_report_from_file {
     exit_error "--name is not set" unless $options->{name};
     my $report = { options => $options };
-    TBBTestSuite::Reports::set_report_dir($report);
-    $report = YAML::LoadFile("$options->{'report-dir'}/report.yml");
+    $report = YAML::LoadFile(report_path($report, 'report.yml'));
     $report->{options} = { %{$report->{options}}, %$options };
     return $report;
 }

@@ -19,7 +19,7 @@ our (@ISA, @EXPORT_OK);
 BEGIN {
     require Exporter;
     @ISA       = qw(Exporter);
-    @EXPORT_OK = qw(load_report);
+    @EXPORT_OK = qw(load_report report_dir report_path);
 }
 
 my %template_functions = (
@@ -29,21 +29,26 @@ my %template_functions = (
     test_by_name => \&TBBTestSuite::Tests::test_by_name,
 );
 
-sub set_report_dir {
+sub report_dir {
     my ($report) = @_;
-    my $rdir = $report->{options}{'reports-dir'} . '/r';
+    my $rdir = $options->{'reports-dir'} . '/r';
+    make_path($rdir) unless -d $rdir;
     if ($report->{options}{name}) {
-        $report->{options}{'report-dir'} = "$rdir/$report->{options}{name}";
-        make_path($options->{'report-dir'});
-        return;
+        my $reportdir = "$rdir/$report->{options}{name}";
+        make_path($reportdir) unless -d $reportdir;
+        return $reportdir;
     }
-    make_path($rdir);
-    $report->{options}{'report-dir'} = File::Temp::newdir(
+    my $reportdir = File::Temp::newdir(
         'XXXXXX',
         DIR => $rdir,
         CLEANUP => 0)->dirname;
     (undef, undef, $report->{options}{name})
-                = File::Spec->splitpath($report->{options}{'report-dir'});
+                = File::Spec->splitpath($reportdir);
+    return $reportdir;
+}
+
+sub report_path {
+    report_dir($_[0]) . '/' . $_[1];
 }
 
 sub copy_static {
@@ -61,8 +66,8 @@ sub make_report {
     copy_static;
     my $template = Template->new(
         ENCODING => 'utf8',
-        INCLUDE_PATH => "$FindBin::Bin/tmpl:$report->{options}{'report-dir'}",
-        OUTPUT_PATH => $report->{options}{'report-dir'},
+        INCLUDE_PATH => "$FindBin::Bin/tmpl:" . report_dir($report),
+        OUTPUT_PATH => report_dir($report),
     );
     foreach my $tbbfile (keys %{$report->{tbbfiles}}) {
         my $type = $report->{tbbfiles}{$tbbfile}{type};

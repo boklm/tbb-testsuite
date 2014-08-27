@@ -10,6 +10,7 @@ use File::Temp;
 use File::Slurp;
 use LWP::UserAgent;
 use YAML;
+use TBBTestSuite::Reports;
 use TBBTestSuite::Common qw(exit_error);
 use TBBTestSuite::Options qw($options);
 use TBBTestSuite::BrowserBundleTests qw(tbb_filename_infos);
@@ -155,7 +156,8 @@ sub test_start {
     $tbbinfos->{tmpdir} = $tmpdir->dirname;
     $tbbinfos->{tests} //= [ map { { %$_ } } @TBBTestSuite::BrowserBundleTests::tests ];
     $tbbinfos->{'results-dir'} =
-        "$options->{'report-dir'}/results-$tbbinfos->{filename}";
+        TBBTestSuite::Reports::report_path($report,
+                                        "results-$tbbinfos->{filename}");
     mkdir $tbbinfos->{'results-dir'};
     my $testsuite = $testsuite_types{$tbbinfos->{type}};
     $testsuite->{pre_tests}($tbbinfos);
