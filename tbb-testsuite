@@ -7,7 +7,7 @@ use File::Path qw(make_path);
 use YAML;
 use TBBTestSuite::Common qw(exit_error run_alone rm_pidfile);
 use TBBTestSuite::Options qw($options);
-use TBBTestSuite::Reports qw(report_dir report_path);
+use TBBTestSuite::Reports qw(report_dir report_path save_report);
 use TBBTestSuite::Reports::Receive;
 use TBBTestSuite::Reports::Send;
 use TBBTestSuite::Tests;
@@ -50,8 +50,8 @@ sub run_tests {
         TBBTestSuite::Tests::test_start($report, $tbbinfos);
     }
     set_report_success($report);
+    save_report($report);
     print 'Report directory: ', report_dir($report), "\n";
-    YAML::DumpFile(report_path($report, 'report.yml'), $report);
     TBBTestSuite::Reports::make_report($report);
     TBBTestSuite::Reports::make_reports_index;
     TBBTestSuite::Reports::Send::send_report if $options->{'upload-to'};

@@ -19,7 +19,7 @@ our (@ISA, @EXPORT_OK);
 BEGIN {
     require Exporter;
     @ISA       = qw(Exporter);
-    @EXPORT_OK = qw(load_report report_dir report_path);
+    @EXPORT_OK = qw(load_report report_dir report_path save_report);
 }
 
 my %template_functions = (
@@ -205,6 +205,11 @@ sub load_report {
     my $reportfile = "$options->{'reports-dir'}/r/$report_name/report.yml";
     return undef unless -f $reportfile;
     return YAML::LoadFile($reportfile);
+}
+
+sub save_report {
+    my ($report) = @_;
+    YAML::DumpFile(report_path($report, 'report.yml'), $report);
 }
 
 1;
