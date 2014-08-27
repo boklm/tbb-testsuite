@@ -107,15 +107,13 @@ sub make_reports_index {
     }
     my @reports_by_time =
         sort { $reports{$b}->{time} <=> $reports{$a}->{time} } keys %reports;
-    my %reports_by_tbbversion;
     my %reports_by_tag;
     my %reports_by_type;
     foreach my $report (keys %reports) {
-        my $tbbver = $reports{$report}->{options}{tbbversion};
-        push @{$reports_by_tbbversion{$tbbver}}, $report if $tbbver;
         my $type = report_type($reports{$report});
         push @{$reports_by_type{$type}}, $report;
         my $tags = as_array($reports{$report}->{options}{tags} // []);
+        my $tbbver = $reports{$report}->{options}{tbbversion};
         push @$tags, $tbbver if $tbbver;
         foreach my $tag (@$tags) {
             push @{$reports_by_tag{$type}->{$tag}}, $report;
@@ -136,13 +134,6 @@ sub make_reports_index {
     $template->process('tests_index.html', { %$vars, tests =>
             \@TBBTestSuite::Tests::tests }, 'tests.html')
                 || exit_error "Template Error:\n" . $template->error;
-    foreach my $tbbver (keys %reports_by_tbbversion) {
-        my @s = sort { $reports{$b}->{time} <=> $reports{$a}->{time} }
-                @{$reports_by_tbbversion{$tbbver}};
-        $template->process('reports_index_browserbundle.html',
-            { %$vars, reports_list => \@s }, "tbbversion_$tbbver.html")
-                || exit_error "Template Error:\n" . $template->error;
-    }
     foreach my $type (keys %reports_by_type) {
         my @s = sort { $reports{$b}->{time} <=> $reports{$a}->{time} }
                 @{$reports_by_type{$type}};
