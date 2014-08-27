@@ -9,7 +9,7 @@ use File::Copy;
 use Template;
 use File::Spec;
 use YAML;
-use TBBTestSuite::Common qw(exit_error);
+use TBBTestSuite::Common qw(exit_error as_array);
 use TBBTestSuite::Options qw($options);
 use TBBTestSuite::Tests;
 use Email::Simple;
@@ -115,8 +115,9 @@ sub make_reports_index {
         push @{$reports_by_tbbversion{$tbbver}}, $report if $tbbver;
         my $type = report_type($reports{$report});
         push @{$reports_by_type{$type}}, $report;
-        my $tags = $reports{$report}->{options}{tags} // [];
-        foreach my $tag (ref $tags ? @$tags : ($tags)) {
+        my $tags = as_array($reports{$report}->{options}{tags} // []);
+        push @$tags, $tbbver if $tbbver;
+        foreach my $tag (@$tags) {
             push @{$reports_by_tag{$type}->{$tag}}, $report;
         }
         my $testsuite = $TBBTestSuite::Tests::testsuite_types{$type};

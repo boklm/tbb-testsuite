@@ -13,7 +13,7 @@ BEGIN {
     require Exporter;
     @ISA       = qw(Exporter);
     @EXPORT_OK = qw(exit_error system_infos run_alone rm_pidfile winpath
-                    has_bin get_var run_to_file get_nbcpu);
+                    has_bin get_var run_to_file get_nbcpu as_array);
 }
 
 sub exit_error {
@@ -88,6 +88,10 @@ sub get_nbcpu {
     my $res = grep { m/^processor\s+:\s/ } <$cpuinfo>;
     close $cpuinfo;
     return $res;
+}
+
+sub as_array {
+    ref $_[0] eq 'ARRAY' ? $_[0] : [ $_[0] ];
 }
 
 1;
