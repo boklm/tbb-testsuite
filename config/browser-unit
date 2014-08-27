@@ -23,6 +23,7 @@ my @commits = get_commits_by_branch($torbrowser_branch, $esr_branch);
 my %res = (
     args => [],
     'reports-url' => 'https://people.torproject.org/~boklm/tbbtests/',
+    tags => [ $torbrowser_branch ],
 );
 my ($previous, $p);
 for my $commit (reverse @commits) {
