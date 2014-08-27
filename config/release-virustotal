@@ -12,7 +12,7 @@ foreach my $build (@latest_builds) {
         name => $name,
         keyring => "$build->{user}.gpg",
         args => [ $build->{url} ],
-        tbbversion => "$build->{version}-$build->{build}",
+        tags => [ "$build->{version}-$build->{build}" ],
         virustotal => 1,
         os         => 'Windows',
         arch       => 'x86',
