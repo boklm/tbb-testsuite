@@ -6,8 +6,10 @@ use FindBin;
 use File::Temp;
 use File::Path qw(make_path);
 use File::Copy;
+use File::Slurp;
 use Template;
 use File::Spec;
+use JSON;
 use YAML;
 use TBBTestSuite::Common qw(exit_error as_array);
 use TBBTestSuite::Options qw($options);
@@ -207,8 +209,30 @@ sub load_report {
     return YAML::LoadFile($reportfile);
 }
 
+sub report_summary {
+    my ($report) = @_;
+    my %res = (
+        type => report_type($report),
+        time => 1,
+    );
+    foreach my $o (qw(report_format time success)) {
+        $res{$o} = $report->{$o} if $report->{$o};
+    }
+    $res{options}->{tags} = $report->{options}{tags} // [];
+    my $tbbver = $report->{options}{tbbversion};
+    push @{$res{options}->{tags}}, $tbbver if $tbbver;
+    return \%res;
+}
+
+sub save_report_summary {
+    my ($report) = @_;
+    write_file(report_path($report, 'summary.json'),
+               encode_json(report_summary($report)));
+}
+
 sub save_report {
     my ($report) = @_;
+    save_report_summary($report);
     YAML::DumpFile(report_path($report, 'report.yml'), $report);
 }
 
