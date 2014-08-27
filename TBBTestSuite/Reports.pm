@@ -128,6 +128,7 @@ sub make_reports_index {
         reports => \%reports,
         reports_list => \@reports_by_time,
         reports_by_type => \%reports_by_type,
+        reports_by_tag => \%reports_by_tag,
     };
     $template->process('reports_index.html', $vars, 'index.html')
                 || exit_error "Template Error:\n" . $template->error;

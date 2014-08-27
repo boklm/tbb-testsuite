@@ -27,7 +27,15 @@
         <h1>Tests Reports</h1>
         <ul>
             [% FOREACH type IN reports_by_type.keys.sort %]
-            <li><a href="index-[% type %].html">[% type %] reports</a></li>
+            <li><a href="index-[% type %].html">[% type %] reports</a>
+            [% IF reports_by_tag.$type %]
+            <ul>
+                [% FOREACH tag IN reports_by_tag.$type.keys %]
+                <li><a href="index-[% type %]-[% tag %].html">[% tag %]</a></li>
+                [% END %]
+            </ul>
+            [% END %]
+            </li>
             [% END %]
         </ul>
     </body>
