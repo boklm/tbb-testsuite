@@ -149,6 +149,7 @@ sub make_reports_index {
     foreach my $type ($changed_report ? @changed_type : keys %reports_by_type) {
         my @s = sort { $summaries{$b}->{time} <=> $summaries{$a}->{time} }
                 @{$reports_by_type{$type}};
+        @s = @s[0..19] if @s > 20;
         load_reports_for_index(\%pre_reports_index, @s);
         $template->process("reports_index_$type.html",
             { %$vars, reports_list => \@s }, "index-$type.html")
