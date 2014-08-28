@@ -101,6 +101,15 @@ sub report_type {
 }
 
 sub make_reports_index {
+    my ($changed_report) = @_;
+    my %pre_reports_index;
+    my @changed_tags;
+    my @changed_type;
+    if ($changed_report) {
+        @changed_tags = $changed_report->{options}{tags} ?
+                        @{$changed_report->{options}{tags}} : ();
+        push @changed_type, report_type($changed_report);
+    }
     copy_static;
     my $template = Template->new(
         ENCODING => 'utf8',
@@ -124,11 +133,6 @@ sub make_reports_index {
         foreach my $tag (@$tags) {
             push @{$reports_by_tag{$type}->{$tag}}, $report;
         }
-        my $testsuite = $TBBTestSuite::Tests::testsuite_types{$type};
-        if ($testsuite->{pre_reports_index}) {
-            load_report($report);
-            $testsuite->{pre_reports_index}(\%reports, $reports{$report});
-        }
     }
     my $vars = {
         %template_functions,
@@ -142,19 +146,20 @@ sub make_reports_index {
     $template->process('tests_index.html', { %$vars, tests =>
             \@TBBTestSuite::Tests::tests }, 'tests.html')
                 || exit_error "Template Error:\n" . $template->error;
-    foreach my $type (keys %reports_by_type) {
+    foreach my $type ($changed_report ? @changed_type : keys %reports_by_type) {
         my @s = sort { $summaries{$b}->{time} <=> $summaries{$a}->{time} }
                 @{$reports_by_type{$type}};
-        load_reports(@s);
+        load_reports_for_index(\%pre_reports_index, @s);
         $template->process("reports_index_$type.html",
             { %$vars, reports_list => \@s }, "index-$type.html")
                 || exit_error "Template Error:\n" . $template->error;
     }
-    foreach my $type (keys %reports_by_tag) {
-        foreach my $tag (keys %{$reports_by_tag{$type}}) {
+    foreach my $type ($changed_report ? @changed_type : keys %reports_by_tag) {
+        foreach my $tag ($changed_report ? @changed_tags
+                                : keys %{$reports_by_tag{$type}}) {
             my @s = sort { $summaries{$b}->{time} <=> $summaries{$a}->{time} }
                 @{$reports_by_tag{$type}->{$tag}};
-            load_reports(@s);
+            load_reports_for_index(\%pre_reports_index, @s);
             $template->process("reports_index_$type.html",
                     { %$vars, reports_list => \@s }, "index-$type-$tag.html")
                         || exit_error "Template Error:\n" . $template->error;
@@ -213,9 +218,15 @@ sub load_report {
     return $reports{$report_name} = YAML::LoadFile($reportfile);
 }
 
-sub load_reports {
-    foreach my $report (@_) {
-        load_report($report);
+sub load_reports_for_index {
+    my ($pre_reports_index, @reports) = @_;
+    foreach my $rname (@reports) {
+        my $r = load_report($rname);
+        my $testsuite = $TBBTestSuite::Tests::testsuite_types{report_type($r)};
+        if ($testsuite->{pre_reports_index} && !$pre_reports_index->{$rname}) {
+            $pre_reports_index->{$rname} = 1;
+            $testsuite->{pre_reports_index}(\%reports, $reports{$rname});
+        }
     }
 }
 

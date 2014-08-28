@@ -53,7 +53,7 @@ sub run_tests {
     save_report($report);
     print 'Report directory: ', report_dir($report), "\n";
     TBBTestSuite::Reports::make_report($report);
-    TBBTestSuite::Reports::make_reports_index;
+    TBBTestSuite::Reports::make_reports_index($report);
     TBBTestSuite::Reports::Send::send_report if $options->{'upload-to'};
 }
 
@@ -71,8 +71,8 @@ sub make_report {
 }
 
 sub receive_report {
-    TBBTestSuite::Reports::Receive::receive_report;
-    TBBTestSuite::Reports::make_reports_index;
+    my $report = TBBTestSuite::Reports::Receive::receive_report;
+    TBBTestSuite::Reports::make_reports_index($report);
 }
 
 sub email_report {

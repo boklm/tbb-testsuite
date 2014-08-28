@@ -29,6 +29,7 @@ sub receive_report {
     $report->{options} = { %$options, %{$report->{options}} };
     TBBTestSuite::Reports::email_report($report)
                 if @{$report->{options}{'email-to'}};
+    return $report;
 }
 
 sub update_authkeys {
