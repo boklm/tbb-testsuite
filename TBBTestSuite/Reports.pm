@@ -153,8 +153,9 @@ sub make_reports_index {
                 @{$reports_by_type{$type}};
         @s = @s[0..19] if @s > 20;
         load_reports_for_index(\%pre_reports_index, @s);
+        my $title = "Last 10 reports";
         $template->process("reports_index_$type.html",
-            { %$vars, reports_list => \@s }, "index-$type.html")
+          { %$vars, reports_list => \@s, title => $title }, "index-$type.html")
                 || exit_error "Template Error:\n" . $template->error;
     }
     foreach my $type ($changed_report ? @changed_type : keys %reports_by_tag) {
@@ -163,8 +164,10 @@ sub make_reports_index {
             my @s = sort { $summaries{$b}->{time} <=> $summaries{$a}->{time} }
                 @{$reports_by_tag{$type}->{$tag}};
             load_reports_for_index(\%pre_reports_index, @s);
+            my $title = "Reports for $tag";
             $template->process("reports_index_$type.html",
-                    { %$vars, reports_list => \@s }, "index-$type-$tag.html")
+                    { %$vars, reports_list => \@s, title => $title, },
+                    "index-$type-$tag.html")
                         || exit_error "Template Error:\n" . $template->error;
         }
     }

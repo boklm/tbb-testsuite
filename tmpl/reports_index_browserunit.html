@@ -25,7 +25,7 @@
         [% INCLUDE togglecontent.js %]
     </head>
     <body>
-        <h1>Tor Browser Unit Test Reports</h1>
+        <h1>Tor Browser Unit Test Reports: [% title %]</h1>
         [% FOREACH report IN reports_list %]
         [%
           SET tbbfiles = reports.$report.tbbfiles;
