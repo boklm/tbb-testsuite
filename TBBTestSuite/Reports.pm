@@ -10,7 +10,7 @@ use File::Slurp;
 use Template;
 use File::Spec;
 use JSON;
-use YAML;
+use YAML::Syck;
 use TBBTestSuite::Common qw(exit_error as_array);
 use TBBTestSuite::Options qw($options);
 use TBBTestSuite::Tests;
@@ -221,7 +221,7 @@ sub load_report {
     return $reports{$report_name} if exists $reports{$report_name};
     my $reportfile = "$options->{'reports-dir'}/r/$report_name/report.yml";
     return undef unless -f $reportfile;
-    return $reports{$report_name} = YAML::LoadFile($reportfile);
+    return $reports{$report_name} = YAML::Syck::LoadFile($reportfile);
 }
 
 sub load_reports_for_index {
@@ -272,7 +272,7 @@ sub save_report_summary {
 sub save_report {
     my ($report) = @_;
     save_report_summary($report);
-    YAML::DumpFile(report_path($report, 'report.yml'), $report);
+    YAML::Syck::DumpFile(report_path($report, 'report.yml'), $report);
 }
 
 1;

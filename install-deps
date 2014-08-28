@@ -17,7 +17,7 @@ yum_install() {
 perlmodules='
 Cwd Data::Dump Digest::SHA File::Path File::Slurp File::Spec File::Temp
 FindBin Getopt::Long IO::CaptureOutput IO::Socket::INET Image::Magick
-JSON LWP::UserAgent LWP::Protocol::https Template YAML DateTime
+JSON LWP::UserAgent LWP::Protocol::https Template YAML::Syck DateTime
 Email::Simple Email::Sender File::Type IPC::Run XML::LibXML
 '
 
@@ -26,7 +26,7 @@ then
    apt-get install -y ntp xvfb python-virtualenv
    apt-get install -y libdata-dump-perl libdigest-sha-perl libfile-slurp-perl \
 	   libfile-spec-perl libio-captureoutput-perl perlmagick libjson-perl \
-	    libwww-perl libtemplate-perl libyaml-perl libdatetime-perl \
+	    libwww-perl libtemplate-perl libyaml-syck-perl libdatetime-perl \
             libemail-sender-perl libemail-simple-perl libfile-type-perl \
             libipc-run-perl libxml-libxml-perl
    apt-get install -y libgtk2.0-0

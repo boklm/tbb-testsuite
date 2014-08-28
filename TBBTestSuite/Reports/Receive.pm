@@ -2,7 +2,7 @@ package TBBTestSuite::Reports::Receive;
 
 use warnings;
 use strict;
-use YAML qw(LoadFile);
+use YAML::Syck qw(LoadFile);
 use File::Path qw(make_path);
 use File::Temp;
 use File::Copy;

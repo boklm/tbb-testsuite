@@ -4,7 +4,7 @@ use FindBin;
 use lib "$FindBin::Bin";
 use Data::Dump qw/dd/;
 use File::Path qw(make_path);
-use YAML;
+use YAML::Syck;
 use TBBTestSuite::Common qw(exit_error run_alone rm_pidfile);
 use TBBTestSuite::Options qw($options);
 use TBBTestSuite::Reports qw(report_dir report_path save_report);
@@ -60,7 +60,7 @@ sub run_tests {
 sub load_report_from_file {
     exit_error "--name is not set" unless $options->{name};
     my $report = { options => $options };
-    $report = YAML::LoadFile(report_path($report, 'report.yml'));
+    $report = YAML::Syck::LoadFile(report_path($report, 'report.yml'));
     $report->{options} = { %{$report->{options}}, %$options };
     return $report;
 }
