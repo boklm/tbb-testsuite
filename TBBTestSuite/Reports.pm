@@ -25,6 +25,7 @@ BEGIN {
 }
 
 my %reports;
+my %summaries;
 
 my %template_functions = (
     is_test_error => \&TBBTestSuite::Tests::is_test_error,
@@ -110,25 +111,24 @@ sub make_reports_index {
         my $resfile = "$dir/report.yml";
         next unless -f $resfile;
         my (undef, undef, $name) = File::Spec->splitpath($dir);
-        $reports{$name} = YAML::LoadFile($resfile);
-        $reports{$name}->{time} = 1 unless $reports{$name}->{time};
+        load_report_summary($name);
     }
     my @reports_by_time =
         sort { $reports{$b}->{time} <=> $reports{$a}->{time} } keys %reports;
     my %reports_by_tag;
     my %reports_by_type;
-    foreach my $report (keys %reports) {
-        my $type = report_type($reports{$report});
+    foreach my $report (keys %summaries) {
+        my $type = $summaries{$report}->{type};
         push @{$reports_by_type{$type}}, $report;
-        my $tags = as_array($reports{$report}->{options}{tags} // []);
-        my $tbbver = $reports{$report}->{options}{tbbversion};
-        push @$tags, $tbbver if $tbbver;
+        my $tags = as_array($summaries{$report}->{options}{tags} // []);
         foreach my $tag (@$tags) {
             push @{$reports_by_tag{$type}->{$tag}}, $report;
         }
         my $testsuite = $TBBTestSuite::Tests::testsuite_types{$type};
-        $testsuite->{pre_reports_index}(\%reports, $reports{$report})
-                if $testsuite->{pre_reports_index};
+        if ($testsuite->{pre_reports_index}) {
+            load_report($report);
+            $testsuite->{pre_reports_index}(\%reports, $reports{$report});
+        }
     }
     my $vars = {
         %template_functions,
@@ -143,17 +143,19 @@ sub make_reports_index {
             \@TBBTestSuite::Tests::tests }, 'tests.html')
                 || exit_error "Template Error:\n" . $template->error;
     foreach my $type (keys %reports_by_type) {
-        my @s = sort { $reports{$b}->{time} <=> $reports{$a}->{time} }
+        my @s = sort { $summaries{$b}->{time} <=> $summaries{$a}->{time} }
                 @{$reports_by_type{$type}};
+        load_reports(@s);
         $template->process("reports_index_$type.html",
             { %$vars, reports_list => \@s }, "index-$type.html")
                 || exit_error "Template Error:\n" . $template->error;
     }
     foreach my $type (keys %reports_by_tag) {
         foreach my $tag (keys %{$reports_by_tag{$type}}) {
-            my @s = sort { $reports{$b}->{time} <=> $reports{$a}->{time} }
+            my @s = sort { $summaries{$b}->{time} <=> $summaries{$a}->{time} }
                 @{$reports_by_tag{$type}->{$tag}};
-                $template->process("reports_index_$type.html",
+            load_reports(@s);
+            $template->process("reports_index_$type.html",
                     { %$vars, reports_list => \@s }, "index-$type-$tag.html")
                         || exit_error "Template Error:\n" . $template->error;
         }
@@ -209,6 +211,24 @@ sub load_report {
     my $reportfile = "$options->{'reports-dir'}/r/$report_name/report.yml";
     return undef unless -f $reportfile;
     return $reports{$report_name} = YAML::LoadFile($reportfile);
+}
+
+sub load_reports {
+    foreach my $report (@_) {
+        load_report($report);
+    }
+}
+
+sub load_report_summary {
+    my ($report_name) = @_;
+    return $summaries{$report_name} if exists $summaries{$report_name};
+    my $summaryfile = "$options->{'reports-dir'}/r/$report_name/summary.json";
+    if (!-f $summaryfile) {
+        $summaries{$report_name} = report_summary(load_report($report_name));
+        save_report_summary($reports{$report_name});
+        return $summaries{$report_name};
+    }
+    return $summaries{$report_name} = decode_json read_file $summaryfile;
 }
 
 sub report_summary {
