@@ -95,7 +95,9 @@ sub make_report {
 sub report_type {
     my ($report) = @_;
     foreach my $tbbfile (values %{$report->{tbbfiles}}) {
-        return $tbbfile->{type} // 'browserbundle';
+        return 'browserbundle' if not defined $tbbfile->{type};
+        return 'browserbundle' if $tbbfile->{type} eq 'tbbfile';
+        return $tbbfile->{type};
     }
     return 'browserbundle';
 }
