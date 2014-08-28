@@ -9,7 +9,6 @@ use File::Spec;
 use File::Temp;
 use File::Slurp;
 use LWP::UserAgent;
-use YAML;
 use TBBTestSuite::Reports;
 use TBBTestSuite::Common qw(exit_error);
 use TBBTestSuite::Options qw($options);
