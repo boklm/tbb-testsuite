@@ -16,6 +16,7 @@ use TBBTestSuite::Options qw($options);
 use TBBTestSuite::Tests;
 use Email::Simple;
 use Email::Sender::Simple qw(try_to_sendmail);
+use DateTime;
 
 our (@ISA, @EXPORT_OK);
 BEGIN {
@@ -102,15 +103,22 @@ sub report_type {
     return 'browserbundle';
 }
 
+sub date_month {
+    my $dt = DateTime->from_epoch(epoch => $_[0]);
+    return $dt->year . '-' . sprintf("%02d", $dt->month);
+}
+
 sub make_reports_index {
     my ($changed_report) = @_;
     my %pre_reports_index;
     my @changed_tags;
     my @changed_type;
+    my @changed_month;
     if ($changed_report) {
         @changed_tags = $changed_report->{options}{tags} ?
                         @{$changed_report->{options}{tags}} : ();
         push @changed_type, report_type($changed_report);
+        push @changed_month, date_month($changed_report->{time});
     }
     copy_static;
     my $template = Template->new(
@@ -128,6 +136,7 @@ sub make_reports_index {
         sort { $reports{$b}->{time} <=> $reports{$a}->{time} } keys %reports;
     my %reports_by_tag;
     my %reports_by_type;
+    my %reports_by_month;
     foreach my $report (keys %summaries) {
         my $type = $summaries{$report}->{type};
         push @{$reports_by_type{$type}}, $report;
@@ -135,6 +144,8 @@ sub make_reports_index {
         foreach my $tag (@$tags) {
             push @{$reports_by_tag{$type}->{$tag}}, $report;
         }
+        my $month = date_month($summaries{$report}->{time});
+        push @{$reports_by_month{$type}->{$month}}, $report;
     }
     my $vars = {
         %template_functions,
@@ -142,6 +153,7 @@ sub make_reports_index {
         reports_list => \@reports_by_time,
         reports_by_type => \%reports_by_type,
         reports_by_tag => \%reports_by_tag,
+        reports_by_month => \%reports_by_month,
     };
     $template->process('reports_index.html', $vars, 'index.html')
                 || exit_error "Template Error:\n" . $template->error;
@@ -170,6 +182,19 @@ sub make_reports_index {
                     "index-$type-$tag.html")
                         || exit_error "Template Error:\n" . $template->error;
         }
+    }
+    foreach my $type ($changed_report ? @changed_type : keys %reports_by_month) {
+        foreach my $month ($changed_report ? @changed_month
+                                : keys %{$reports_by_month{$type}}) {
+            my @s = sort { $summaries{$b}->{time} <=> $summaries{$a}->{time} }
+                @{$reports_by_month{$type}->{$month}};
+            load_reports_for_index(\%pre_reports_index, @s);
+            my $title = "$month reports";
+            $template->process("reports_index_$type.html",
+                    { %$vars, reports_list => \@s, title => $title, },
+                    "index-$type-$month.html")
+                        || exit_error "Template Error:\n" . $template->error;
+            }
     }
 }
 

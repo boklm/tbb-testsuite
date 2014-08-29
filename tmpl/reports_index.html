@@ -28,14 +28,27 @@
         <ul>
             [% FOREACH type IN reports_by_type.keys.sort %]
             <li><a href="index-[% type %].html">[% type %] reports</a>
-            [% IF reports_by_tag.$type %]
-            <ul>
-                [% FOREACH tag IN reports_by_tag.$type.keys %]
-                <li><a href="index-[% type %]-[% tag %].html">[% tag %]</a></li>
-                [% END %]
-            </ul>
+            [% IF reports_by_month.$type %]
+            <div>
+                Months:
+                <ul>
+                    [% FOREACH month IN reports_by_month.$type.keys.sort %]
+                    <li><a href="index-[% type %]-[% month %].html">[% month %]</a></li>
+                    [% END %]
+                </ul>
+            </div>
             [% END %]
-            </li>
+            [% IF reports_by_tag.$type %]
+            <div>
+                Tags:
+                <ul>
+                    [% FOREACH tag IN reports_by_tag.$type.keys %]
+                    <li><a href="index-[% type %]-[% tag %].html">[% tag %]</a></li>
+                    [% END %]
+                </ul>
+                [% END %]
+                </li>
+            </div>
             [% END %]
         </ul>
     </body>
