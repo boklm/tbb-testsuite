@@ -166,7 +166,7 @@ sub make_reports_index {
                 @{$reports_by_type{$type}};
         @s = @s[0..19] if @s > 20;
         load_reports_for_index(\%pre_reports_index, @s);
-        my $title = "Last 10 reports";
+        my $title = "Last 20 reports";
         $template->process("reports_index_$type.html",
           { %$vars, reports_list => \@s, title => $title }, "index-$type.html")
                 || exit_error "Template Error:\n" . $template->error;
