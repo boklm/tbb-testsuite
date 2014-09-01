@@ -23,9 +23,10 @@ my $test_types = {
 };
 
 our %testsuite = (
-    test_types => $test_types,
-    pre_tests  => \&pre_tests,
-    post_tests => \&post_tests,
+    description => 'Tor Browser unit tests',
+    test_types  => $test_types,
+    pre_tests   => \&pre_tests,
+    post_tests  => \&post_tests,
     pre_makereport => \&pre_makereport,
     pre_reports_index => \&pre_reports_index,
 );

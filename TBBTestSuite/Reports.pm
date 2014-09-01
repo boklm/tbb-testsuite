@@ -154,6 +154,7 @@ sub make_reports_index {
         reports_by_type => \%reports_by_type,
         reports_by_tag => \%reports_by_tag,
         reports_by_month => \%reports_by_month,
+        testsuite_types => \%TBBTestSuite::Tests::testsuite_types,
     };
     $template->process('reports_index.html', $vars, 'index.html')
                 || exit_error "Template Error:\n" . $template->error;

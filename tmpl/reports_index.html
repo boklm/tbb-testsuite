@@ -27,7 +27,7 @@
         <h1>Tests Reports</h1>
         <ul>
             [% FOREACH type IN reports_by_type.keys.sort %]
-            <li><a href="index-[% type %].html">[% type %] reports</a>
+            <li><a href="index-[% type %].html">[% testsuite_types.$type.description %]</a>
             [% IF reports_by_month.$type %]
             <div>
                 Months:
