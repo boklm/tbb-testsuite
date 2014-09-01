@@ -9,11 +9,12 @@ use TBBTestSuite::BrowserGit qw(git_clone_fetch get_commits_by_branch
 
 my $torbrowser_branch = 'tor-browser-24.7.0esr-3.x-1';
 my $esr_branch = 'esr24';
+my $testsuite_version = '1';
 
 sub commit_to_name {
     my ($commit) = @_;
     $commit = substr $commit, 0, 20;
-    return "browser-$commit";
+    return ("browser-$testsuite_version-$commit", "browser-$commit");
 }
 
 git_clone_fetch;
@@ -25,17 +26,18 @@ my %res = (
     'reports-url' => 'https://people.torproject.org/~boklm/tbbtests/',
     tags => [ $torbrowser_branch ],
 );
-my ($previous, $p);
+my $previous;
 for my $commit (reverse @commits) {
-    my $name = commit_to_name($commit);
-    $p = $previous ? [ $previous, $previous ] : undef;
-    $previous = $name;
-    next if -d "$options->{'reports-dir'}/r/$name";
+    my ($name, $fname) = commit_to_name($commit);
+    if (-d "$options->{'reports-dir'}/r/$name") {
+        $previous = [ $name, $fname ];
+        next;
+    }
     $res{name} = $name;
     my $tbbinfos = TBBTestSuite::BrowserUnitTests::get_tbbinfos({
             browserdir => $TBBTestSuite::BrowserGit::clone_dir,
             commit => substr($commit, 0, 20),
-            $p ? (parent_results => $p) : (),
+            $previous ? (parent_results => $previous) : (),
         });
     $res{args} = [ $tbbinfos ],
     return %res;
