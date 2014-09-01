@@ -24,32 +24,35 @@
         </style>
     </head>
     <body>
-        <h1>Tests Reports</h1>
+        [% FOREACH type IN reports_by_type.keys.sort %]
+        <h2>[% testsuite_types.$type.description %]</h2>
         <ul>
-            [% FOREACH type IN reports_by_type.keys.sort %]
-            <li><a href="index-[% type %].html">[% testsuite_types.$type.description %]</a>
+            <li><a href="index-[% type %].html">Last 20 reports</a></li>
+
             [% IF reports_by_month.$type %]
-            <div>
+            <li>
                 Months:
                 <ul>
                     [% FOREACH month IN reports_by_month.$type.keys.sort %]
                     <li><a href="index-[% type %]-[% month %].html">[% month %]</a></li>
                     [% END %]
                 </ul>
-            </div>
+            </li>
             [% END %]
+
             [% IF reports_by_tag.$type %]
-            <div>
+            <li>
                 Tags:
                 <ul>
                     [% FOREACH tag IN reports_by_tag.$type.keys %]
                     <li><a href="index-[% type %]-[% tag %].html">[% tag %]</a></li>
                     [% END %]
                 </ul>
-                [% END %]
-                </li>
-            </div>
+            </li>
             [% END %]
+
         </ul>
+        <hr />
+        [% END %]
     </body>
 </html>
