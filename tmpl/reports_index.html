@@ -44,7 +44,7 @@
             <li>
                 Tags:
                 <ul>
-                    [% FOREACH tag IN reports_by_tag.$type.keys %]
+                    [% FOREACH tag IN reports_by_tag.$type.keys.sort %]
                     <li><a href="index-[% type %]-[% tag %].html">[% tag %]</a></li>
                     [% END %]
                 </ul>
