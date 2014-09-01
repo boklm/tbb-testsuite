@@ -27,6 +27,7 @@
         [% FOREACH type IN reports_by_type.keys.sort %]
         <h2>[% testsuite_types.$type.description %]</h2>
         <ul>
+            <li><a href="tests-[% type %].html">Tests list</a></li>
             <li><a href="index-[% type %].html">Last 20 reports</a></li>
 
             [% IF reports_by_month.$type %]

@@ -1,10 +1,10 @@
 [% USE date -%]
 <html>
     <head>
-        <title>Available Tests</title>
+        <title>Tests list: [% testsuite_types.$testsuite_type.description %]</title>
     </head>
     <body>
-        <h1>Available Tests</h1>
+        <h1>Tests list: [% testsuite_types.$testsuite_type.description %]</h1>
 
         [% FOREACH test IN tests %]
         <h2>[% test.name %] ([% test.type %])</h2>

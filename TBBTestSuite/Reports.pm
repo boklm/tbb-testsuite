@@ -158,9 +158,6 @@ sub make_reports_index {
     };
     $template->process('reports_index.html', $vars, 'index.html')
                 || exit_error "Template Error:\n" . $template->error;
-    $template->process('tests_index.html', { %$vars, tests =>
-            \@TBBTestSuite::Tests::tests }, 'tests.html')
-                || exit_error "Template Error:\n" . $template->error;
     foreach my $type ($changed_report ? @changed_type : keys %reports_by_type) {
         my @s = sort { $summaries{$b}->{time} <=> $summaries{$a}->{time} }
                 @{$reports_by_type{$type}};
@@ -169,6 +166,10 @@ sub make_reports_index {
         my $title = "Last 20 reports";
         $template->process("reports_index_$type.html",
           { %$vars, reports_list => \@s, title => $title }, "index-$type.html")
+                || exit_error "Template Error:\n" . $template->error;
+        my ($t) = values %{$reports{$s[0]}->{tbbfiles}};
+        $template->process('tests_index.html', { %$vars, testsuite_type => $type,
+                tests => $t->{tests} }, "tests-$type.html")
                 || exit_error "Template Error:\n" . $template->error;
     }
     foreach my $type ($changed_report ? @changed_type : keys %reports_by_tag) {
