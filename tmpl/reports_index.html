@@ -33,7 +33,7 @@
             <li>
                 Months:
                 <ul>
-                    [% FOREACH month IN reports_by_month.$type.keys.sort %]
+                    [% FOREACH month IN reports_by_month.$type.keys.sort.reverse %]
                     <li><a href="index-[% type %]-[% month %].html">[% month %]</a></li>
                     [% END %]
                 </ul>
