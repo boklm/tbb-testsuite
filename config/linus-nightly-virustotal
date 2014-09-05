@@ -33,5 +33,5 @@ if (!get($shaurl)) {
     selenium => 0,
     'email-from' => 'TBB Nightly Tests <boklm@torproject.org>',
     'email-to'   => [ 'boklm@mars-attacks.org', ],
-    'reports-url' => 'https://people.torproject.org/~boklm/tbbtests/',
+    'reports-url' => 'http://93.95.228.164/reports/',
 );

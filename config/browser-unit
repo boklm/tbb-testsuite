@@ -23,7 +23,7 @@ my @commits = get_commits_by_branch($torbrowser_branch, $esr_branch);
 
 my %res = (
     args => [],
-    'reports-url' => 'https://people.torproject.org/~boklm/tbbtests/',
+    'reports-url' => 'http://93.95.228.164/reports/',
     tags => [ $torbrowser_branch ],
 );
 my $previous;
