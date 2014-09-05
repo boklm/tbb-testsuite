@@ -192,7 +192,12 @@ our @tests = (
         type  => 'mozmill',
         descr => 'Check that some important settings are correctly set',
     },
-        {
+    {
+        name  => 'dom-objects-enumeration',
+        type  => 'mozmill',
+        descr => 'Check the list of DOM Objects exposed in the global namespace',
+    },
+    {
         name => 'fp_screen_dimensions',
         type  => 'selenium',
         descr => 'Check that screen dimensions are spoofed correctly',
