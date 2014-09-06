@@ -248,9 +248,10 @@ sub mochitest_test {
                 capture_exec('xvfb-run', '--server-args=-screen 0 1024x768x24',
                     './mach', $mach_command, $test->{dir});
     $test->{results}{out} = $out;
-    my $failed = decode_json(scalar read_file($failures_file));
-    $test->{results}{failed} = [ keys %$failed ];
-    $test->{results}{success} = ! @{$test->{results}{failed}};
+    my $failed = eval { -f $failures_file
+                && decode_json(scalar read_file($failures_file)) };
+    $test->{results}{failed} = $failed ? [ keys %$failed ] : [];
+    $test->{results}{success} = $failed && ! @{$test->{results}{failed}};
 }
 
 sub build_firefox {
