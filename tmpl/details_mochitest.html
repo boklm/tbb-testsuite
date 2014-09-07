@@ -9,4 +9,4 @@ Failed tests:
 [% END %]
 <a href="javascript:togglecontent('logs_[% test.name %]');">mochitest logs</a>
 [% END %]
-<pre [% IF ! from_index %]id="logs_[% report_name %][% test.name %]" style="display:none"[% END %]>[% test.results.out %]</pre>
+<pre [% IF ! from_index %]id="logs_[% report_name %][% test.name %]" style="display:none"[% END %]>[% FILTER html_entity %][% test.results.out %][% END %]</pre>

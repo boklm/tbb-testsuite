@@ -5,7 +5,7 @@
     </li>
     [% END %]
     <li><a href="javascript:togglecontent('logs_[% test.name %]')">tor daemon logs</a>
-    <pre id="logs_[% test.name %]" style="display:none">[% INSERT "results-${tbbfile}/${test.name}.log"; %]</pre>
+    <pre id="logs_[% test.name %]" style="display:none">[% FILTER html_entity %][% INSERT "results-${tbbfile}/${test.name}.log"; %][% END %]</pre>
     </li>
 </ul>
 [% IF test.results.fetch_error %]

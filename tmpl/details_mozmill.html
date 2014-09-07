@@ -8,7 +8,7 @@
   [% FOREACH f IN test.results.results.0.fails %]
     [% FOREACH v IN f.values %]
       <b>Error:</b> [% v.name %]<br />
-      <pre>[% v.message %]</pre><br />
+      <pre>[% FILTER html_entity %][% v.message %][% END %]</pre><br />
     [% END %]
   [% END %]
 [% END %]
