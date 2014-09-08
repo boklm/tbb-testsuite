@@ -7,6 +7,6 @@ Failed tests:
 [% END %]
 </ul>
 [% END %]
-<a href="javascript:togglecontent('logs_[% test.name %]');">mochitest logs</a>
+[% IF test.results.error_logs %]<a href="javascript:togglecontent('logs_[% test.name %]');">mochitest error logs</a>[% END %]
 [% END %]
-<pre [% IF ! from_index %]id="logs_[% report_name %][% test.name %]" style="display:none"[% END %]>[% FILTER html_entity %][% test.results.out %][% END %]</pre>
+<pre [% IF ! from_index %]id="logs_[% report_name %][% test.name %]" style="display:none"[% END %]>[% FILTER html_entity %][% test.results.error_logs %][% END %]</pre>

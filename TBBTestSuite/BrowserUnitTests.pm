@@ -144,6 +144,9 @@ sub diff_results {
 sub pre_makereport {
     my ($report, $tbbfile, $r) = @_;
     my $tbbinfos = $report->{tbbfiles}{$tbbfile};
+    foreach my $test (@{$tbbinfos->{tests}}) {
+        mochitest_error_logs($test);
+    }
     return unless $tbbinfos->{parent_results};
     $r //= TBBTestSuite::Reports::load_report($tbbinfos->{parent_results}[0]);
     return unless $r;
@@ -159,6 +162,9 @@ sub pre_reports_index {
         pre_makereport($report, $tbbfile,
                        $reports->{$tbbinfos->{parent_results}[0]})
                    if $tbbinfos->{parent_results};
+        foreach my $test (@{$report->{tbbfiles}{$tbbfile}{tests}}) {
+            mochitest_error_logs($test);
+        }
     }
 }
 
@@ -252,6 +258,17 @@ sub mochitest_test {
                 && decode_json(scalar read_file($failures_file)) };
     $test->{results}{failed} = $failed ? [ keys %$failed ] : [];
     $test->{results}{success} = $failed && ! @{$test->{results}{failed}};
+}
+
+sub mochitest_error_logs {
+    my ($test) = @_;
+    return unless $test->{type} =~ m/^mochitest_/;
+    return unless exists $test->{results};
+    return unless $test->{results}{out};
+    return if exists $test->{results}{error_logs};
+    my @logs = split /^/, $test->{results}{out};
+    @logs = grep { m/^\s*[^\s]+\s[^\s]+\sERROR/ } @logs;
+    $test->{results}{error_logs} = join '', @logs;
 }
 
 sub build_firefox {
