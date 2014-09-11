@@ -225,6 +225,7 @@ sub xpcshell_test {
     my ($out, $err, $success) =
                 capture_exec('xvfb-run', '--server-args=-screen 0 1024x768x24',
                     './mach', 'xpcshell-test', $test->{dir});
+    return unless -f $xunit_file;
     $test->{results}{out} = $out;
     $test->{results}{failed} = {};
     my $root = eval {
