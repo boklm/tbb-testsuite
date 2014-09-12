@@ -83,12 +83,16 @@ Available options
         The default is the 'virtualenv' directory created by the
         'setup-virtualenv' script.
 
---no-xvfb::
-        Don't run the tests using a virtual frame buffer X server.
+--xvfb::
+        Run the tests using a virtual frame buffer X server. You should
+        also disable the X server with --no-xdummy.
+
+--no-xdummy::
+        Don't start an X server with the dummy driver to run the tests.
 
 --resolution=<resolution>::
-        When using xvfb, this sets the default resolution. The default
-        is 1024x768.
+        When using xvfb or X dummy, this sets the default resolution.
+        The default is 1024x768.
 
 --enable-tests=<test1,test2>::
         Only run the list of tests selected. When this option is not

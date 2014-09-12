@@ -14,6 +14,7 @@ use TBBTestSuite::Common qw(exit_error);
 use TBBTestSuite::Options qw($options);
 use TBBTestSuite::BrowserBundleTests qw(tbb_filename_infos);
 use TBBTestSuite::BrowserUnitTests;
+use TBBTestSuite::XServer qw(set_Xmode);
 
 our %testsuite_types = (
     browserunit => \%TBBTestSuite::BrowserUnitTests::testsuite,
@@ -39,10 +40,16 @@ sub run_tests {
         print "* Running test $test->{name} *\n";
         print '*' x (17 + length($test->{name})), "\n\n";
         $test->{start_time} = time;
+        if ($options->{xdummy} && $test->{resolution}) {
+            set_Xmode($tbbinfos->{Xdisplay}, $test->{resolution});
+        }
         $test->{pre}->($tbbinfos, $test) if $test->{pre};
         $test_types->{$test->{type}}->($tbbinfos, $test)
                 if $test_types->{$test->{type}};
         $test->{post}->($tbbinfos, $test) if $test->{post};
+        if ($options->{xdummy} && $test->{resolution}) {
+            set_Xmode($tbbinfos->{Xdisplay}, $options->{resolution});
+        }
         $test->{finish_time} = time;
         $test->{run_time} = $test->{finish_time} - $test->{start_time};
         if ($test->{fail_type} eq 'fatal' && is_test_error($test)) {

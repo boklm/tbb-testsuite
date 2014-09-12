@@ -12,6 +12,7 @@ use JSON;
 use TBBTestSuite::Common qw(exit_error get_nbcpu run_to_file);
 use TBBTestSuite::Reports qw(load_report);
 use TBBTestSuite::Options qw($options);
+use TBBTestSuite::XServer qw(start_X stop_X set_Xmode);
 
 my $test_types = {
     xpcshell => \&xpcshell_test,
@@ -75,9 +76,15 @@ sub pre_tests {
     my ($config_guess) = capture_exec('./build/autoconf/config.guess');
     chomp $config_guess;
     $tbbinfos->{topobjdir} = "obj-$config_guess";
+    if ($options->{xdummy}) {
+        $tbbinfos->{Xdisplay} = start_X("$tbbinfos->{'results-dir'}/xorg.log");
+        set_Xmode($tbbinfos->{Xdisplay}, $options->{resolution});
+    }
 }
 
 sub post_tests {
+    my ($tbbinfos) = @_;
+    stop_X($tbbinfos->{Xdisplay}) if $options->{xdummy};
 }
 
 sub tests_by_name {

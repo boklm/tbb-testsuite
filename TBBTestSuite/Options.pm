@@ -32,7 +32,8 @@ my %default_options = (
     'reports-dir'      => "$FindBin::Bin/reports",
     virtualenv => "$FindBin::Bin/virtualenv",
     resolution => '1024x768',
-    xvfb       => $OSNAME ne 'cygwin',
+    xvfb       => 0,
+    xdummy     => $OSNAME ne 'cygwin',
     mbox       => has_bin('mbox'),
     virustotal => 0,
     newlayout  => 1,
@@ -52,7 +53,7 @@ sub get_options {
                      action=s enable-tests=s upload-to=s os=s arch=s
                      virustotal! email-to=s@ email-from=s email-subject=s
                      mozmill-dir=s reports-url=s http-proxy-port=i
-                     newlayout! mbox!);
+                     newlayout! mbox! xdummy!);
     my (%cli, %config);
     Getopt::Long::GetOptionsFromArray(\@_, \%cli, @options) || exit 1;
     $cli{args} = \@_ if @_;

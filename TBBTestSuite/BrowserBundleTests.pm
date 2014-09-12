@@ -17,6 +17,7 @@ use TBBTestSuite::Options qw($options);
 use TBBTestSuite::Tests::VirusTotal qw(virustotal_run);
 use TBBTestSuite::Tests::Command qw(command_run);
 use TBBTestSuite::Tests::TorBootstrap;
+use TBBTestSuite::XServer qw(start_X stop_X set_Xmode);
 
 our (@ISA, @EXPORT_OK);
 BEGIN {
@@ -482,11 +483,16 @@ sub pre_tests {
     set_tbbpaths($tbbinfos);
     chdir $tbbinfos->{tbbdir} || exit_error "Can't enter directory $tbbinfos->{tbbdir}";
     $ENV{TOR_SKIP_LAUNCH} = 1;
+    if ($options->{xdummy}) {
+        $tbbinfos->{Xdisplay} = start_X("$tbbinfos->{'results-dir'}/xorg.log");
+        set_Xmode($tbbinfos->{Xdisplay}, $options->{resolution});
+    }
 }
 
 sub post_tests {
     my ($tbbinfos) = @_;
     TBBTestSuite::Tests::TorBootstrap::stop_tor($tbbinfos);
+    stop_X($tbbinfos->{Xdisplay}) if $options->{xdummy};
 }
 
 1;
