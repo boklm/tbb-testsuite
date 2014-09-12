@@ -222,9 +222,10 @@ sub xpcshell_test {
     my ($tbbinfos, $test) = @_;
     my $xunit_file = "$tbbinfos->{topobjdir}/.mozbuild/xpchsell.xunit.xml";
     unlink $xunit_file if -f $xunit_file;
+    my @xvfb = $options->{xvfb} ?
+        ('xvfb-run', '--server-args=-screen 0 1024x768x24') : ();
     my ($out, $err, $success) =
-                capture_exec('xvfb-run', '--server-args=-screen 0 1024x768x24',
-                    './mach', 'xpcshell-test', $test->{dir});
+                capture_exec(@xvfb, './mach', 'xpcshell-test', $test->{dir});
     return unless -f $xunit_file;
     $test->{results}{out} = $out;
     $test->{results}{failed} = {};
@@ -251,9 +252,10 @@ sub mochitest_test {
     my ($mach_command, $tbbinfos, $test) = @_;
     my $failures_file = "$tbbinfos->{topobjdir}/.mozbuild/mochitest_failures.json";
     unlink $failures_file if -f $failures_file;
+    my @xvfb = $options->{xvfb} ?
+        ('xvfb-run', '--server-args=-screen 0 1024x768x24') : ();
     my ($out, $err, $success) =
-                capture_exec('xvfb-run', '--server-args=-screen 0 1024x768x24',
-                    './mach', $mach_command, $test->{dir});
+                capture_exec(@xvfb, './mach', $mach_command, $test->{dir});
     return unless -f $failures_file;
     $test->{results}{out} = $out;
     my $failed = eval { -f $failures_file
