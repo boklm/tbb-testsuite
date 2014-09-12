@@ -14,6 +14,15 @@ yum_install() {
     done
 }
 
+apt_install() {
+    apt-get install -y "$@"
+}
+
+pkg_install() {
+    [ -f /etc/debian_version ] && apt_install "$@"
+    [ -f /etc/redhat-release ] && which yum > /dev/null 2>&1 && yum_install "$@"
+}
+
 perlmodules='
 Cwd Data::Dump Digest::SHA File::Path File::Slurp File::Spec File::Temp
 FindBin Getopt::Long IO::CaptureOutput IO::Socket::INET Image::Magick
@@ -73,3 +82,21 @@ then
         cpan_install $perlmod
     done
 fi
+
+install_X() {
+    packages="fluxbox"
+    [ -f /etc/debian_version ] && packages="$packages xserver-xorg-video-dummy"
+    [ -f /etc/redhat-release ] && packages="$packages xorg-x11-drv-dummy"
+    pkg_install $packages
+}
+
+while test $# != 0
+do
+    case "$1" in
+        X)
+            install_X ;;
+        *)
+            echo "Unknown option $1" >&2 ;;
+    esac
+    shift
+done
