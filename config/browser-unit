@@ -9,7 +9,7 @@ use TBBTestSuite::BrowserGit qw(git_clone_fetch get_commits_by_branch
 
 my $torbrowser_branch = 'tor-browser-24.8.0esr-3.x-1';
 my $esr_branch = 'esr24';
-my $testsuite_version = '1';
+my $testsuite_version = '2';
 
 sub commit_to_name {
     my ($commit) = @_;
@@ -24,7 +24,7 @@ my @commits = get_commits_by_branch($torbrowser_branch, $esr_branch);
 my %res = (
     args => [],
     'reports-url' => 'http://93.95.228.164/reports/',
-    tags => [ $torbrowser_branch ],
+    tags => [ "$torbrowser_branch-build2" ],
 );
 my $previous;
 for my $commit (reverse @commits) {
