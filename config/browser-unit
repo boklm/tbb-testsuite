@@ -25,6 +25,11 @@ my %res = (
     args => [],
     'reports-url' => 'http://93.95.228.164/reports/',
     tags => [ "$torbrowser_branch-build2" ],
+    'disable-tests' => [
+        'mochitest-chrome:toolkit/content/tests/chrome',
+        'mochitest-chrome:toolkit/content/tests/widgets',
+        'mochitest-chrome:toolkit/identity/tests/chrome',
+    ],
 );
 my $previous;
 for my $commit (reverse @commits) {
