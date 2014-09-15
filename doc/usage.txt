@@ -100,6 +100,9 @@ Available options
         working on a new test and don't want to run all the test suite
         to try your new test.
 
+--disable-tests=<test1,test2>::
+        Don't run the list of tests selected.
+
 --upload-to=<login@hostname>::
         Upload the tests reports to select host, with ssh.
 

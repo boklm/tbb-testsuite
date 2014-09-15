@@ -29,12 +29,21 @@ sub run_tests {
                             @{$options->{'enable-tests'}}
                             : split(',', $options->{'enable-tests'});
     }
+    my @disable_tests;
+    if ($options->{'disable-tests'}) {
+        @disable_tests = ref $options->{'disable-tests'} ?
+                            @{$options->{'disable-tests'}}
+                            : split(',', $options->{'disable-tests'});
+    }
     my $test_types = $testsuite_types{$tbbinfos->{type}}->{test_types};
     foreach my $test (@{$tbbinfos->{tests}}) {
         $test->{fail_type} //= 'error';
     }
     foreach my $test (@{$tbbinfos->{tests}}) {
         if (@enable_tests && ! grep { $test->{name} eq $_ } @enable_tests) {
+            next;
+        }
+        if (@disable_tests && grep { $test->{name} eq $_ } @disable_tests) {
             next;
         }
         if ($test->{enable} && !$test->{enable}->($tbbinfos, $test)) {
