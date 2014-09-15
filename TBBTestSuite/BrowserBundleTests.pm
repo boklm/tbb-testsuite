@@ -485,7 +485,6 @@ sub pre_tests {
     $ENV{TOR_SKIP_LAUNCH} = 1;
     if ($options->{xdummy}) {
         $tbbinfos->{Xdisplay} = start_X("$tbbinfos->{'results-dir'}/xorg.log");
-        set_Xmode($tbbinfos->{Xdisplay}, $options->{resolution});
     }
 }
 

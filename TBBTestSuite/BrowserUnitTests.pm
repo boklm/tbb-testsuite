@@ -78,7 +78,6 @@ sub pre_tests {
     $tbbinfos->{topobjdir} = "obj-$config_guess";
     if ($options->{xdummy}) {
         $tbbinfos->{Xdisplay} = start_X("$tbbinfos->{'results-dir'}/xorg.log");
-        set_Xmode($tbbinfos->{Xdisplay}, $options->{resolution});
     }
 }
 
