@@ -85,10 +85,14 @@ fi
 
 install_X() {
     packages="fluxbox"
-    [ -f /etc/debian_version ] && packages="$packages xserver-xorg-video-dummy "\
-                                           'xserver-xorg-input-void'
-    [ -f /etc/redhat-release ] && packages="$packages xorg-x11-drv-dummy"\
-                                           'xorg-x11-drv-void.x86_64'
+    if [ -f /etc/debian_version ]
+    then
+        packages="$packages xserver-xorg-video-dummy xserver-xorg-input-void"
+    fi
+    if [ -f /etc/redhat-release ]
+    then
+        packages="$packages xorg-x11-drv-dummy xorg-x11-drv-void.x86_64"
+    fi
     pkg_install $packages
 }
 
