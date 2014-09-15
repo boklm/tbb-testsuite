@@ -23,8 +23,12 @@ our %testsuite_types = (
 
 sub run_tests {
     my ($tbbinfos) = @_;
-    my @enable_tests = $options->{'enable-tests'}
-                ? split(',', $options->{'enable-tests'}) : ();
+    my @enable_tests;
+    if ($options->{'enable-tests'}) {
+        @enable_tests = ref $options->{'enable-tests'} ?
+                            @{$options->{'enable-tests'}}
+                            : split(',', $options->{'enable-tests'});
+    }
     my $test_types = $testsuite_types{$tbbinfos->{type}}->{test_types};
     foreach my $test (@{$tbbinfos->{tests}}) {
         $test->{fail_type} //= 'error';
