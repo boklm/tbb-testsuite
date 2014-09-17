@@ -1,0 +1,38 @@
+<html>
+<head>
+<title>Videos</title>
+</head>
+<body>
+    <div id="videos" />
+    <div id="finished" />
+    <script>
+
+const videos = [ 
+        "videos/320x240.ogg",
+        "videos/320x240.skeleton+cmml.ogv",
+        "videos/seek.webm",
+        ];
+//      "videos/gizmo.mp4",
+
+var next = {};
+
+for (var i = 0; i < videos.length; i++) {
+    var v = document.createElement('video');
+    v.id = 'videos_' + i;
+    v.src = videos[i];
+    v.controls = 1;
+    v.addEventListener("ended", function() {
+            if (next[this.id])
+                document.getElementById(next[this.id]).play();
+            else
+                document.getElementById("finished").innerHTML = 'finished';
+    }, true);
+    if (i + 1 < videos.length)
+        next[v.id] = 'videos_' + (i + 1).toString();
+    document.getElementById("videos").appendChild(v);
+}
+document.getElementById("videos_0").play();
+
+    </script>
+</body>
+</html>
