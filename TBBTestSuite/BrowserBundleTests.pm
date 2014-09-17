@@ -417,9 +417,24 @@ sub ffbin_path {
            : ff_wrapper($tbbinfos, $test);
 }
 
+sub mozmill_export_options {
+    my ($tbbinfos, $test) = @_;
+    my $options_file = winpath("$FindBin::Bin/mozmill-tests/lib/testsuite.js");
+    my $json_opts = encode_json $options;
+    my $json_test = encode_json $test;
+    my $content = <<EOF;
+var options = $json_opts;
+var test = $json_test;
+exports.options = options;
+exports.test = test;
+EOF
+    write_file($options_file, $content);
+}
+
 sub mozmill_run {
     my ($tbbinfos, $test) = @_;
     return unless $options->{mozmill};
+    mozmill_export_options($tbbinfos, $test);
     $test->{screenshots} = [];
     my $screenshots_tmp = File::Temp::newdir('XXXXXX', DIR => $options->{tmpdir});
     $ENV{'MOZMILL_SCREENSHOTS'} = winpath($screenshots_tmp);
