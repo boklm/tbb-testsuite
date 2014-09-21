@@ -53,7 +53,8 @@ To add a new test based on mozmill, you will add something like this in
 
 The mozmill test files are stored in the directory
 'mozmill/mozmill-tests/tbb-tests/'. The name of the file is the name
-of the test with '.js' at the end.
+of the test with '.js' at the end, unless mozmill_test is defined, in
+which case it is used instead of the name.
 
 
 Adding a selenium test

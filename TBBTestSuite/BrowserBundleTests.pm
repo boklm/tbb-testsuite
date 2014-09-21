@@ -439,9 +439,10 @@ sub mozmill_run {
     my $screenshots_tmp = File::Temp::newdir('XXXXXX', DIR => $options->{tmpdir});
     $ENV{'MOZMILL_SCREENSHOTS'} = winpath($screenshots_tmp);
     my $results_file = "$tbbinfos->{'results-dir'}/$test->{name}.json";
+    my $mozmill_test = $test->{mozmill_test} // $test->{name};
     system(xvfb_run($test), mozmill_cmd(), '-b', ffbin_path($tbbinfos, $test),
         '-p', winpath($tbbinfos->{ffprofiledir}),
-        '-t', winpath("$FindBin::Bin/mozmill-tests/tbb-tests/$test->{name}.js"),
+        '-t', winpath("$FindBin::Bin/mozmill-tests/tbb-tests/$mozmill_test.js"),
         '--report', 'file://' . winpath($results_file));
     my $i = 0;
     for my $screenshot_file (reverse sort glob "$screenshots_tmp/*.png") {
