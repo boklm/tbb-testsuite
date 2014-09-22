@@ -12,7 +12,7 @@ use File::Copy;
 use JSON;
 use Digest::SHA qw(sha256_hex);
 use LWP::UserAgent;
-use TBBTestSuite::Common qw(exit_error winpath);
+use TBBTestSuite::Common qw(exit_error winpath clone_strip_coderef);
 use TBBTestSuite::Options qw($options);
 use TBBTestSuite::Tests::VirusTotal qw(virustotal_run);
 use TBBTestSuite::Tests::Command qw(command_run);
@@ -427,8 +427,8 @@ sub ffbin_path {
 sub mozmill_export_options {
     my ($tbbinfos, $test) = @_;
     my $options_file = winpath("$FindBin::Bin/mozmill-tests/lib/testsuite.js");
-    my $json_opts = encode_json $options;
-    my $json_test = encode_json $test;
+    my $json_opts = encode_json clone_strip_coderef $options;
+    my $json_test = encode_json clone_strip_coderef $test;
     my $content = <<EOF;
 var options = $json_opts;
 var test = $json_test;

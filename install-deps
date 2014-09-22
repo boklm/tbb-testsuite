@@ -27,7 +27,7 @@ perlmodules='
 Cwd Data::Dump Digest::SHA File::Path File::Slurp File::Spec File::Temp
 FindBin Getopt::Long IO::CaptureOutput IO::Socket::INET Image::Magick
 JSON LWP::UserAgent LWP::Protocol::https Template YAML::Syck DateTime
-Email::Simple Email::Sender File::Type IPC::Run XML::LibXML
+Email::Simple Email::Sender File::Type IPC::Run XML::LibXML Storable
 '
 
 if [ -f /etc/debian_version ]

@@ -7,13 +7,15 @@ use FindBin;
 use IO::CaptureOutput qw(capture_exec);
 use File::Slurp;
 use IPC::Run qw(run);
+use Storable qw(dclone);
 
 our (@ISA, @EXPORT_OK);
 BEGIN {
     require Exporter;
     @ISA       = qw(Exporter);
     @EXPORT_OK = qw(exit_error system_infos run_alone rm_pidfile winpath
-                    has_bin get_var run_to_file get_nbcpu as_array);
+                    has_bin get_var run_to_file get_nbcpu as_array
+                    clone_strip_coderef);
 }
 
 sub exit_error {
@@ -92,6 +94,15 @@ sub get_nbcpu {
 
 sub as_array {
     ref $_[0] eq 'ARRAY' ? $_[0] : [ $_[0] ];
+}
+
+# clone a data structure, stripping code references
+sub clone_strip_coderef {
+    my ($in) = @_;
+    local $Storable::Deparse = 0;
+    local $Storable::forgive_me = 1;
+    local $SIG{__WARN__} = sub {};
+    return dclone $in;
 }
 
 1;
