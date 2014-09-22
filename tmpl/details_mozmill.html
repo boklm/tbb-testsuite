@@ -16,7 +16,7 @@
 <b>List of opened connections:</b>
 <ul>
     [% FOREACH con IN test.results.connections.nsort.reverse %]
-    <li>[% con %]: [% test.results.connections.$con %] connections</li>
+    <li[% IF test.results.bad_connections.$con %] class="text_red"[% END %]>[% con %]: [% test.results.connections.$con %] connections</li>
     [% END %]
 </ul>
 [% END %]

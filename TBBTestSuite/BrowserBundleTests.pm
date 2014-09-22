@@ -356,6 +356,16 @@ sub check_opened_connections {
         next unless $line =~ m/ > \[\d+\] -> (.+)/;
         $test->{results}{connections}{$1}++;
     }
+    my %bad_connections =  %{$test->{results}{connections}};
+    delete $bad_connections{"127.0.0.1:$options->{'tor-control-port'}"};
+    delete $bad_connections{"127.0.0.1:$options->{'tor-socks-port'}"};
+    # For some reasons, tor-browser creates two connections to the default
+    # socks port even when when TOR_SOCKS_PORT is set
+    # https://lists.torproject.org/pipermail/tbb-dev/2014-May/000050.html
+    delete $bad_connections{'127.0.0.1:9150'}
+                if $bad_connections{'127.0.0.1:9150'} <= 2;
+    $test->{results}{success} = 0 if %bad_connections;
+    $test->{results}{bad_connections} = \%bad_connections;
 }
 
 sub check_modified_files {
@@ -459,9 +469,9 @@ sub mozmill_run {
         $i++;
     }
     $test->{results} = decode_json(read_file($results_file));
+    $test->{results}{success} = !$test->{results}{results}->[0]->{failed};
     check_opened_connections($tbbinfos, $test);
     check_modified_files($tbbinfos, $test);
-    $test->{results}{success} = !$test->{results}{results}->[0]->{failed};
 }
 
 sub selenium_run {
