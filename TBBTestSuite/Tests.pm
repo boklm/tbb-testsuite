@@ -169,8 +169,6 @@ sub test_sha {
 sub test_start {
     my ($report, $tbbinfos) = @_;
     my $oldcwd = getcwd;
-    return test_sha($report, $tbbinfos->{tbbfile})
-                if $tbbinfos->{type} eq 'sha256sum';
     my $tmpdir = File::Temp::newdir('XXXXXX', DIR => $options->{tmpdir});
     $tbbinfos->{tmpdir} = $tmpdir->dirname;
     $tbbinfos->{tests} //= [ map { { %$_ } } @TBBTestSuite::BrowserBundleTests::tests ];

@@ -297,8 +297,6 @@ sub tbb_filename_infos {
     } elsif ($file =~ m/^TorBrowserBundle-(.+)-osx32_(.+)\.zip$/) {
         @res{qw(type os arch version language)} =
                 ('browserbundle', 'MacOSX', 'x86', $1, $2);
-    } elsif ($file eq 'sha256sums.txt') {
-        $res{type} = 'sha256sum';
     } else {
         $res{type} = 'Unknown';
     }

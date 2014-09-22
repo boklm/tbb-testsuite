@@ -4,6 +4,7 @@ use FindBin;
 use lib "$FindBin::Bin";
 use Data::Dump qw/dd/;
 use File::Path qw(make_path);
+use File::Spec;
 use YAML::Syck;
 use TBBTestSuite::Common qw(exit_error run_alone rm_pidfile);
 use TBBTestSuite::Options qw($options);
@@ -35,6 +36,13 @@ sub set_report_success {
     }
 }
 
+sub is_shafile {
+    my ($tbbfile) = @_;
+    return 0 if ref $tbbfile;
+    my (undef, undef, $file) = File::Spec->splitpath($tbbfile);
+    return $file eq 'sha256sums.txt';
+}
+
 sub run_tests {
     return unless @{$options->{args}};
     my $report = {
@@ -47,7 +55,11 @@ sub run_tests {
     foreach my $tbbfile (@{$options->{args}}) {
         my $tbbinfos = ref $tbbfile eq 'HASH' ? $tbbfile
                          : tbb_filename_infos($tbbfile);
-        TBBTestSuite::Tests::test_start($report, $tbbinfos);
+        if (is_shafile($tbbfile)) {
+            TBBTestSuite::Tests::test_sha($report, $tbbfile);
+        } else {
+            TBBTestSuite::Tests::test_start($report, $tbbinfos);
+        }
     }
     set_report_success($report);
     save_report($report);
