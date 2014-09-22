@@ -362,8 +362,10 @@ sub check_opened_connections {
     # For some reasons, tor-browser creates two connections to the default
     # socks port even when when TOR_SOCKS_PORT is set
     # https://lists.torproject.org/pipermail/tbb-dev/2014-May/000050.html
-    delete $bad_connections{'127.0.0.1:9150'}
-                if $bad_connections{'127.0.0.1:9150'} <= 2;
+    if (defined $bad_connections{'127.0.0.1:9150'}
+        && $bad_connections{'127.0.0.1:9150'} <= 2) {
+        delete $bad_connections{'127.0.0.1:9150'}
+    }
     $test->{results}{success} = 0 if %bad_connections;
     $test->{results}{bad_connections} = \%bad_connections;
 }
