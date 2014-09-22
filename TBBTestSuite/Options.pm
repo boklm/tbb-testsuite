@@ -43,6 +43,8 @@ my %default_options = (
     'email-subject' => '[test result: [% success ? "ok" : "failed" %]] [% options.name %]',
     'mozmill-dir' => 'c:\tbbtestsuite\mozmill-env',
     'http-proxy-port' => '8888',
+    test_data_url => 'http://93.95.228.161/test-data',
+    test_data_dir => "$FindBin::Bin/test-data",
 );
 
 
