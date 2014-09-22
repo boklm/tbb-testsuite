@@ -222,6 +222,15 @@ our @tests = (
         type  => 'selenium',
         descr => 'Check that navigator properties are as expected',
     },
+    {
+        name => 'play_videos',
+        type => 'mozmill',
+        descr => 'Play some videos',
+        mozmill_test => 'test_page',
+        remote => 1,
+        timeout => 50000,
+        interval => 100,
+    },
 );
 
 sub toggle_https_everywhere {
