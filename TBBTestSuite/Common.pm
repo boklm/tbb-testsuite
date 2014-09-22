@@ -96,13 +96,30 @@ sub as_array {
     ref $_[0] eq 'ARRAY' ? $_[0] : [ $_[0] ];
 }
 
+sub remove_scalarref {
+    my ($data) = @_;
+    return unless ref $data;
+    unless (ref $data eq 'ARRAY' or ref $data eq 'HASH') {
+        return;
+    }
+    foreach my $d (ref $data eq 'ARRAY' ? @$data : values %$data) {
+        if (ref $d eq 'ARRAY' or ref $d eq 'HASH') {
+            remove_scalarref($d);
+        } elsif (ref $d eq 'SCALAR') {
+            $d = $$d;
+        }
+    }
+}
+
 # clone a data structure, stripping code references
 sub clone_strip_coderef {
     my ($in) = @_;
     local $Storable::Deparse = 0;
     local $Storable::forgive_me = 1;
     local $SIG{__WARN__} = sub {};
-    return dclone $in;
+    my $res = dclone $in;
+    remove_scalarref $res;
+    return $res;
 }
 
 1;
