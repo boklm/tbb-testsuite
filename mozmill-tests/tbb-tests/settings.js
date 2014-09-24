@@ -4,8 +4,11 @@
 
 "use strict";
 
+Cu.import("resource://gre/modules/Services.jsm");
+
 var {expect} = require("../mozilla-mozmill-tests/lib/assertions");
 var prefs = require("../mozilla-mozmill-tests/firefox/lib/prefs");
+var utils = require("../mozilla-mozmill-tests/firefox/lib/utils");
 
 // Most of the following checks and comments are taken from 
 // https://github.com/arthuredelstein/tor-browser/blob/12620/tbb-tests/browser_tor_TB4.js 
@@ -173,6 +176,13 @@ const SETTINGS = {
     // "torbrowser.version": "UNKNOWN", // TODO: Should we check version using a regexp?
 };
 
+// Adding these preferences to SETTINGS breaks ESR 24 based browsers which do
+// not have them. Thus, we check the version of the Tor Browser to test and iff
+// it is equal or larger to 31.0 the preferences are tested.
+const SETTINGS_NEW = {
+    "dom.enable_resource_timing": false,
+}
+
 var setupModule = function(aModule) {
   aModule.controller = mozmill.getBrowserController();
 }
@@ -191,5 +201,10 @@ var testTBBSettings = function() {
     var prefSrv = prefs.preferences;
     for (let prefname in SETTINGS)
         expect.equal(prefSrv.getPref(prefname, dval(SETTINGS[prefname])),
-                SETTINGS[prefname], prefname);
+                     SETTINGS[prefname], prefname);
+    if (Services.vc.compare(utils.appInfo.version, "31.0") >= 0) {
+        for (let prefname in SETTINGS_NEW)
+            expect.equal(prefSrv.getPref(prefname, dval(SETTINGS_NEW[prefname])),
+                         SETTINGS_NEW[prefname], prefname);
+    }
 }
