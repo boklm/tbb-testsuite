@@ -102,7 +102,6 @@ const SETTINGS = {
 
     // Proxy and proxy security
     "network.proxy.socks": "127.0.0.1",
-    "network.proxy.socks_port": 9150,
     "network.proxy.socks_remote_dns": true,
     "network.proxy.no_proxies_on": "", // For fingerprinting and local service vulns (#10419)
     "network.proxy.type": 1,
