@@ -136,7 +136,6 @@ const SETTINGS = {
 
     // Extension support
     // "extensions.autoDisableScopes": 0, TODO: check default
-    "extensions.bootstrappedAddons": "{}",
     "extensions.checkCompatibility.4.*": false,
     // "extensions.databaseSchema": 3, TODO: check default
     
