@@ -393,6 +393,7 @@ sub check_modified_files {
         push @{$test->{results}{modified_files}}, $fname;
     };
     find($add_modified_file, $sandbox_dir);
+    return unless -f "$sandbox_dir.meta";
     foreach my $meta (read_file("$sandbox_dir.meta")) {
         if ($meta =~ m/^D:(.*):1$/) {
             my $fname = $1;
