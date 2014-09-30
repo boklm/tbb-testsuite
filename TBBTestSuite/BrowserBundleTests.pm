@@ -199,6 +199,11 @@ our @tests = (
         descr => 'Check the list of DOM Objects exposed in the global namespace',
     },
     {
+        name  => 'resource-timing',
+        type  => 'mozmill',
+        descr => 'Check that the Resource Timing API is really disabled',
+    },
+    {
         name => 'fp_screen_dimensions',
         type  => 'selenium',
         descr => 'Check that screen dimensions are spoofed correctly',
