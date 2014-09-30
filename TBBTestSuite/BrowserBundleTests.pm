@@ -204,6 +204,11 @@ our @tests = (
         descr => 'Check that the Navigation Timing API is really disabled',
     },
     {
+        name  => 'resource-timing',
+        type  => 'mozmill',
+        descr => 'Check that the Resource Timing API is really disabled',
+    },
+    {
         name => 'fp_screen_dimensions',
         type  => 'selenium',
         descr => 'Check that screen dimensions are spoofed correctly',
