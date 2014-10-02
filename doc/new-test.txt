@@ -1,6 +1,38 @@
 How to add a new test
 =====================
 
+Where to add a new test
+-----------------------
+
+Depending on what you want to test, it can be added in different places.
+
+There are two categories of tests that we are running:
+
+- The tor browser unit tests. Those tests are included in the tor browser
+  sources tree, in tor-browser.git, and can only be run from the sources
+  tree. We are currently running all the xpcshell and mozmill tests
+  that we find in the sources tree.
+
+- The tor browser bundle tests. Those tests are run on a complete bundle.
+  The tests in the browser can be implemented using mozmill or selenium.
+  We also have other types of tests checking that pluggable transports
+  are working with and without using an http proxy, or checking that
+  binary files have been compiled with hardenning options.
+
+If the goal is to check that the behavior of the browser is correct
+after some changes from one of our patches, then it is probably a good
+idea to have the test as a patch on tor-browser.git. The Mozilla wiki
+has some documentation about adding mochitest and XPCShell tests.
+
+If the goal is to check the behavior of something that could be changed
+by an extension included in the bundle, some build options or some
+settings, then it should be included in the bundle tests. How to add
+this kind of test is described below.
+
+
+Adding a browser bundle test
+----------------------------
+
 The list of tests to be run by the test suite is defined in file
 'TBBTestSuite/BrowserBundleTests.pm' in the '@tests' variable.
 
@@ -38,7 +70,7 @@ enable::
 
 
 Adding a mozmill test
----------------------
+~~~~~~~~~~~~~~~~~~~~~
 
 To add a new test based on mozmill, you will add something like this in
 'TBBTestSuite/BrowserBundleTests.pm':
@@ -56,9 +88,80 @@ The mozmill test files are stored in the directory
 of the test with '.js' at the end, unless mozmill_test is defined, in
 which case it is used instead of the name.
 
+It is possible to share a single mozmill file for multiple tests. The
+mozmill test can access values from the test definition to do something
+different in each test. It is also possible to access the test suite options.
+In this example, we are accessing the "timeout" value from the test
+definition, and the "test_data_url" from the the testsuite options:
+
+----
+var testsuite = require("../lib/testsuite");
+
+var testThings = function() {
+    var test_data_url = testsuite.options.test_data_url;
+    var timeout = testsuite.test.timeout;
+    ...
+}
+----
+
+A common option is 'test_data_url' which is an URL where test data have
+been deployed. If you want to add more data, it should be added to the
+'test-data' directory at the root of the repository.
+
+If the test data does not need to be accessed remotely, the 'test_data_dir'
+option can be used instead.
+
+
+Adding a simple test page
+~~~~~~~~~~~~~~~~~~~~~~~~~
+
+If what you want to test is the behavior of some specific page and you
+don't need any of the mozmill specific features, you can reuse the
+'test_page' mozmill test.
+
+To do that, put your page in the directory 'test-data'. The name of the
+test will be the name of the page without the '.html' extension.
+
+Your page will do something in javascript, and save its result in an
+element whose id is 'test_result'. If the test is successful, the result
+should be "OK", and anything else will be considered as an error message
+and a failed test.
+
+Adding a successful test result can be done like this:
+----
+var result = document.createElement('div');
+result.innerHTML = 'OK';
+result.setAttribute("id", "test_result");
+document.getElementsByTagName("body")[0].appendChild(result);
+----
+
+The test definition will look like this:
+----
+    {
+        name => 'some_name',
+        type => 'mozmill',
+        descr => 'Some description',
+        mozmill_test => 'test_page',
+        remote => 1,
+        timeout => 50000,
+        interval => 100,
+    },
+----
+
+If 'remote' is set to 1, then the page will be accessed using the URL
+defined in the 'test_data_url' option, otherwise it will be accessed
+locally with the 'test_data_dir' option.
+
+The 'timeout' value is the time in milliseconds after which the test
+should be considered as failed if the 'test_result' element is still
+not present.
+
+The 'interval' value is how often we should check if the test_result
+element appeared.
+
 
 Adding a selenium test
-----------------------
+~~~~~~~~~~~~~~~~~~~~~~
 
 To add a new test based on selenium webdriver, you will add something
 like this in 'TBBTestSuite/BrowserBundleTests.pm':
@@ -77,7 +180,7 @@ $name replaced by the test name).
 
 
 Adding a command test
----------------------
+~~~~~~~~~~~~~~~~~~~~~
 
 To run a command on some files, and check the output. You will add
 something like this in 'TBBTestSuite/BrowserBundleTests.pm':
@@ -100,4 +203,26 @@ reference containing the files list. The 'check_output' is optional and
 is a reference to a subroutine that checks the output of the command.
 The test will fail if the command returns non-zero, or the check_output
 sub returns false, on any of the files.
+
+
+Testing the new test
+--------------------
+
+When you are creating a new test, you probably don't want to run all
+the tests to try your new test. In this case, the '--enable-tests'
+option is useful to run only the test that you added:
+
+----
+$ ./tbb-testsuite --no-newlayout --enable-tests my_new_test /path/to/tor-browser-linux64-3.6.6_ko.tar.xz
+----
+
+If your test requires a running Tor daemon, you may need to enable the 'tor_bootstrap' test too:
+----
+$ ./tbb-testsuite --no-newlayout --enable-tests tor_bootstrap,my_new_test /path/to/tor-browser-linux64-3.6.6_ko.tar.xz
+----
+
+Alternatively you may use an already running Tor daemon with the '--tor-socks-port' option:
+----
+$ ./tbb-testsuite --no-newlayout --enable-tests my_new_test --tor-socks-port=9150 /path/to/tor-browser-linux64-3.6.6_ko.tar.xz
+----
 
