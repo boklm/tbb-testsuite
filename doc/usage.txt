@@ -119,8 +119,8 @@ Available options
         you are currently running.
 
 --virustotal::
-        Enable upload of files for analysis on virustotal.com. It is
-        disabled by default.
+        Enable upload of files for analysis on virustotal.com instead
+        of the regular testsuite.
 
 --email-from::
         Set the From header that will be used when sending reports by

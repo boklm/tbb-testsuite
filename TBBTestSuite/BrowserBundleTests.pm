@@ -55,6 +55,11 @@ our %testsuite = (
     post_tests  => \&post_tests,
 );
 
+our %testsuite_virustotal = (
+    %testsuite,
+    description => 'Tor Browser Bundle Virustotal checks',
+);
+
 our @tests = (
     {
         name         => 'readelf_RELRO',
@@ -160,11 +165,6 @@ our @tests = (
         fail_type => 'fatal',
         use_default_config => 1,
         no_kill => 1,
-    },
-    {
-        name   => 'virustotal',
-        type   => 'virustotal',
-        descr  => 'Analyze files on virustotal.com',
     },
     {
         name => 'screenshots',
@@ -308,16 +308,27 @@ sub tbb_filename_infos {
     my (undef, undef, $file) = File::Spec->splitpath($tbbfile);
     my %res = (filename => $file, tbbfile => $tbbfile);
     if ($file =~ m/^tor-browser-linux(..)-([^_]+)_(.+)\.tar\.xz$/) {
-        @res{qw(type os version language)} = ('browserbundle', 'Linux', $2, $3);
+        @res{qw(os version language)} = ('Linux', $2, $3);
         $res{arch} = $1 eq '64' ? 'x86_64' : 'x86';
     } elsif ($file =~ m/^torbrowser-install-([^_]+)_(.+)\.exe$/) {
-        @res{qw(type os arch version language)} =
-                ('browserbundle', 'Windows', 'x86', $1, $2);
+        @res{qw(os arch version language)} = ('Windows', 'x86', $1, $2);
     } elsif ($file =~ m/^TorBrowserBundle-(.+)-osx32_(.+)\.zip$/) {
-        @res{qw(type os arch version language)} =
-                ('browserbundle', 'MacOSX', 'x86', $1, $2);
+        @res{qw(os arch version language)} = ('MacOSX', 'x86', $1, $2);
     } else {
-        $res{type} = 'Unknown';
+        return undef;
+    }
+    if ($options->{virustotal}) {
+        $res{type} = 'browserbundle_virustotal';
+        $res{tests} = [
+            {
+                name   => 'virustotal',
+                type   => 'virustotal',
+                descr  => 'Analyze files on virustotal.com',
+            },
+        ];
+    } else {
+        $res{type} = 'browserbundle';
+        $res{tests} = [ map { { %$_ } } @tests ];
     }
     return \%res;
 }

@@ -19,6 +19,7 @@ use TBBTestSuite::XServer qw(set_Xmode);
 our %testsuite_types = (
     browserunit => \%TBBTestSuite::BrowserUnitTests::testsuite,
     browserbundle => \%TBBTestSuite::BrowserBundleTests::testsuite,
+    browserbundle_virustotal => \%TBBTestSuite::BrowserBundleTests::testsuite_virustotal,
 );
 
 sub run_tests {
@@ -122,8 +123,7 @@ sub test_by_name {
 
 sub matching_tbbfile {
     my $o = tbb_filename_infos($_[0]);
-    return $o->{type} eq 'browserbundle' && $o->{os} eq $options->{os}
-        && $o->{arch} eq $options->{arch};
+    return $o && $o->{os} eq $options->{os} && $o->{arch} eq $options->{arch};
 }
 
 sub check_gpgsig {
