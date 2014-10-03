@@ -64,7 +64,7 @@ Details
 
 result: [% tbbfiles.$tbbfile.success ? 'ok' : 'failed' %]
 
-[% INCLUDE report.txt | indent(2) %]
+[% SET type = tbbfiles.$tbbfile.type; INCLUDE "report_${type}.txt" | indent(2) %]
 
 [% END %]
 [% END %]
