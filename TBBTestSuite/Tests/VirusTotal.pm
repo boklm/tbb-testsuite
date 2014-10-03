@@ -6,6 +6,7 @@ use JSON;
 use LWP::UserAgent;
 use File::Slurp;
 use File::Spec;
+use File::Find;
 use Digest::SHA qw(sha256_hex);
 use Data::Dump qw(dd);
 use TBBTestSuite::Options qw($options);
@@ -75,10 +76,15 @@ sub virustotal_run {
     my $files = {};
     $files->{$tbbinfos->{filename}} = scan_file($tbbinfos->{tbbfile});
     my $cwd = getcwd;
-    foreach my $file (glob("$cwd/*.exe"), glob("$cwd/*/*.exe")) {
-        my (undef, undef, $f) = File::Spec->splitpath($file);
-        $files->{$f} = scan_file($file);
-    }
+    my $scanfile = sub {
+        my $file = $File::Find::name;
+        return unless -f $file;
+        return unless $file =~ m/\.exe$/;
+        my $relative = $file;
+        $relative =~ s/^$cwd\///;
+        $files->{$relative} = scan_file($File::Find::name);
+    };
+    find($scanfile, $cwd);
     $test->{results}{files} = $files;
     $test->{results}{success} = 1;
     foreach my $file (keys %$files) {
