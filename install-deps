@@ -32,7 +32,7 @@ Email::Simple Email::Sender File::Type IPC::Run XML::LibXML Storable
 
 if [ -f /etc/debian_version ]
 then
-   apt-get install -y ntp xvfb python-virtualenv
+   apt-get install -y ntp python-virtualenv
    apt-get install -y libdata-dump-perl libdigest-sha-perl libfile-slurp-perl \
 	   libfile-spec-perl libio-captureoutput-perl perlmagick libjson-perl \
 	    libwww-perl libtemplate-perl libyaml-syck-perl libdatetime-perl \
@@ -43,7 +43,7 @@ fi
 
 if [ -f /etc/redhat-release ] && which yum > /dev/null 2>&1
 then
-    yum_install ntp redhat-lsb-core xorg-x11-server-Xvfb python-virtualenv
+    yum_install ntp redhat-lsb-core python-virtualenv
     if lsb_release -i | grep -q Fedora
     then
         yum_install nmap-ncat
