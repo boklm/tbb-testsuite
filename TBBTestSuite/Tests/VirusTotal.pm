@@ -32,12 +32,11 @@ sub req {
     }
     $last_req = time;
     my $r = $ua->post(@args);
-    return "$r->code - $r->message" unless $r->is_success;
-    my $res;
-    eval {
-        $res = JSON::decode_json $r->content;
-    };
-    return $res;
+    return undef unless $r->is_success;
+    my $res = eval { JSON::decode_json $r->content };
+    print STDERR $@, "\n" unless defined $res;
+    return undef unless defined $res;
+    return $res->{response_code} ? $res : undef;
 }
 
 sub scan_file {
@@ -52,13 +51,14 @@ sub scan_file {
     };
     my $ua = LWP::UserAgent->new;
     my $r = req($ua, $urls{report}, $params_report);
-    return $r if $r->{response_code};
+    return $r if defined $r;
     my $params_scan = {
         apikey => $apikey,
         file => [ $file, $filename ],
     };
     $r = req($ua, $urls{scan}, Content_Type => 'multipart/form-data',
                                Content => $params_scan);
+    return $r unless defined $r;
     return $r unless $r->{response_code};
     my $retry = 20;
     while ($retry) {
