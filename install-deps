@@ -96,11 +96,19 @@ install_X() {
     pkg_install $packages
 }
 
+install_win() {
+    [ -f /etc/debian_version ] && packages="p7zip-full"
+    [ -f /etc/redhat-release ] && packages="p7zip-plugins"
+    pkg_install $packages
+}
+
 while test $# != 0
 do
     case "$1" in
         X)
             install_X ;;
+        win)
+            install_win ;;
         *)
             echo "Unknown option $1" >&2 ;;
     esac
