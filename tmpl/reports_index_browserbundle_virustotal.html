@@ -30,8 +30,6 @@
                 <th>Name</th>
                 <th>Date</th>
                 <th>Version</th>
-                <th>OS</th>
-                <th>Arch</th>
                 <th>Result</th>
             </tr>
             [% FOREACH report IN reports_list %]
@@ -42,8 +40,6 @@
                                         <a href="index-browserbundle-[% reports.$report.options.tags.0 %].html">[% reports.$report.options.tags.0 %]</a>
                                  [% END %]
                                     </td>
-                <td valign="top">[% reports.$report.system_infos.osname %]</td>
-                <td valign="top">[% reports.$report.system_infos.arch %]</td>
                 <td valign="top">
                     [% failed = 0 %]
                     [% FOREACH tbbfile IN reports.$report.tbbfiles.keys %]
