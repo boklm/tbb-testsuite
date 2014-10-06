@@ -1,1 +1,63 @@
-reports_index_browserbundle.html
+[% USE date -%]
+<html>
+    <head>
+        <title>Tests reports</title>
+        <style type="text/css">
+            .test_ok {
+                color: #006600;
+                font-weight: bold;
+            }
+            .test_ok A {
+                color: #006600;
+                font-weight: bold;
+            }
+            .test_notok {
+                color: #FF0000;
+                font-weight: bold;
+            }
+            .test_notok A {
+                color: #FF0000;
+            }
+            .reportdate {
+                font-size: small;
+            }
+        </style>
+    </head>
+    <body>
+        <h1>[% title %]</h1>
+        <table>
+            <tr>
+                <th>Name</th>
+                <th>Date</th>
+                <th>Version</th>
+                <th>OS</th>
+                <th>Arch</th>
+                <th>Result</th>
+            </tr>
+            [% FOREACH report IN reports_list %]
+            <tr>
+                <td valign="top"><a href="r/[% report %]/index.html">[% report %]</a></td>
+                <td valign="top">[% date.format(reports.$report.time, '%Y-%m-%d %H:%M') %]</td>
+                <td valign="top">[% IF reports.$report.options.tags %]
+                                        <a href="index-browserbundle-[% reports.$report.options.tags.0 %].html">[% reports.$report.options.tags.0 %]</a>
+                                 [% END %]
+                                    </td>
+                <td valign="top">[% reports.$report.system_infos.osname %]</td>
+                <td valign="top">[% reports.$report.system_infos.arch %]</td>
+                <td valign="top">
+                    [% failed = 0 %]
+                    [% FOREACH tbbfile IN reports.$report.tbbfiles.keys %]
+                      [% IF ! reports.$report.tbbfiles.$tbbfile.success %]
+                        <span class="test_notok">Failed: <a href="r/[% report %]/[% tbbfile %].html">[% tbbfile %]</a></span><br />
+                        [% failed = 1 %]
+                      [% END %]
+                    [% END %]
+                    [% IF failed == 0 %]
+                      <span class="test_ok"><a href="r/[% report %]/index.html">OK</a></span>
+                    [% END %]
+                </td>
+            </tr>
+            [% END %]
+        </table>
+    </body>
+</html>
