@@ -48,12 +48,42 @@
                     [% failed = 0 %]
                     [% FOREACH tbbfile IN reports.$report.tbbfiles.keys %]
                       [% IF ! reports.$report.tbbfiles.$tbbfile.success %]
-                        <span class="test_notok">Failed: <a href="r/[% report %]/[% tbbfile %].html">[% tbbfile %]</a></span><br />
                         [% failed = 1 %]
                       [% END %]
                     [% END %]
+
                     [% IF failed == 0 %]
                       <span class="test_ok"><a href="r/[% report %]/index.html">OK</a></span>
+                    [% ELSE %]
+                    <span class="test_notok">Failed:</span>
+                    <ul>
+                    [% FOREACH tbbfile IN reports.$report.tbbfiles.keys %]
+                      [% IF ! reports.$report.tbbfiles.$tbbfile.success %]
+                        <li><a href="r/[% report %]/[% tbbfile %].html">[% tbbfile %]</a>
+                            <ul>
+                            [%
+                            FOREACH test IN reports.$report.tbbfiles.$tbbfile.tests;
+                              NEXT IF test.type != 'virustotal';
+                              FOREACH file IN test.results.files.keys;
+                                 NEXT UNLESS test.results.files.$file.positives;
+                                 %]<li><a href="[% test.results.files.$file.permalink %]">[% file %]</a>
+                                 <ul>
+                                 [% FOREACH av IN test.results.files.$file.scans.keys;
+                                      IF test.results.files.$file.scans.$av.result %]
+                                      <li>[% av %]: [% test.results.files.$file.scans.$av.result %]</li>
+                                 [%   END;
+                                    END -%]
+                                 </ul>
+                                 </li>[%
+                              END;
+                            END;
+                            %]
+                            </ul>
+                        </li>
+                        [% failed = 1 %]
+                      [% END %]
+                    [% END %]
+                    </ul>
                     [% END %]
                 </td>
             </tr>
