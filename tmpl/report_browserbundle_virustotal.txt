@@ -1,1 +1,43 @@
-report_browserbundle.txt
+Bundle infos
+  Filename: [% tbbfiles.$tbbfile.filename %]
+  sha256sum: [% tbbfiles.$tbbfile.sha256sum %]
+
+Results
+
+[%
+FOREACH test IN tbbfiles.$tbbfile.tests;
+NEXT IF test.type != 'virustotal';
+positives = [];
+negatives = [];
+FOREACH file IN test.results.files.keys;
+ IF test.results.files.$file.positives;
+    positives.push(file);
+ ELSE;
+    negatives.push(file);
+ END;
+END;
+
+IF positives.size == 0 -%]
+   No positives
+[% ELSE -%]
+   Positives:
+[% FOREACH file IN positives -%]
+    - [% file %]
+[%    FOREACH av IN test.results.files.$file.scans.keys -%]
+[%       IF test.results.files.$file.scans.$av.result -%]
+      [% av %]: [% test.results.files.$file.scans.$av.result %]
+[%       END -%]
+[%    END -%]
+      [% test.results.files.$file.permalink %]
+[% END -%]
+
+[% END;
+IF negatives.size == 0 -%]
+   No negatives
+[% ELSE  -%]
+   Negatives:
+[% FOREACH file IN negatives -%]
+    - [% file %]
+[% END -%]
+[% END -%]
+[% END -%]
