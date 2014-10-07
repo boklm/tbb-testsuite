@@ -421,7 +421,7 @@ sub ff_wrapper {
     my $wrapper = <<EOF;
 #!/bin/sh
 set -e
-export LD_LIBRARY_PATH="$tbbinfos->{tordir}"
+export LD_LIBRARY_PATH="$tbbinfos->{tbbdir}:$tbbinfos->{tordir}"
 exec \'$tbbinfos->{ffbin}\' "\$@"
 EOF
     write_file($wrapper_file, $wrapper);
