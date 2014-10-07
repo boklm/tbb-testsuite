@@ -493,7 +493,8 @@ sub mozmill_run {
         $i++;
     }
     $test->{results} = decode_json(read_file($results_file));
-    $test->{results}{success} = !$test->{results}{results}->[0]->{failed};
+    $test->{results}{success} = $test->{results}{results}->[0]->{passed} ?
+                        !$test->{results}{results}->[0]->{failed} : 0;
     check_opened_connections($tbbinfos, $test);
     check_modified_files($tbbinfos, $test);
 }
