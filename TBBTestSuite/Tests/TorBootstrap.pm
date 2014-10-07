@@ -73,7 +73,7 @@ sub fetch {
 sub tor_capture_exec {
     my ($tbbinfos) = shift;
     my $ld_lib = $ENV{LD_LIBRARY_PATH};
-    $ENV{LD_LIBRARY_PATH} = $tbbinfos->{tordir};
+    $ENV{LD_LIBRARY_PATH} = "$tbbinfos->{tbbdir}:$tbbinfos->{tordir}";
     my @res = capture_exec(@_);
     $ENV{LD_LIBRARY_PATH} = $ld_lib;
     return @res;
@@ -133,7 +133,7 @@ sub start_tor {
         '__OwningControllerProcess', $$);
     $tbbinfos->{torpid} = fork;
     if ($tbbinfos->{torpid} == 0) {
-        $ENV{LD_LIBRARY_PATH} = $tbbinfos->{tordir};
+        $ENV{LD_LIBRARY_PATH} = "$tbbinfos->{tbbdir}:$tbbinfos->{tordir}";
         my $logfile = "$tbbinfos->{'results-dir'}/$test->{name}.log";
         open(STDOUT, '>', $logfile);
         open(STDERR, '>', $logfile);
