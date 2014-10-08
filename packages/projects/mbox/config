@@ -1,4 +1,4 @@
 git_url: https://github.com/boklm/mbox
-git_hash: ebb92c468e5d148f2acbafabde261048a8b6faea
+git_hash: fb072723f6ad65c51d18c2f33bbc6261ba0c66d2
 version: 0
-rpm_rel: "2.g[% c('abbrev') %]"
+rpm_rel: "3.g[% c('abbrev') %]"
