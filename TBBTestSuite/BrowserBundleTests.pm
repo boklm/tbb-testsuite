@@ -69,7 +69,7 @@ our @tests = (
         files        => \&tbb_binfiles,
         command      => [ 'readelf', '-ld' ],
         check_output => sub { ( $_[0] =~ m/GNU_RELRO/ )
-                                && ( $_[0] =~ m/\(BIND_NOW\)/ ) },
+                                && ( $_[0] =~ m/BIND_NOW/ ) },
         enable       => sub { $options->{os} eq 'Linux' },
     },
     {
