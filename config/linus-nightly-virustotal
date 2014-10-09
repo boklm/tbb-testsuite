@@ -1,25 +1,29 @@
 # vim: filetype=perl expandtab
 
 use strict;
-use DateTime;
 use Data::Dump qw(dd);
 use LWP::Simple;
-use TBBTestSuite::Common;
+use TBBTestSuite::Common qw(last_days);
 
 my $system_infos = TBBTestSuite::Common::system_infos;
-my $today = DateTime->now->ymd;
-my $shaurl = "https://people.torproject.org/~linus/builds/tbb-nightly-$today/sha256sums.txt";
-my $name = "tbb-nightly-$today-win32-virustotal";
+my ($name, $shaurl);
+my @dates = last_days(3);
+my $ok = 0;
 
-if (-d "$options->{'reports-dir'}/r/$name") {
-    print "Doing nothing: $name already done\n";
-    return ( args => [] );
-}
+foreach my $date (@dates) {
+    my $shaurl = "https://people.torproject.org/~linus/builds/tbb-nightly-$date/sha256sums.txt";
+    my $name = "tbb-nightly-$date-win32-virustotal";
+    if (-d "$options->{'reports-dir'}/r/$name") {
+        print "Doing nothing: $name already done\n";
+        return ( args => [] );
+    }
 
-if (!get($shaurl)) {
-    print "Doing nothing: cannot download $shaurl\n";
-    return ( args => [] );
+    if (get($shaurl)) {
+        $ok = 1;
+        last;
+    }
 }
+return ( args => [] ) unless $ok;
 
 (
     name    => $name,

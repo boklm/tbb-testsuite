@@ -8,6 +8,7 @@ use IO::CaptureOutput qw(capture_exec);
 use File::Slurp;
 use IPC::Run qw(run);
 use Storable qw(dclone);
+use DateTime;
 
 our (@ISA, @EXPORT_OK);
 BEGIN {
@@ -15,7 +16,7 @@ BEGIN {
     @ISA       = qw(Exporter);
     @EXPORT_OK = qw(exit_error system_infos run_alone rm_pidfile winpath
                     has_bin get_var run_to_file get_nbcpu as_array
-                    clone_strip_coderef);
+                    clone_strip_coderef last_days);
 }
 
 sub exit_error {
@@ -120,6 +121,18 @@ sub clone_strip_coderef {
     my $res = dclone $in;
     remove_scalarref $res;
     return $res;
+}
+
+sub last_days {
+    my ($n) = @_;
+    my $dt = DateTime->now;
+    my @res;
+    while ($n > 0) {
+        push @res, scalar $dt->ymd;
+        $dt -= DateTime::Duration->new(days => 1);
+        $n--;
+    }
+    return @res;
 }
 
 1;
