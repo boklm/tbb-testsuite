@@ -14,12 +14,11 @@ nav_props = {"appCodeName": "Mozilla",
 "product": "Gecko",
 "productSub": "20100101",
 "plugins": "[object PluginArray]",
-"userAgent": "Mozilla/5.0 (Windows NT 6.1; rv:24.0) Gecko/20100101 Firefox/24.0",
+"userAgent": "Mozilla/5.0 (Windows NT 6.1; rv:31.0) Gecko/20100101 Firefox/31.0",
 "cookieEnabled": "true",
 "onLine": "true",
 "buildID": "20100101",
 "doNotTrack": "unspecified",
-"mozPower": "null",
 "javaEnabled": """function javaEnabled() {
     [native code]
 }""",
@@ -29,22 +28,6 @@ nav_props = {"appCodeName": "Mozilla",
 "vibrate": """function vibrate() {
     [native code]
 }""",
-"addIdleObserver": """function addIdleObserver() {
-    [native code]
-}""",
-"removeIdleObserver": """function removeIdleObserver() {
-    [native code]
-}""",
-"requestWakeLock": """function requestWakeLock() {
-    [native code]
-}""",
-"getDeviceStorage": """function getDeviceStorage() {
-    [native code]
-}""",
-"getDeviceStorages": """function getDeviceStorages() {
-    [native code]
-}""",
-"geolocation": "null",
 "registerContentHandler": """function registerContentHandler() {
     [native code]
 }""",
@@ -54,15 +37,14 @@ nav_props = {"appCodeName": "Mozilla",
 "mozIsLocallyAvailable": """function mozIsLocallyAvailable() {
     [native code]
 }""",
-"mozSms": "null",
-"mozMobileMessage": "null",
-"mozGetUserMediaDevices": """function mozGetUserMediaDevices() {
-    [native code]
-}""",
-"mozGetUserMedia": """function mozGetUserMedia() {
-    [native code]
-}""",
-"mozCameras": "null", }
+"mozId":  "null",
+"mozPay":  "null",
+"mozAlarms":  "null",
+"mozContacts":  "[object ContactManager]",
+"mozPhoneNumberService":  "[object PhoneNumberService]",
+"mozApps":  "[xpconnect wrapped (nsISupports, mozIDOMApplicationRegistry, mozIDOMApplicationRegistry2)]",
+"mozTCPSocket":  "null",
+}
 
 
 class Test(tbbtest.TBBTest):
@@ -70,7 +52,8 @@ class Test(tbbtest.TBBTest):
         driver = self.driver
         js = driver.execute_script
         # Check that plugins are disabled
-        for nav_prop, value in nav_props.iteritems():
+        for nav_prop, expected_value in nav_props.iteritems():
             # cast to string on the JS side, otherwise we have issues
             # that raise from Python/JS type disparity
-            self.assertEqual(value, js("return ''+navigator['%s']" % nav_prop))
+            current_value = js("return ''+navigator['%s']" % nav_prop)
+            self.assertEqual(expected_value, current_value, "Navigator property mismatch %s [%s != %s]" % (nav_prop, current_value, expected_value))
