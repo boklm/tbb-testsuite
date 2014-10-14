@@ -19,7 +19,6 @@ foreach my $build (@latest_builds) {
         starttor   => 0,
         mozmill    => 0,
         selenium   => 0,
-        newlayout  => 0,
         'reports-url' => 'http://93.95.228.164/reports/',
         'email-from'  => 'TBB Tests <boklm@torproject.org>',
         'email-to'    => [ 'tor-qa@lists.torproject.org', 'boklm@mars-attacks.org', ],
