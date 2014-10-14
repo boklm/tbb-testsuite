@@ -15,7 +15,6 @@ my $ok = 0;
 foreach my $date (@dates) {
     $shaurl = "https://people.torproject.org/~linus/builds/tbb-nightly-$date/sha256sums.txt";
     $name = "tbb-nightly-$date-$osname";
-    print "trying $shaurl\n";
     if (-d "$options->{'reports-dir'}/r/$name") {
         print "Doing nothing: $name already done\n";
         return ( args => [] );
