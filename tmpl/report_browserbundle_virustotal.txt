@@ -9,7 +9,7 @@ FOREACH test IN tbbfiles.$tbbfile.tests;
 NEXT IF test.type != 'virustotal';
 positives = [];
 negatives = [];
-FOREACH file IN test.results.files.keys;
+FOREACH file IN test.results.files.keys.sort;
  IF test.results.files.$file.positives;
     positives.push(file);
  ELSE;
@@ -23,7 +23,7 @@ IF positives.size == 0 -%]
    Positives:
 [% FOREACH file IN positives -%]
     - [% file %]
-[%    FOREACH av IN test.results.files.$file.scans.keys -%]
+[%    FOREACH av IN test.results.files.$file.scans.keys.sort -%]
 [%       IF test.results.files.$file.scans.$av.result -%]
       [% av %]: [% test.results.files.$file.scans.$av.result %]
 [%       END -%]
