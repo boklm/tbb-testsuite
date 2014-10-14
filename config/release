@@ -20,6 +20,12 @@ foreach my $build (@latest_builds) {
         'reports-url' => 'http://93.95.228.164/reports/',
         'email-from'  => 'TBB Tests <boklm@torproject.org>',
         'email-to'    => [ 'tor-qa@lists.torproject.org', 'boklm@mars-attacks.org', ],
+        known_issues => {
+            readelf_PIE => file_known_issue(
+                'TorBrowser/Tor/PluggableTransports/meek-client' => '10935',
+                'TorBrowser/Tor/PluggableTransports/meek-client-torbrowser' => '10935',
+            ),
+        },
     );
 }
 return ( args => [] );
