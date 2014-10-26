@@ -12,7 +12,7 @@ my $ok = 0;
 
 foreach my $date (@dates) {
     $shaurl = "https://people.torproject.org/~linus/builds/tbb-nightly-$date/sha256sums.txt";
-    my $name = "tbb-nightly-$date-win32-virustotal";
+    $name = "tbb-nightly-$date-win32-virustotal";
     if (-d "$options->{'reports-dir'}/r/$name") {
         print "Doing nothing: $name already done\n";
         return ( args => [] );
