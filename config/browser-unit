@@ -7,8 +7,8 @@ use TBBTestSuite::BrowserUnitTests;
 use TBBTestSuite::BrowserGit qw(git_clone_fetch get_commits_by_branch
                                 parent_commit);
 
-my $torbrowser_branch = 'tor-browser-24.8.0esr-3.x-1';
-my $esr_branch = 'esr24';
+my $torbrowser_branch = 'tor-browser-31.2.0esr-4.x-1';
+my $esr_branch = 'esr31';
 my $testsuite_version = '2';
 
 sub commit_to_name {
