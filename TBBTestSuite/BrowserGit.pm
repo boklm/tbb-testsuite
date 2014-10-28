@@ -31,6 +31,7 @@ sub git_cmd {
 sub git_cmd_ch {
     my (@res) = git_cmd(@_);
     chomp @res;
+    chomp @res;
     return @res;
 }
 
