@@ -14,7 +14,7 @@ BEGIN {
 }
 
 my $torbrowsergit = 'https://git.torproject.org/tor-browser.git';
-my $geckodevgit = 'https://git.mozilla.org/integration/gecko-dev.git';
+my $geckodevgit = 'https://github.com/mozilla/gecko-dev';
 our $clone_dir = "$FindBin::Bin/clones/tor-browser";
 
 sub git_cmd {
