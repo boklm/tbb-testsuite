@@ -58,8 +58,15 @@ sub run_tests {
             set_Xmode($tbbinfos->{Xdisplay}, $test->{resolution});
         }
         $test->{pre}->($tbbinfos, $test) if $test->{pre};
-        $test_types->{$test->{type}}->($tbbinfos, $test)
+        $test->{tried} = 0;
+        while ($test->{tried} < ($test->{retry} // 2)) {
+            $test->{tried} += 1;
+            $test_types->{$test->{type}}->($tbbinfos, $test)
                 if $test_types->{$test->{type}};
+            if (!defined $test->{results} || $test->{results}{success}) {
+                last;
+            }
+        }
         $test->{post}->($tbbinfos, $test) if $test->{post};
         if ($options->{xdummy} && $test->{resolution}) {
             set_Xmode($tbbinfos->{Xdisplay}, $options->{resolution});
