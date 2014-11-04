@@ -9,6 +9,13 @@ my $system_infos = TBBTestSuite::Common::system_infos;
 my $osname = $system_infos->{osname} . '-' . $system_infos->{arch};
 
 my @latest_builds = TBBTestSuite::TBBVersion::latest_builds($options);
+push @latest_builds, {
+    build   => "build1",
+    shasha  => "a7fdcfcefa25457a31092f49e731864c5abf05fbb09b2cebb162b0561b8c05eb",
+    url     => "https://people.torproject.org/~boklm/builds/4.5-alpha-1/sha256sums.txt",
+    user    => "gk",
+    version => "4.5-alpha-1",
+};
 foreach my $build (@latest_builds) {
     my $id = substr($build->{shasha}, 0, 5);
     my $name = "$build->{version}-$id-$osname";
