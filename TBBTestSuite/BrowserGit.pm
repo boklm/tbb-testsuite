@@ -62,13 +62,9 @@ sub parent_commits {
 
 sub get_commits {
     my ($commit, $commit_stop) = @_;
-    my @res = ($commit);
-    return @res if $commit eq $commit_stop;
-    my ($parents) = git_cmd_ch('git', 'show', '-s', '--format=%P', $commit);
-    foreach my $p (split(' ', $parents)) {
-        push @res, get_commits($p, $commit_stop);
-    }
-    return @res;
+    my ($out) = git_cmd_ch('git', 'rev-list', '--topo-order',
+                           "$commit_stop^..$commit");
+    return split "\n", $out;
 }
 
 sub get_commits_by_branch {
