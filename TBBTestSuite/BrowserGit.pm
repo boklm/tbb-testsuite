@@ -41,6 +41,7 @@ sub git_clone_fetch {
         system('git', 'clone', $torbrowsergit, $clone_dir) == 0
                 || exit_error "Error cloning $torbrowsergit";
     }
+    git_cmd('git', 'checkout', '--detach', '-f');
     git_cmd('git', 'fetch', 'origin', '+refs/heads/*:refs/heads/*');
     my ($r) = git_cmd('git', 'remote');
     git_cmd('git', 'remote', 'add', 'gecko-dev', $geckodevgit)
