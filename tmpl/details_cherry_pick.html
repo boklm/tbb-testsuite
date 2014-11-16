@@ -1,0 +1,10 @@
+[% IF test.results.success %]
+  [% IF test.results.patch_file %]
+  <a href="results-[% tbbfile %]/[% test.name %].patch">rebased patch</a>
+  [% ELSE %]
+  Skipped
+  [% END %]
+[% ELSE %]
+Failed diff:
+<pre>[% FILTER html_entity %][% test.results.failed_diff %][% END %]</pre>
+[% END %]

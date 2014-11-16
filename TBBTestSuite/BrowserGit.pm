@@ -10,7 +10,8 @@ our (@ISA, @EXPORT_OK);
 BEGIN {
     require Exporter;
     @ISA       = qw(Exporter);
-    @EXPORT_OK = qw(git_clone_fetch get_commits_by_branch parent_commit);
+    @EXPORT_OK = qw(git_clone_fetch get_commits_by_branch parent_commit
+                    git_cmd git_cmd_ch);
 }
 
 my $torbrowsergit = 'https://git.torproject.org/tor-browser.git';

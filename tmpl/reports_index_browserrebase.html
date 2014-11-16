@@ -1,0 +1,40 @@
+[% USE date -%]
+<html>
+    <head>
+        <title>Tests reports</title>
+        <style type="text/css">
+            .test_ok {
+                color: #006600;
+                font-weight: bold;
+            }
+            .test_ok A {
+                color: #006600;
+                font-weight: bold;
+            }
+            .test_notok {
+                color: #FF0000;
+                font-weight: bold;
+            }
+            .test_notok A {
+                color: #FF0000;
+            }
+            .reportdate {
+                font-size: small;
+            }
+        </style>
+        [% INCLUDE togglecontent.js %]
+    </head>
+    <body>
+        <h1>Tor Browser Rebase Test Reports: [% title %]</h1>
+        [% FOREACH report IN reports_list %]
+        [%
+          SET tbbfiles = reports.$report.tbbfiles;
+          SET tbbfile = reports.$report.tbbfiles.keys.0;
+        %]
+        <ul>
+            <li><a href="r/[% report %]/[% tbbfile %].html">Details</a></li>
+        </ul>
+        <hr />
+        [% END %]
+    </body>
+</html>

@@ -18,6 +18,7 @@ use TBBTestSuite::XServer qw(set_Xmode);
 
 our %testsuite_types = (
     browserunit => \%TBBTestSuite::BrowserUnitTests::testsuite,
+    browserrebase => \%TBBTestSuite::BrowserRebaseTests::testsuite,
     browserbundle => \%TBBTestSuite::BrowserBundleTests::testsuite,
     browserbundle_virustotal => \%TBBTestSuite::BrowserBundleTests::testsuite_virustotal,
 );

@@ -1,0 +1,24 @@
+# vim: filetype=perl expandtab
+
+use strict;
+use FindBin;
+use TBBTestSuite::Common;
+use TBBTestSuite::BrowserRebaseTests;
+use TBBTestSuite::BrowserGit qw(git_clone_fetch get_commits_by_branch
+                                parent_commit);
+use Data::Dump qw(dd);
+
+my $torbrowser_branch = 'tor-browser-31.2.0esr-4.x-1';
+my $esr_branch = 'esr31';
+my $testsuite_version = '2';
+
+my $tbbinfos = TBBTestSuite::BrowserRebaseTests::get_tbbinfos({
+        tb_branch => 'tor-browser-31.2.0esr-4.x-1',
+        esr_branch => 'esr31',
+    });
+dd $tbbinfos;
+
+my %res = (
+    args => [ $tbbinfos ],
+);
+%res;
