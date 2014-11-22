@@ -21,6 +21,7 @@ our %testsuite_types = (
     browserrebase => \%TBBTestSuite::BrowserRebaseTests::testsuite,
     browserbundle => \%TBBTestSuite::BrowserBundleTests::testsuite,
     browserbundle_virustotal => \%TBBTestSuite::BrowserBundleTests::testsuite_virustotal,
+    testtestsuite => \%TBBTestSuite::TestTestSuite::testsuite,
 );
 
 sub run_tests {
