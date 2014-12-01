@@ -347,7 +347,7 @@ sub extract_tbb {
         my (undef, undef, $f) = File::Spec->splitpath($tbbfile);
         copy($tbbfile, "$tmpdir/$f");
         system('7z', 'x', $f);
-        $tbbinfos->{tbbdir} = "$tmpdir/torbrowser";
+        $tbbinfos->{tbbdir} = "$tmpdir/torbrowser/Browser";
         move("$tmpdir/\$_OUTDIR", "$tmpdir/torbrowser");
         move ("$tmpdir/Start Tor Browser.exe", "$tmpdir/torbrowser/");
     }
