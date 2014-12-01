@@ -1,6 +1,7 @@
 package TBBTestSuite::Tests::TorBootstrap;
 
 use strict;
+use English;
 use File::Slurp;
 use Cwd qw(getcwd);
 use TBBTestSuite::Common qw(exit_error winpath has_bin);
@@ -25,6 +26,10 @@ sub stop_httpproxy {
 
 END {
     stop_httpproxy;
+}
+
+sub winpid {
+    $OSNAME eq 'cygwin' ? Cygwin::pid_to_winpid($_[0]) : $_[0];
 }
 
 sub monitor_bootstrap {
@@ -132,7 +137,7 @@ sub start_tor {
         '-f', winpath("$tbbinfos->{datadir}/Tor/torrc"),
         'DataDirectory', winpath("$tbbinfos->{datadir}/Tor"),
         'GeoIPFile', winpath("$tbbinfos->{datadir}/Tor/geoip"),
-        '__OwningControllerProcess', $$);
+        '__OwningControllerProcess', winpid($$));
     $tbbinfos->{torpid} = fork;
     if ($tbbinfos->{torpid} == 0) {
         $ENV{LD_LIBRARY_PATH} = "$tbbinfos->{tbbdir}:$tbbinfos->{tordir}";
