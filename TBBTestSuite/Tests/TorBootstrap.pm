@@ -93,9 +93,9 @@ sub start_tor {
     $ENV{TOR_CONTROL_PORT} = $options->{'tor-control-port'};
     $ENV{TOR_CONTROL_HOST} = '127.0.0.1';
     $ENV{TOR_CONTROL_COOKIE_AUTH_FILE} = winpath("$tbbinfos->{datadir}/Tor/control_auth_cookie");
-    my ($hashed_password, undef, $success) = tor_capture_exec($tbbinfos,
+    my ($hashed_password, $err, $success) = tor_capture_exec($tbbinfos,
         $tbbinfos->{torbin}, '--quiet', '--hash-password', $control_passwd);
-    exit_error "Error running tor --hash-password" unless $success;
+    exit_error "Error running tor --hash-password: $err" unless $success;
     chomp $hashed_password;
     my $torrc_file;
     if ($test->{use_default_config}) {
