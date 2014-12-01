@@ -94,7 +94,8 @@ sub start_tor {
     $ENV{TOR_CONTROL_HOST} = '127.0.0.1';
     $ENV{TOR_CONTROL_COOKIE_AUTH_FILE} = winpath("$tbbinfos->{datadir}/Tor/control_auth_cookie");
     my ($hashed_password, $err, $success) = tor_capture_exec($tbbinfos,
-        $tbbinfos->{torbin}, '--quiet', '--hash-password', $control_passwd);
+        winpath($tbbinfos->{torbin}), '--quiet', '--hash-password',
+        $control_passwd);
     exit_error "Error running tor --hash-password: $err" unless $success;
     chomp $hashed_password;
     my $torrc_file;
@@ -126,7 +127,8 @@ sub start_tor {
         $torrc_file = File::Temp->new;
         write_file($torrc_file, $config);
     }
-    my @cmd = ($tbbinfos->{torbin}, '--defaults-torrc', winpath($torrc_file),
+    my @cmd = (winpath($tbbinfos->{torbin}), '--defaults-torrc',
+        winpath($torrc_file),
         '-f', winpath("$tbbinfos->{datadir}/Tor/torrc"),
         'DataDirectory', winpath("$tbbinfos->{datadir}/Tor"),
         'GeoIPFile', winpath("$tbbinfos->{datadir}/Tor/geoip"),
