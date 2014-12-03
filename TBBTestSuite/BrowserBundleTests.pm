@@ -525,7 +525,7 @@ sub set_tbbpaths {
         $tbbinfos->{datadir} = "$tbbinfos->{tbbdir}/Data";
     }
     $tbbinfos->{torbin} = "$tbbinfos->{tordir}/tor";
-    $tbbinfos->{ptdir} = "$tbbinfos->{tordir}/PluggableTransports";
+    $tbbinfos->{ptdir} = winpath("$tbbinfos->{tordir}/PluggableTransports");
     $tbbinfos->{ffprofiledir} = "$tbbinfos->{datadir}/Browser/profile.default";
 }
 
