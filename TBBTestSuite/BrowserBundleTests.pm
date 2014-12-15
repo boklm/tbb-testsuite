@@ -194,6 +194,46 @@ our @tests = (
         descr => 'Check that some important settings are correctly set',
     },
     {
+        name         => 'slider_settings_1',
+        mozmill_test => 'slider_settings',
+        type         => 'mozmill',
+        descr        => 'Check that settings are set according to security slider mode',
+        slider_mode  => 1,
+        pre          => \&set_slider_mode,
+        post         => \&reset_slider_mode,
+        enable       => sub { $_[0]->{version} !~ m/^4.0/ },
+    },
+    {
+        name         => 'slider_settings_2',
+        mozmill_test => 'slider_settings',
+        type         => 'mozmill',
+        descr        => 'Check that settings are set according to security slider mode',
+        slider_mode  => 2,
+        pre          => \&set_slider_mode,
+        post         => \&reset_slider_mode,
+        enable       => sub { $_[0]->{version} !~ m/^4.0/ },
+    },
+    {
+        name         => 'slider_settings_3',
+        mozmill_test => 'slider_settings',
+        type         => 'mozmill',
+        descr        => 'Check that settings are set according to security slider mode',
+        slider_mode  => 3,
+        pre          => \&set_slider_mode,
+        post         => \&reset_slider_mode,
+        enable       => sub { $_[0]->{version} !~ m/^4.0/ },
+    },
+    {
+        name         => 'slider_settings_4',
+        mozmill_test => 'slider_settings',
+        type         => 'mozmill',
+        descr        => 'Check that settings are set according to security slider mode',
+        slider_mode  => 4,
+        pre          => \&set_slider_mode,
+        post         => \&reset_slider_mode,
+        enable       => sub { $_[0]->{version} !~ m/^4.0/ },
+    },
+    {
         name  => 'dom-objects-enumeration',
         type  => 'mozmill',
         descr => 'Check the list of DOM Objects exposed in the global namespace',
@@ -258,6 +298,21 @@ sub toggle_https_everywhere {
         }
     }
     write_file($prefs, @f);
+}
+
+sub set_slider_mode {
+    my ($tbbinfos, $t) = @_;
+    my $prefs = "$tbbinfos->{ffprofiledir}/preferences/extension-overrides.js";
+    copy $prefs, "$prefs.slider_backup";
+    write_file($prefs, {append => 1},
+      'pref("extensions.torbutton.security_custom", false);' . "\n" .
+      "pref(\"extensions.torbutton.security_slider\", $t->{slider_mode});\n");
+}
+
+sub reset_slider_mode {
+    my ($tbbinfos, $t) = @_;
+    my $prefs = "$tbbinfos->{ffprofiledir}/preferences/extension-overrides.js";
+    move "$prefs.slider_backup", $prefs;
 }
 
 sub tbb_binfiles {
