@@ -9,6 +9,8 @@ var testsuite = require("../lib/testsuite");
 
 // The torbutton_sec_* variables have been copy pasted from
 // torbutton/src/chrome/content/torbutton.js
+// The noscript.globalHttpsWhitelist setting has been removed as it is
+// special (a special value is set in level 4)
 var torbutton_sec_l_bool_prefs = {
   "gfx.font_rendering.opentype_svg.enabled" : false,
 };
@@ -24,7 +26,6 @@ var torbutton_sec_ml_bool_prefs = {
 
 var torbutton_sec_mh_bool_prefs = {
   "javascript.options.baselinejit.content" : false,
-  "noscript.globalHttpsWhitelist" : true,
   // XXX: pref for disableing SVG is missing
 };
 
