@@ -2,6 +2,7 @@ package TBBTestSuite::Reports;
 
 use warnings;
 use strict;
+use English;
 use FindBin;
 use File::Temp;
 use File::Path qw(make_path);
@@ -23,6 +24,20 @@ BEGIN {
     require Exporter;
     @ISA       = qw(Exporter);
     @EXPORT_OK = qw(load_report report_dir report_path save_report);
+}
+
+my $screenshot_thumbnail;
+BEGIN {
+    # For some reason that I did not understand yet, Image::Magick does
+    # not work on Windows, so we're not creating thumbnails if we're
+    # on Windows. In that case, the thumbnails should be created by the
+    # server that receives the results.
+    if ($OSNAME ne 'cygwin') {
+        require TBBTestSuite::Thumbnail;
+        $screenshot_thumbnail = \&TBBTestSuite::Thumbnail::screenshot_thumbnail;
+    } else {
+        $screenshot_thumbnail = sub { };
+    }
 }
 
 my %reports;
@@ -300,6 +315,21 @@ sub save_report {
     my ($report) = @_;
     save_report_summary($report);
     YAML::Syck::DumpFile(report_path($report, 'report.yml'), $report);
+}
+
+sub generate_missing_thumbnails {
+    my ($report) = @_;
+    foreach my $tbbinfos (values %{$report->{tbbfiles}}) {
+        $tbbinfos->{'results-dir'} =
+                TBBTestSuite::Reports::report_path($report,
+                                        "results-$tbbinfos->{filename}");
+        foreach my $test (@{$tbbinfos->{tests}}) {
+            next unless $test->{screenshots};
+            foreach my $screenshot (@{$test->{screenshots}}) {
+                $screenshot_thumbnail->($tbbinfos->{'results-dir'}, $screenshot);
+            }
+        }
+    }
 }
 
 1;

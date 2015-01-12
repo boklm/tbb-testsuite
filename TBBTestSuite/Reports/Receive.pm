@@ -26,6 +26,7 @@ sub receive_report {
     exit_error 'Report already exist' if -d "$options->{'reports-dir'}/r/$name";
     $tmpdir->unlink_on_destroy(0);
     system('mv', $tmpdir, "$options->{'reports-dir'}/r/$name");
+    TBBTestSuite::Reports::generate_missing_thumbnails($report);
     $report->{options} = { %$options, %{$report->{options}} };
     TBBTestSuite::Reports::email_report($report)
                 if @{$report->{options}{'email-to'}};

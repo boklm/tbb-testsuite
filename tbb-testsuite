@@ -101,6 +101,11 @@ sub dump_options {
     dd $options;
 }
 
+sub gen_missing_thumbnails {
+    my $report = load_report_from_file;
+    TBBTestSuite::Reports::generate_missing_thumbnails($report);
+}
+
 my %actions = (
     run_tests => \&run_tests,
     list_tests => \&TBBTestSuite::BrowserBundleTests::list_tests,
@@ -112,6 +117,7 @@ my %actions = (
     email_report => \&email_report,
     show_report  => \&show_report,
     dump_options => \&dump_options,
+    gen_missing_thumbnails => \&gen_missing_thumbnails,
 );
 
 sub usage {
