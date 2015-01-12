@@ -70,7 +70,7 @@ our @tests = (
         command      => [ 'readelf', '-ld' ],
         check_output => sub { ( $_[0] =~ m/GNU_RELRO/ )
                                 && ( $_[0] =~ m/BIND_NOW/ ) },
-        enable       => sub { $options->{os} eq 'Linux' },
+        enable       => sub { $OSNAME eq 'linux' },
     },
     {
         name         => 'readelf_stack_canary',
@@ -80,7 +80,7 @@ our @tests = (
         files        => \&tbb_binfiles,
         command      => [ 'readelf', '-s' ],
         check_output => sub { $_[0] =~ m/__stack_chk_fail/ },
-        enable       => sub { $options->{os} eq 'Linux' },
+        enable       => sub { $OSNAME eq 'linux' },
     },
     {
         name         => 'readelf_NX',
@@ -89,7 +89,7 @@ our @tests = (
         files        => \&tbb_binfiles,
         command      => [ 'readelf', '-W', '-l' ],
         check_output => sub { ! ($_[0] =~ m/GNU_STACK.+RWE/) },
-        enable       => sub { $options->{os} eq 'Linux' },
+        enable       => sub { $OSNAME eq 'linux' },
     },
     {
         name         => 'readelf_PIE',
@@ -98,7 +98,7 @@ our @tests = (
         files        => \&tbb_binfiles,
         command      => [ 'readelf', '-h' ],
         check_output => sub { $_[0] =~ m/Type:\s+DYN/ },
-        enable       => sub { $options->{os} eq 'Linux' },
+        enable       => sub { $OSNAME eq 'linux' },
     },
     {
         name         => 'readelf_no_rpath',
@@ -108,7 +108,7 @@ our @tests = (
         files        => \&tbb_binfiles,
         command      => [ 'readelf', '-d' ],
         check_output => sub { ! ( $_[0] =~ m/RPATH/ ) },
-        enable       => sub { $options->{os} eq 'Linux' },
+        enable       => sub { $OSNAME eq 'linux' },
     },
     {
         name         => 'readelf_no_runpath',
@@ -117,7 +117,7 @@ our @tests = (
         files        => \&tbb_binfiles,
         command      => [ 'readelf', '-d' ],
         check_output => sub { ! ( $_[0] =~ m/runpath/ ) },
-        enable       => sub { $options->{os} eq 'Linux' },
+        enable       => sub { $OSNAME eq 'linux' },
     },
     {
         name      => 'tor_httpproxy',
