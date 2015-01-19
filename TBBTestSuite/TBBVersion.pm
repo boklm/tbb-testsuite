@@ -54,8 +54,16 @@ EOF
                 'gpg.program', $wrapper_file);
 }
 
+sub get_taggerdate {
+    my ($tagname) = @_;
+    my ($out) = git_cmd('git', 'for-each-ref', '--format=%(taggerdate:raw)',
+                        "refs/tags/$tagname");
+    my @r = split ' ', $out;
+    return $r[0];
+}
+
 sub latest_tagged_version {
-    my ($branch) = @_;
+    my ($branch, $min_date) = @_;
     my ($d) = git_cmd('git', 'describe', '--long', '--match=tbb-*', $branch);
     my @t = split /-/, $d;
     pop @t;
@@ -64,6 +72,9 @@ sub latest_tagged_version {
     git_cmd('git', 'tag', '-v', $tag);
     if ($t[0] ne 'tbb' || @t != 3) {
         exit_error "Unknown tag format $tag";
+    }
+    if ($min_date && get_taggerdate($tag) < $min_date) {
+        return ();
     }
     return ($t[1], $t[2]);
 }
@@ -81,8 +92,10 @@ sub latest_builds {
     my @res;
     git_clone_pull;
     set_gpgwrapper;
+    my $two_weeks_ago = time - 1209600;
     foreach my $branch (branch_list) {
-        my ($version, $build) = latest_tagged_version($branch);
+        my ($version, $build) = latest_tagged_version($branch, $two_weeks_ago);
+        next unless $version;
         foreach my $user (@tbb_builders) {
             my $url = "https://people.torproject.org/~$user/builds/$version/sha256sums.txt";
             my $sha = get($url);
