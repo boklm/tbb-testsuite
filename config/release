@@ -15,7 +15,7 @@ foreach my $build (@latest_builds) {
     next if -d "$options->{'reports-dir'}/r/$name";
     return (
         name => $name,
-        keyring => "$build->{user}.gpg",
+        keyring => [ "$build->{user}.gpg", 'torbrowser.gpg' ],
         args => [ $build->{url} ],
         tags => [ "$build->{version}-$build->{build}" ],
         'reports-url' => 'http://93.95.228.164/reports/',
