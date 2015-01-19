@@ -3,6 +3,7 @@ package TBBTestSuite::Options;
 use warnings;
 use strict;
 use English;
+use Config;
 use FindBin;
 use Getopt::Long;
 use File::Slurp;
@@ -16,11 +17,26 @@ BEGIN {
     @EXPORT_OK = qw($options);
 }
 
+sub get_os_name {
+    my %os = (
+        linux   => 'Linux',
+        cygwin  => 'Windows',
+        MSWin32 => 'Windows',
+        darwin  => 'MacOSX',
+    );
+    return $os{$OSNAME} ? $os{$OSNAME} : 'Unknown';
+}
+
+sub get_arch {
+    return 'x86_64' if $Config{archname} =~ m/^x86_64/;
+    return 'x86';
+}
+
 my %default_options = (
     tmpdir   => "$FindBin::Bin/tmp",
     action   => 'run_tests',
-    os       => 'Linux',
-    arch     => 'x86_64',
+    os       => get_os_name(),
+    arch     => get_arch(),
     mozmill  => 1,
     selenium => $OSNAME ne 'cygwin',
     starttor => 1,
