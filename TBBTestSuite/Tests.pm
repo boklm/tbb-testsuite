@@ -137,9 +137,15 @@ sub matching_tbbfile {
 
 sub check_gpgsig {
     my ($file) = @_;
-    my $keyring = $options->{keyring} =~ m/^\// ? $options->{keyring}
-        : "$FindBin::Bin/keyring/$options->{keyring}";
-    return system('gpg', '--no-default-keyring', '--keyring', $keyring,
+    my @kr_args;
+    my @keyrings = ref $options->{keyring} eq 'ARRAY' ?
+                        @{$options->{keyring}} : ($options->{keyring});
+    print "keyrings\n";
+    foreach my $keyring (@keyrings) {
+        my $kr = $keyring =~ m/^\// ? $keyring : "$FindBin::Bin/keyring/$keyring";
+        push @kr_args, '--keyring', $kr;
+    }
+    return system('gpg', '--no-default-keyring', @kr_args,
         '--verify', '--', $file) == 0;
 }
 
