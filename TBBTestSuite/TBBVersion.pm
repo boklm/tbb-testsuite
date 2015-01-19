@@ -87,6 +87,7 @@ sub latest_builds {
             my $url = "https://people.torproject.org/~$user/builds/$version/sha256sums.txt";
             my $sha = get($url);
             next unless $sha;
+            next unless head("$url.asc");
             my $shasha = sha256_hex($sha);
             push @res, {
                 version => $version,
