@@ -26,6 +26,7 @@ var torbutton_sec_ml_bool_prefs = {
 
 var torbutton_sec_mh_bool_prefs = {
   "javascript.options.baselinejit.content" : false,
+  "noscript.global" : false,
   // XXX: pref for disableing SVG is missing
 };
 
