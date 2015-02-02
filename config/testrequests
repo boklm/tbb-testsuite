@@ -1,0 +1,44 @@
+# vim: filetype=perl expandtab
+
+use strict;
+use LWP::Simple;
+use YAML::Syck qw(Load);
+
+# list of users who publish builds on their build directory on people.torproject.org
+# email me if you want to be added
+my @tbbteam = qw(gk mikeperry linus boklm);
+
+my $system_infos = TBBTestSuite::Common::system_infos;
+my $osname = $system_infos->{osname} . '-' . $system_infos->{arch};
+
+
+foreach my $user (@tbbteam) {
+    my $content = get("https://people.torproject.org/~$user/builds/tbb-qa.yml");
+    next unless $content;
+    my $qa = eval { Load($content) };
+    if (!$qa || ref $qa ne 'ARRAY') {
+        print STDERR "Error reading ~$user/builds/tbb-qa.yml\n";
+        next;
+    }
+    foreach my $qaitem (@$qa) {
+        next if ref $qaitem;
+        my $name = "$user-$qaitem-$osname";
+        my $url = "https://people.torproject.org/~$user/builds/$qaitem/sha256sums.txt";
+        next if -d "$options->{'reports-dir'}/r/$name";
+        mkdir "$options->{'reports-dir'}/r/$name";
+        next unless get($url);
+        next unless get("$url.asc");
+        my %res = (
+            name => $name,
+            keyring => [ "$user.gpg", 'torbrowser.gpg' ],
+            args => [ $url ],
+            tags => [ "user:$user" ],
+            'reports-url' => 'http://93.95.228.164/reports/',
+            'email-from'  => 'TBB Tests <no-reply@torproject.org>',
+            'email-to'    => [ "$user\@torproject.org" ],
+        );
+        return %res;
+    }
+}
+
+return ( args => [] );
