@@ -34,7 +34,7 @@ foreach my $user (@tbbteam) {
             args => [ $url ],
             tags => [ "user:$user" ],
             'reports-url' => 'http://93.95.228.164/reports/',
-            'email-from'  => 'TBB Tests <no-reply@torproject.org>',
+            'email-from'  => 'TBB Tests <boklm@torproject.org>',
             'email-to'    => [ "$user\@torproject.org" ],
         );
         return %res;
