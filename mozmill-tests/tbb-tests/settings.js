@@ -167,15 +167,10 @@ const SETTINGS = {
     // https://trac.torproject.org/projects/tor/ticket/11253
     "security.tls.version.max": 3,
 
+    "dom.enable_resource_timing": false,
+
     // "torbrowser.version": "UNKNOWN", // TODO: Should we check version using a regexp?
 };
-
-// Adding these preferences to SETTINGS breaks ESR 24 based browsers which do
-// not have them. Thus, we check the version of the Tor Browser to test and iff
-// it is equal or larger to 31.0 the preferences are tested.
-const SETTINGS_NEW = {
-    "dom.enable_resource_timing": false,
-}
 
 // Settings for the Tor Browser 4.0 branch
 const SETTINGS_40 = {
@@ -213,11 +208,6 @@ var testTBBSettings = function() {
     for (let prefname in SETTINGS)
         expect.equal(prefSrv.getPref(prefname, dval(SETTINGS[prefname])),
                      SETTINGS[prefname], prefname);
-    if (Services.vc.compare(utils.appInfo.version, "31.0") >= 0) {
-        for (let prefname in SETTINGS_NEW)
-            expect.equal(prefSrv.getPref(prefname, dval(SETTINGS_NEW[prefname])),
-                         SETTINGS_NEW[prefname], prefname);
-    }
     if (testsuite.tbbinfos.version.startsWith("4.0")) {
         for (let prefname in SETTINGS_40)
             expect.equal(prefSrv.getPref(prefname, dval(SETTINGS_40[prefname])),
