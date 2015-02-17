@@ -2,4 +2,5 @@
 cd $(dirname $0)/..
 ./tools/pull
 ./tbb-testsuite --config=release "$@"
+./tbb-testsuite --config=testrequests "$@"
 ./tbb-testsuite --config=linus-nightly "$@"
