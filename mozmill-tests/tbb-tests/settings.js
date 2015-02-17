@@ -9,7 +9,11 @@ Cu.import("resource://gre/modules/Services.jsm");
 var {expect} = require("../mozilla-mozmill-tests/lib/assertions");
 var prefs = require("../mozilla-mozmill-tests/firefox/lib/prefs");
 var utils = require("../mozilla-mozmill-tests/firefox/lib/utils");
+var testsuite = require("../lib/testsuite");
 
+// This variable contains settings we want to check on all versions of
+// Tor Browser. See below for settings to check on specific versions.
+//
 // Most of the following checks and comments are taken from 
 // https://github.com/arthuredelstein/tor-browser/blob/12620/tbb-tests/browser_tor_TB4.js 
 const SETTINGS = {
@@ -150,20 +154,10 @@ const SETTINGS = {
     "xpinstall.whitelist.add": "",
     "xpinstall.whitelist.add.36": "",
 
-    // Omnibox settings
-    "keyword.URL": "https://startpage.com/do/search?q=",
-
     // Hacks/workarounds: Direct2D seems to crash w/ lots of video cards w/ MinGW?
     // Nvida cards also experience crashes without the second pref set to disabled
     "gfx.direct2d.disabled": true,
     "layers.acceleration.disabled": true,
-
-    // Security enhancements
-    // https://trac.torproject.org/projects/tor/ticket/9387#comment:17
-    "javascript.options.ion.content": false,
-    "javascript.options.baselinejit.content": false,
-    "javascript.options.asmjs": false,
-    "javascript.options.typeinference": false,
 
     // Audio_data is deprecated in future releases, but still present
     // in FF24. This is a dangerous combination (spotted by iSec)
@@ -181,6 +175,23 @@ const SETTINGS = {
 // it is equal or larger to 31.0 the preferences are tested.
 const SETTINGS_NEW = {
     "dom.enable_resource_timing": false,
+}
+
+// Settings for the Tor Browser 4.0 branch
+const SETTINGS_40 = {
+    // Omnibox settings
+    "keyword.URL": "https://startpage.com/do/search?q=",
+
+    // Security enhancements
+    // https://trac.torproject.org/projects/tor/ticket/9387#comment:17
+    "javascript.options.ion.content": false,
+    "javascript.options.baselinejit.content": false,
+    "javascript.options.asmjs": false,
+    "javascript.options.typeinference": false,
+}
+
+// Settings for the Tor Browser 4.5 and nightly branch
+const SETTINGS_45 = {
 }
 
 var setupModule = function(aModule) {
@@ -206,5 +217,16 @@ var testTBBSettings = function() {
         for (let prefname in SETTINGS_NEW)
             expect.equal(prefSrv.getPref(prefname, dval(SETTINGS_NEW[prefname])),
                          SETTINGS_NEW[prefname], prefname);
+    }
+    if (testsuite.tbbinfos.version.startsWith("4.0")) {
+        for (let prefname in SETTINGS_40)
+            expect.equal(prefSrv.getPref(prefname, dval(SETTINGS_40[prefname])),
+                         SETTINGS_40[prefname], prefname);
+    }
+    if (testsuite.tbbinfos.version.startsWith("4.5")
+            || testsuite.tbbinfos.version == "tbb-nightly") {
+        for (let prefname in SETTINGS_45)
+            expect.equal(prefSrv.getPref(prefname, dval(SETTINGS_45[prefname])),
+                         SETTINGS_45[prefname], prefname);
     }
 }
