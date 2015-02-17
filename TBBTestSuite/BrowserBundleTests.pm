@@ -201,6 +201,12 @@ our @tests = (
         descr => 'Check that some important settings are correctly set',
     },
     {
+    {
+        name  => 'acid3',
+        type  => 'mozmill',
+        descr => 'acid3 tests',
+    },
+    {
         name         => 'slider_settings_1',
         mozmill_test => 'slider_settings',
         type         => 'mozmill',
