@@ -525,11 +525,15 @@ sub mozmill_export_options {
     my $options_file = winpath("$FindBin::Bin/mozmill-tests/lib/testsuite.js");
     my $json_opts = encode_json clone_strip_coderef $options;
     my $json_test = encode_json clone_strip_coderef $test;
+    my $json_tbbinfos = encode_json clone_strip_coderef
+                                { %$tbbinfos, tests => undef };
     my $content = <<EOF;
 var options = $json_opts;
 var test = $json_test;
+var tbbinfos = $json_tbbinfos;
 exports.options = options;
 exports.test = test;
+exports.tbbinfos = tbbinfos;
 EOF
     write_file($options_file, $content);
 }
