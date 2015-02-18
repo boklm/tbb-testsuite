@@ -261,6 +261,12 @@ our @tests = (
         descr => 'Check that the Resource Timing API is really disabled',
     },
     {
+        name  => 'searchengines',
+        type  => 'mozmill',
+        descr => 'Check that we have the default search engines set',
+    },
+
+    {
         name => 'fp_screen_dimensions',
         type  => 'selenium',
         descr => 'Check that screen dimensions are spoofed correctly',
