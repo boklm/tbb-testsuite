@@ -201,7 +201,6 @@ our @tests = (
         descr => 'Check that some important settings are correctly set',
     },
     {
-    {
         name  => 'acid3',
         type  => 'mozmill',
         descr => 'acid3 tests',
