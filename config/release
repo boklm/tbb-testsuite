@@ -17,7 +17,7 @@ foreach my $build (@latest_builds) {
         keyring => [ "$build->{user}.gpg", 'torbrowser.gpg' ],
         args => [ $build->{url} ],
         tags => [ "$build->{version}-$build->{build}" ],
-        'reports-url' => 'http://93.95.228.164/reports/',
+        'reports-url' => 'http://test-reports.tbb.torproject.org/reports/',
         'email-from'  => 'TBB Tests <boklm@torproject.org>',
         'email-to'    => [ 'tor-qa@lists.torproject.org', 'boklm@mars-attacks.org', ],
         known_issues => {

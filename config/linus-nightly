@@ -40,7 +40,7 @@ return ( args => [] ) unless $ok;
         'mcs@pearlcrescent.com',
         'gunes.acar@esat.kuleuven.be',
     ],
-    'reports-url' => 'http://93.95.228.164/reports/',
+    'reports-url' => 'http://test-reports.tbb.torproject.org/reports/',
     known_issues => {
         readelf_PIE => file_known_issue(
             'TorBrowser/Tor/PluggableTransports/meek-client' => '10935',
