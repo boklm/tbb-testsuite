@@ -10,8 +10,7 @@ my $osname = $system_infos->{osname} . '-' . $system_infos->{arch};
 
 my @latest_builds = TBBTestSuite::TBBVersion::latest_builds($options);
 foreach my $build (@latest_builds) {
-    my $id = substr($build->{shasha}, 0, 5);
-    my $name = "$build->{version}-$id-$osname";
+    my $name = "$build->{buildname}-$osname";
     next if -d "$options->{'reports-dir'}/r/$name";
     return (
         name => $name,

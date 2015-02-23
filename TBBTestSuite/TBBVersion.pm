@@ -97,17 +97,25 @@ sub latest_builds {
         my ($version, $build) = latest_tagged_version($branch, $two_weeks_ago);
         next unless $version;
         foreach my $user (@tbb_builders) {
-            my $url = "https://people.torproject.org/~$user/builds/$version/sha256sums.txt";
+            my $buildname;
+            my $url = "https://people.torproject.org/~$user/builds/$version-$build/sha256sums.txt";
             my $sha = get($url);
-            next unless $sha;
-            next unless head("$url.asc");
-            my $shasha = sha256_hex($sha);
+            if ($sha && head("$url.asc")) {
+                $buildname = "$version-$build";
+            } else {
+                $url = "https://people.torproject.org/~$user/builds/$version/sha256sums.txt";
+                $sha = get($url);
+                next unless $sha;
+                next unless head("$url.asc");
+                my $shasha = substr(sha256_hex($sha), 0, 5);
+                $buildname = "$version-$shasha";
+            }
             push @res, {
+                buildname => $buildname,
                 version => $version,
                 build => $build,
                 url => $url,
                 user => $user,
-                shasha => $shasha,
             };
         }
     }

@@ -5,8 +5,7 @@ use TBBTestSuite::TBBVersion;
 
 my @latest_builds = TBBTestSuite::TBBVersion::latest_builds($options);
 foreach my $build (@latest_builds) {
-    my $id = substr($build->{shasha}, 0, 5);
-    my $name = "$build->{version}-$id-win32-virustotal";
+    my $name = "$build->{buildname}-win32-virustotal";
     next if -d "$options->{'reports-dir'}/r/$name";
     return (
         name => $name,
