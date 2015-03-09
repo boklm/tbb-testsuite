@@ -265,7 +265,16 @@ our @tests = (
         type  => 'mozmill',
         descr => 'Check that we have the default search engines set',
     },
-
+    {
+        name  => 'noscript',
+        type  => 'mozmill',
+        descr => 'Check that noscript options are working',
+        retry => 1,
+        prefs => {
+            'extensions.torbutton.security_slider' => 3,
+        },
+        enable       => sub { $_[0]->{version} !~ m/^4.0/ },
+    },
     {
         name => 'fp_screen_dimensions',
         type  => 'selenium',

@@ -60,6 +60,7 @@ my %default_options = (
     'mozmill-dir' => 'c:\tbbtestsuite\mozmill-env',
     'http-proxy-port' => '8888',
     test_data_url => 'http://test-data.tbb.torproject.org',
+    test_data_url_https => 'https://test-data.tbb.torproject.org',
     test_data_dir => "$FindBin::Bin/test-data",
 );
 
