@@ -617,6 +617,8 @@ sub pre_tests {
     extract_tbb($tbbinfos);
     set_tbbpaths($tbbinfos);
     chdir $tbbinfos->{tbbdir} || exit_error "Can't enter directory $tbbinfos->{tbbdir}";
+    copy "$FindBin::Bin/data/cert_override.txt",
+          "TorBrowser/Data/Browser/profile.default/cert_override.txt";
     $ENV{TOR_SKIP_LAUNCH} = 1;
     $ENV{TOR_SOCKS_PORT} = $options->{'tor-socks-port'};
     $ENV{TOR_CONTROL_PORT} = $options->{'tor-control-port'};
