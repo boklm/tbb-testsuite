@@ -318,6 +318,26 @@ sub toggle_https_everywhere {
     write_file($prefs, @f);
 }
 
+sub set_test_prefs {
+    my ($tbbinfos, $t) = @_;
+    return unless $t->{prefs};
+    my $prefs = "$tbbinfos->{ffprofiledir}/preferences/extension-overrides.js";
+    copy $prefs, "$prefs.backup";
+    my $new_prefs = '';
+    foreach my $prefname (sort keys %{$t->{prefs}}) {
+        $new_prefs .= "pref(\"$prefname\", $t->{prefs}{$prefname});\n";
+    }
+    write_file($prefs, {append => 1}, $new_prefs);
+    print "prefs file: $prefs\n";
+}
+
+sub reset_test_prefs {
+    my ($tbbinfos, $t) = @_;
+    return unless $t->{prefs};
+    my $prefs = "$tbbinfos->{ffprofiledir}/preferences/extension-overrides.js";
+    move "$prefs.backup", $prefs;
+}
+
 sub set_slider_mode {
     my ($tbbinfos, $t) = @_;
     my $prefs = "$tbbinfos->{ffprofiledir}/preferences/extension-overrides.js";
@@ -553,6 +573,7 @@ sub mozmill_run {
     my ($tbbinfos, $test) = @_;
     return unless $options->{mozmill};
     mozmill_export_options($tbbinfos, $test);
+    set_test_prefs($tbbinfos, $test);
     $test->{screenshots} = [];
     my $screenshots_tmp = File::Temp::newdir('XXXXXX', DIR => $options->{tmpdir});
     $ENV{'MOZMILL_SCREENSHOTS'} = winpath($screenshots_tmp);
@@ -572,6 +593,7 @@ sub mozmill_run {
     $test->{results} = decode_json(read_file($results_file));
     $test->{results}{success} = $test->{results}{results}->[0]->{passed} ?
                         !$test->{results}{results}->[0]->{failed} : 0;
+    reset_test_prefs($tbbinfos, $test);
     check_opened_connections($tbbinfos, $test);
     check_modified_files($tbbinfos, $test);
 }
