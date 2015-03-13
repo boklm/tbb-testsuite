@@ -6,7 +6,7 @@ use YAML::Syck qw(Load);
 
 # list of users who publish builds on their build directory on people.torproject.org
 # email me if you want to be added
-my @tbbteam = qw(gk mikeperry linus boklm);
+my @tbbteam = qw(boklm brade dcf gacar gk linus mcs mikeperry);
 
 my $system_infos = TBBTestSuite::Common::system_infos;
 my $osname = $system_infos->{osname} . '-' . $system_infos->{arch};
