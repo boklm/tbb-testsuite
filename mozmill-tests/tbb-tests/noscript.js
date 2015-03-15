@@ -40,4 +40,40 @@ var testNoscript = function () {
     controller.sleep(1000);
     var f = new elementslib.ID(controller.window.document, "test_result");
     expect.equal('JavaScriptEnabled', f.getNode().innerHTML, 'https src in https page');
+
+    // http page with http iframe
+    controller.open(http_url + 'http_iframe.html');
+    controller.waitForPageLoad();
+    controller.sleep(1000);
+    var frame = new elementslib.Selector(controller.window.document, "#iframe");
+    var frameWindow = frame.getNode().contentWindow;
+    var f = frameWindow.document.getElementById("test_result");
+    expect.equal(null, f, 'http iframe in http page');
+
+    // http page with https iframe
+    controller.open(http_url + 'https_iframe.html');
+    controller.waitForPageLoad();
+    controller.sleep(1000);
+    var frame = new elementslib.Selector(controller.window.document, "#iframe");
+    var frameWindow = frame.getNode().contentWindow;
+    var f = frameWindow.document.getElementById("test_result");
+    expect.equal(null, f, 'https iframe in http page');
+
+    // https page with http iframe
+    controller.open(https_url + 'http_iframe.html');
+    controller.waitForPageLoad();
+    controller.sleep(1000);
+    var frame = new elementslib.Selector(controller.window.document, "#iframe");
+    var frameWindow = frame.getNode().contentWindow;
+    var f = frameWindow.document.getElementById("test_result");
+    expect.equal(null, f, 'http iframe in https page');
+
+    // https page with https iframe
+    controller.open(https_url + 'https_iframe.html');
+    controller.waitForPageLoad();
+    controller.sleep(1000);
+    var frame = new elementslib.Selector(controller.window.document, "#iframe");
+    var frameWindow = frame.getNode().contentWindow;
+    var f = frameWindow.document.getElementById("test_result");
+    expect.equal('JavaScriptEnabled', f.innerHTML, 'https iframe in https page');
 }
