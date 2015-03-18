@@ -27,6 +27,13 @@ var testNoscript = function () {
     var f = new elementslib.ID(controller.window.document, "test_result");
     expect.equal(null, f.getNode(), 'http src in https page');
 
+    // https page sourcing http js (alternate hostname)
+    controller.open(https_url + 'alternate_http_src.html');
+    controller.waitForPageLoad();
+    controller.sleep(1000);
+    var f = new elementslib.ID(controller.window.document, "test_result");
+    expect.equal(null, f.getNode(), 'http src in https page (alternate hostname)');
+
     // http page sourcing https js
     controller.open(http_url + 'https_src.html');
     controller.waitForPageLoad();
@@ -43,6 +50,16 @@ var testNoscript = function () {
         expect.fail('https src in https page');
     else
         expect.equal('JavaScriptEnabled', f.getNode().innerHTML, 'https src in https page');
+
+    // https page sourcing https js (alternate hostname)
+    controller.open(https_url + 'alternate_https_src.html');
+    controller.waitForPageLoad();
+    controller.sleep(1000);
+    var f = new elementslib.ID(controller.window.document, "test_result");
+    if (f.getNode() == null)
+        expect.fail('https src in https page (alternate hostname)');
+    else
+        expect.equal('JavaScriptEnabled', f.getNode().innerHTML, 'https src in https page (alternate hostname)');
 
     // http page with http iframe
     controller.open(http_url + 'http_iframe.html');
@@ -71,6 +88,15 @@ var testNoscript = function () {
     var f = frameWindow.document.getElementById("test_result");
     expect.equal(null, f, 'http iframe in https page');
 
+    // https page with http iframe (alternate hostname)
+    controller.open(https_url + 'alternate_http_iframe.html');
+    controller.waitForPageLoad();
+    controller.sleep(1000);
+    var frame = new elementslib.Selector(controller.window.document, "#iframe");
+    var frameWindow = frame.getNode().contentWindow;
+    var f = frameWindow.document.getElementById("test_result");
+    expect.equal(null, f, 'http iframe in https page (alternate hostname)');
+
     // https page with https iframe
     controller.open(https_url + 'https_iframe.html');
     controller.waitForPageLoad();
@@ -82,4 +108,16 @@ var testNoscript = function () {
         expect.fail('https iframe in https page');
     else
         expect.equal('JavaScriptEnabled', f.innerHTML, 'https iframe in https page');
+
+    // https page with https iframe (alternate hostname)
+    controller.open(https_url + 'alternate_https_iframe.html');
+    controller.waitForPageLoad();
+    controller.sleep(1000);
+    var frame = new elementslib.Selector(controller.window.document, "#iframe");
+    var frameWindow = frame.getNode().contentWindow;
+    var f = frameWindow.document.getElementById("test_result");
+    if (f == null)
+        expect.fail('https iframe in https page (alternate hostname)');
+    else
+        expect.equal('JavaScriptEnabled', f.innerHTML, 'https iframe in https page (alternate hostname)');
 }
