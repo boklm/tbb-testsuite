@@ -153,6 +153,19 @@ our @tests = (
         enable    => sub { $OSNAME eq 'linux' },
     },
     {
+        name   => 'tor_obfs4',
+        type   => 'tor_bootstrap',
+        descr  => 'Access tor using obfs4',
+        enable => sub { $OSNAME eq 'linux' && $_[0]->{version} !~ m/^4.0/ },
+    },
+    {
+        name      => 'tor_obfs4_httpproxy',
+        type      => 'tor_bootstrap',
+        descr     => 'Access tor using obfs4 and an http proxy',
+        httpproxy => 1,
+        enable    => sub { $OSNAME eq 'linux' && $_[0]->{version} !~ m/^4.0/ },
+    },
+    {
         name   => 'tor_fte',
         type   => 'tor_bootstrap',
         descr  => 'Access tor using fteproxy',
