@@ -6,6 +6,8 @@ use TBBTestSuite::Common qw(exit_error);
 use Cwd qw(getcwd);
 use IO::CaptureOutput qw(capture_exec);
 
+# TODO: We should merge this into GitRepo.pm
+
 our (@ISA, @EXPORT_OK);
 BEGIN {
     require Exporter;
