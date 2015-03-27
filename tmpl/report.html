@@ -20,14 +20,14 @@
     <body>
         [% IF tbbfiles.$tbbfile.type == 'browserunit' %]
         <h1>Browser infos</h1>
-        [% ELSE %]
+        [% ELSIF tbbfiles.$tbbfile.type == 'browserbundle' %]
         <h1>Bundle infos</h1>
         [% END %]
         <ul>
             [% IF tbbfiles.$tbbfile.type == 'browserunit' %]
             <li><b>Commit:</b> <a href="https://gitweb.torproject.org/tor-browser.git/commit/[% tbbfiles.$tbbfile.commit %]">[% tbbfiles.$tbbfile.commit %]</a></li>
             <li><b>Commit subject:</b> [% tbbfiles.$tbbfile.commit_subject %]</li>
-            [% ELSE %]
+            [% ELSIF tbbfiles.$tbbfile.type == 'browserbundle' %]
             <li><b>Filename:</b> [% tbbfiles.$tbbfile.filename %]</li>
             <li><b>Version:</b> [% tbbfiles.$tbbfile.version %]</li>
             <li><b>Language:</b> [% tbbfiles.$tbbfile.language %]</li>
