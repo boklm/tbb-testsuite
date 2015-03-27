@@ -7,9 +7,10 @@ use TBBTestSuite::TestSuite::BrowserBundleTests;
 use TBBTestSuite::TestSuite::BrowserBundleVirusTotal;
 use TBBTestSuite::TestSuite::BrowserUnitTests;
 use TBBTestSuite::TestSuite::BrowserRebaseTests;
+use TBBTestSuite::TestSuite::RBMBuild;
 
 my @testsuite_list = qw(TestTestSuite BrowserBundleTests BrowserBundleVirusTotal
-                        BrowserUnitTests BrowserRebaseTests);
+                        BrowserUnitTests BrowserRebaseTests RBMBuild);
 my %testsuite_types;
 sub testsuite_types {
     return %testsuite_types if %testsuite_types;

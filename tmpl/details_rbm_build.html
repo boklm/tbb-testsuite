@@ -1,0 +1,6 @@
+<ul>
+    <li><a href="results-[% tbbfile %]/[% test.name %].build.txt">build logs</a></li>
+[% IF test.results.success && tbbfiles.$tbbfile.publish_url %]
+    <li><a href="[% tbbfiles.$tbbfile.publish_url %]/[% test.publish_dir %]">build files</a></li>
+[% END %]
+</ul>
