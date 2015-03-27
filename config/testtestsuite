@@ -2,9 +2,9 @@
 use strict;
 use TBBTestSuite::TestTestSuite;
 
-my $tbbinfos = TBBTestSuite::TestTestSuite::get_tbbinfos({});
+my $testsuite = TBBTestSuite::TestTestSuite->new({});
 
 my %res = (
-    args => [ $tbbinfos ],
+    args => [ $testsuite ],
 );
 %res;

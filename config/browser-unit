@@ -39,7 +39,7 @@ for my $commit (reverse @commits) {
         next;
     }
     $res{name} = $name;
-    my $tbbinfos = TBBTestSuite::BrowserUnitTests::get_tbbinfos({
+    my $tbbinfos = TBBTestSuite::BrowserUnitTests->new({
             browserdir => $TBBTestSuite::BrowserGit::clone_dir,
             commit => substr($commit, 0, 20),
             $previous ? (parent_results => $previous) : (),

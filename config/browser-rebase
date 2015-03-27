@@ -12,7 +12,7 @@ my $torbrowser_branch = 'tor-browser-31.2.0esr-4.x-1';
 my $esr_branch = 'esr31';
 my $testsuite_version = '2';
 
-my $tbbinfos = TBBTestSuite::BrowserRebaseTests::get_tbbinfos({
+my $tbbinfos = TBBTestSuite::BrowserRebaseTests->new({
         tb_branch => 'tor-browser-31.2.0esr-4.x-1',
         esr_branch => 'esr31',
     });

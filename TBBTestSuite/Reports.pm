@@ -90,11 +90,8 @@ sub make_report {
         INCLUDE_PATH => "$FindBin::Bin/tmpl:" . report_dir($report),
         OUTPUT_PATH => report_dir($report),
     );
-    foreach my $tbbfile (keys %{$report->{tbbfiles}}) {
-        my $type = $report->{tbbfiles}{$tbbfile}{type};
-        my $testsuite = $TBBTestSuite::Tests::testsuite_types{$type};
-        $testsuite->{pre_makereport}($report, $tbbfile)
-                if $testsuite->{pre_makereport};
+    foreach my $testsuite (values %{$report->{tbbfiles}}) {
+        $testsuite->pre_makereport($report);
     }
     my %r = ( %template_functions, %$report );
     $template->process('screenshots.html', \%r, 'screenshots.html',
@@ -179,10 +176,11 @@ sub make_reports_index {
         @s = @s[0..19] if @s > 20;
         load_reports_for_index(\%pre_reports_index, @s);
         my $title = "Last 20 reports";
-        $template->process("reports_index_$type.html",
+        my ($t) = values %{$reports{$s[0]}->{tbbfiles}};
+        my $tmpl_file = $t->reports_index_tmpl();
+        $template->process($tmpl_file,
           { %$vars, reports_list => \@s, title => $title }, "index-$type.html")
                 || exit_error "Template Error:\n" . $template->error;
-        my ($t) = values %{$reports{$s[0]}->{tbbfiles}};
         $template->process('tests_index.html', { %$vars, testsuite_type => $type,
                 tests => $t->{tests} }, "tests-$type.html")
                 || exit_error "Template Error:\n" . $template->error;
@@ -194,7 +192,9 @@ sub make_reports_index {
                 @{$reports_by_tag{$type}->{$tag}};
             load_reports_for_index(\%pre_reports_index, @s);
             my $title = "Reports for $tag";
-            $template->process("reports_index_$type.html",
+            my ($t) = values %{$reports{$s[0]}->{tbbfiles}};
+            my $tmpl_file = $t->reports_index_tmpl();
+            $template->process($tmpl_file,
                     { %$vars, reports_list => \@s, title => $title, },
                     "index-$type-$tag.html")
                         || exit_error "Template Error:\n" . $template->error;
@@ -207,7 +207,9 @@ sub make_reports_index {
                 @{$reports_by_month{$type}->{$month}};
             load_reports_for_index(\%pre_reports_index, @s);
             my $title = "$month reports";
-            $template->process("reports_index_$type.html",
+            my ($t) = values %{$reports{$s[0]}->{tbbfiles}};
+            my $tmpl_file = $t->reports_index_tmpl();
+            $template->process($tmpl_file,
                     { %$vars, reports_list => \@s, title => $title, },
                     "index-$type-$month.html")
                         || exit_error "Template Error:\n" . $template->error;
@@ -263,17 +265,21 @@ sub load_report {
     return $reports{$report_name} if exists $reports{$report_name};
     my $reportfile = "$options->{'reports-dir'}/r/$report_name/report.yml";
     return undef unless -f $reportfile;
-    return $reports{$report_name} = YAML::Syck::LoadFile($reportfile);
+    my $r = YAML::Syck::LoadFile($reportfile);
+    foreach my $testsuite (values %{$r->{tbbfiles}}) {
+        TBBTestSuite::TestSuite::load($testsuite);
+    }
+    return $reports{$report_name} = $r;
 }
 
 sub load_reports_for_index {
     my ($pre_reports_index, @reports) = @_;
     foreach my $rname (@reports) {
         my $r = load_report($rname);
-        my $testsuite = $TBBTestSuite::Tests::testsuite_types{report_type($r)};
-        if ($testsuite->{pre_reports_index} && !$pre_reports_index->{$rname}) {
-            $pre_reports_index->{$rname} = 1;
-            $testsuite->{pre_reports_index}(\%reports, $reports{$rname});
+        next if $pre_reports_index->{$rname};
+        $pre_reports_index->{$rname} = 1;
+        foreach my $testsuite (values %{$r->{tbbfiles}}) {
+            $testsuite->pre_reports_index(\%reports, $reports{$rname});
         }
     }
 }

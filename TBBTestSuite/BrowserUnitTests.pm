@@ -1,6 +1,9 @@
 package TBBTestSuite::BrowserUnitTests;
 
 use strict;
+
+use parent 'TBBTestSuite::TestSuite';
+
 use FindBin;
 use IO::CaptureOutput qw(capture_exec);
 use File::Spec;
@@ -14,29 +17,30 @@ use TBBTestSuite::Reports qw(load_report);
 use TBBTestSuite::Options qw($options);
 use TBBTestSuite::XServer qw(start_X stop_X set_Xmode);
 
-my $test_types = {
-    xpcshell => \&xpcshell_test,
-    mochitest_plain => sub { mochitest_test('mochitest-plain', @_) },
-    mochitest_chrome => sub { mochitest_test('mochitest-chrome', @_) },
-    mochitest_browser => sub { mochitest_test('mochitest-browser', @_) },
-    mochitest_a11y => sub { mochitest_test('mochitest-a11y', @_) },
-    build_firefox => \&build_firefox,
-};
+sub test_types {
+    return {
+        xpcshell => \&xpcshell_test,
+        mochitest_plain => sub { mochitest_test('mochitest-plain', @_) },
+        mochitest_chrome => sub { mochitest_test('mochitest-chrome', @_) },
+        mochitest_browser => sub { mochitest_test('mochitest-browser', @_) },
+        mochitest_a11y => sub { mochitest_test('mochitest-a11y', @_) },
+        build_firefox => \&build_firefox,
+    };
+}
 
-our %testsuite = (
-    description => 'Tor Browser unit tests',
-    test_types  => $test_types,
-    pre_tests   => \&pre_tests,
-    post_tests  => \&post_tests,
-    pre_makereport => \&pre_makereport,
-    pre_reports_index => \&pre_reports_index,
-);
+sub description {
+    'Tor Browser unit tests';
+}
 
-sub get_tbbinfos {
-    my ($infos) = @_;
-    my %tbbinfos = (
+sub type {
+    'browserunit';
+}
+
+sub new {
+    my ($ts, $infos) = @_;
+    my $tbbinfos = {
         %$infos,
-        type => 'browserunit',
+        type => $ts->type(),
         filename => "browser-$infos->{commit}",
         tests => [
             {
@@ -46,10 +50,10 @@ sub get_tbbinfos {
                 descr => 'Build Firefox',
             },
         ],
-    );
-    push @{$tbbinfos{tests}}, find_xpcshell_tests(\%tbbinfos);
-    push @{$tbbinfos{tests}}, find_mochitest_tests(\%tbbinfos);
-    return \%tbbinfos;
+    };
+    push @{$tbbinfos->{tests}}, find_xpcshell_tests($tbbinfos);
+    push @{$tbbinfos->{tests}}, find_mochitest_tests($tbbinfos);
+    return bless $tbbinfos, $ts;
 }
 
 sub pre_tests {
@@ -148,24 +152,23 @@ sub diff_results {
 }
 
 sub pre_makereport {
-    my ($report, $tbbfile, $r) = @_;
-    my $tbbinfos = $report->{tbbfiles}{$tbbfile};
-    foreach my $test (@{$tbbinfos->{tests}}) {
+    my ($testsuite, $report, $r) = @_;
+    foreach my $test (@{$testsuite->{tests}}) {
         mochitest_error_logs($test);
     }
-    return unless $tbbinfos->{parent_results};
-    $r //= TBBTestSuite::Reports::load_report($tbbinfos->{parent_results}[0]);
+    return unless $testsuite->{parent_results};
+    $r //= TBBTestSuite::Reports::load_report($testsuite->{parent_results}[0]);
     return unless $r;
-    my $parent = $r->{tbbfiles}{$tbbinfos->{parent_results}[1]};
+    my $parent = $r->{tbbfiles}{$testsuite->{parent_results}[1]};
     return unless $parent;
-    $tbbinfos->{parent_diff} = diff_results($parent, $tbbinfos);
+    $testsuite->{parent_diff} = diff_results($parent, $testsuite);
 }
 
 sub pre_reports_index {
-    my ($reports, $report) = @_;
+    my ($testsuite, $reports, $report) = @_;
     foreach my $tbbfile (keys %{$report->{tbbfiles}}) {
         my $tbbinfos = $report->{tbbfiles}{$tbbfile};
-        pre_makereport($report, $tbbfile,
+        $tbbinfos->pre_makereport($report,
                        $reports->{$tbbinfos->{parent_results}[0]})
                    if $tbbinfos->{parent_results};
         foreach my $test (@{$report->{tbbfiles}{$tbbfile}{tests}}) {
