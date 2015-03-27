@@ -3,7 +3,7 @@
 use strict;
 use FindBin;
 use TBBTestSuite::Common;
-use TBBTestSuite::BrowserRebaseTests;
+use TBBTestSuite::TestSuite::BrowserRebaseTests;
 use TBBTestSuite::BrowserGit qw(git_clone_fetch get_commits_by_branch
                                 parent_commit);
 use Data::Dump qw(dd);
@@ -12,7 +12,7 @@ my $torbrowser_branch = 'tor-browser-31.2.0esr-4.x-1';
 my $esr_branch = 'esr31';
 my $testsuite_version = '2';
 
-my $tbbinfos = TBBTestSuite::BrowserRebaseTests->new({
+my $tbbinfos = TBBTestSuite::TestSuite::BrowserRebaseTests->new({
         tb_branch => 'tor-browser-31.2.0esr-4.x-1',
         esr_branch => 'esr31',
     });

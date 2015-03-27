@@ -1,8 +1,8 @@
 # vim: filetype=perl expandtab
 use strict;
-use TBBTestSuite::TestTestSuite;
+use TBBTestSuite::TestSuite::TestTestSuite;
 
-my $testsuite = TBBTestSuite::TestTestSuite->new({});
+my $testsuite = TBBTestSuite::TestSuite::TestTestSuite->new({});
 
 my %res = (
     args => [ $testsuite ],

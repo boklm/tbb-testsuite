@@ -1,4 +1,4 @@
-package TBBTestSuite::TestTestSuite;
+package TBBTestSuite::TestSuite::TestTestSuite;
 
 use strict;
 use parent 'TBBTestSuite::TestSuite';

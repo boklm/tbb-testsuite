@@ -12,7 +12,7 @@ use TBBTestSuite::Reports qw(report_dir report_path save_report);
 use TBBTestSuite::Reports::Receive;
 use TBBTestSuite::Reports::Send;
 use TBBTestSuite::Tests qw(tbb_filename_infos);
-use TBBTestSuite::BrowserBundleTests;
+use TBBTestSuite::TestSuite::BrowserBundleTests;
 
 sub set_report_success {
     my ($report) = @_;
@@ -107,7 +107,7 @@ sub gen_missing_thumbnails {
 
 my %actions = (
     run_tests => \&run_tests,
-    list_tests => \&TBBTestSuite::BrowserBundleTests::list_tests,
+    list_tests => \&TBBTestSuite::TestSuite::BrowserBundleTests::list_tests,
     reports_index => \&TBBTestSuite::Reports::make_reports_index,
     make_report => \&make_report,
     send_report => \&TBBTestSuite::Reports::Send::send_report,

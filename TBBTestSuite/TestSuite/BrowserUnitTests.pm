@@ -1,4 +1,4 @@
-package TBBTestSuite::BrowserUnitTests;
+package TBBTestSuite::TestSuite::BrowserUnitTests;
 
 use strict;
 

@@ -1,4 +1,4 @@
-package TBBTestSuite::BrowserBundleTests;
+package TBBTestSuite::TestSuite::BrowserBundleTests;
 
 use warnings;
 use strict;

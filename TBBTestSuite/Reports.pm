@@ -15,6 +15,7 @@ use YAML::Syck;
 use TBBTestSuite::Common qw(exit_error as_array);
 use TBBTestSuite::Options qw($options);
 use TBBTestSuite::Tests;
+use TBBTestSuite::TestSuites;
 use Email::Simple;
 use Email::Sender::Simple qw(try_to_sendmail);
 use DateTime;
@@ -159,6 +160,7 @@ sub make_reports_index {
         my $month = date_month($summaries{$report}->{time});
         push @{$reports_by_month{$type}->{$month}}, $report;
     }
+    my %testsuite_infos = TBBTestSuite::TestSuites::testsuite_infos();
     my $vars = {
         %template_functions,
         reports => \%reports,
@@ -166,7 +168,7 @@ sub make_reports_index {
         reports_by_type => \%reports_by_type,
         reports_by_tag => \%reports_by_tag,
         reports_by_month => \%reports_by_month,
-        testsuite_types => \%TBBTestSuite::Tests::testsuite_types,
+        testsuite_types => \%testsuite_infos,
     };
     $template->process('reports_index.html', $vars, 'index.html')
                 || exit_error "Template Error:\n" . $template->error;

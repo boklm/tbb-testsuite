@@ -12,10 +12,10 @@ use LWP::UserAgent;
 use TBBTestSuite::Reports;
 use TBBTestSuite::Common qw(exit_error);
 use TBBTestSuite::Options qw($options);
-use TBBTestSuite::BrowserBundleTests;
-use TBBTestSuite::BrowserUnitTests;
+use TBBTestSuite::TestSuites;
+use TBBTestSuite::TestSuite::BrowserBundleTests;
+use TBBTestSuite::TestSuite::BrowserUnitTests;
 use TBBTestSuite::XServer qw(set_Xmode);
-use TBBTestSuite::TestSuite;
 
 our (@ISA, @EXPORT_OK);
 BEGIN {
@@ -23,8 +23,6 @@ BEGIN {
     @ISA       = qw(Exporter);
     @EXPORT_OK = qw(tbb_filename_infos);
 }
-
-our %testsuite_types = TBBTestSuite::TestSuite::testsuite_infos();
 
 sub run_tests {
     my ($tbbinfos) = @_;
@@ -147,8 +145,8 @@ sub tbb_filename_infos {
         return undef;
     }
     return $options->{virustotal} ?
-        TBBTestSuite::BrowserBundleVirusTotal->new(\%res)
-        : TBBTestSuite::BrowserBundleTests->new(\%res);
+        TBBTestSuite::TestSuite::BrowserBundleVirusTotal->new(\%res)
+        : TBBTestSuite::TestSuite::BrowserBundleTests->new(\%res);
 }
 
 
@@ -208,12 +206,13 @@ sub test_start {
     my $oldcwd = getcwd;
     my $tmpdir = File::Temp::newdir('XXXXXX', DIR => $options->{tmpdir});
     $tbbinfos->{tmpdir} = $tmpdir->dirname;
-    $tbbinfos->{tests} //= [ map { { %$_ } } @TBBTestSuite::BrowserBundleTests::tests ];
+    $tbbinfos->{tests} //= [ map { { %$_ } } @TBBTestSuite::TestSuite::BrowserBundleTests::tests ];
     $tbbinfos->{'results-dir'} =
         TBBTestSuite::Reports::report_path($report,
                                         "results-$tbbinfos->{filename}");
     mkdir $tbbinfos->{'results-dir'};
-    my $testsuite = $testsuite_types{$tbbinfos->{type}};
+    my %testsuite_infos = TBBTestSuite::TestSuites::testsuite_infos();
+    my $testsuite = $testsuite_infos{$tbbinfos->{type}};
     $tbbinfos->pre_tests();
     $tbbinfos->{start_time} = time;
     run_tests($tbbinfos);

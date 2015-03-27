@@ -34,7 +34,7 @@ Adding a browser bundle test
 ----------------------------
 
 The list of tests to be run by the test suite is defined in file
-'TBBTestSuite/BrowserBundleTests.pm' in the '@tests' variable.
+'TBBTestSuite/TestSuite/BrowserBundleTests.pm' in the '@tests' variable.
 
 Each test is defined with the following properties:
 
@@ -73,7 +73,7 @@ Adding a mozmill test
 ~~~~~~~~~~~~~~~~~~~~~
 
 To add a new test based on mozmill, you will add something like this in
-'TBBTestSuite/BrowserBundleTests.pm':
+'TBBTestSuite/TestSuite/BrowserBundleTests.pm':
 
 ----
     {
@@ -164,7 +164,7 @@ Adding a selenium test
 ~~~~~~~~~~~~~~~~~~~~~~
 
 To add a new test based on selenium webdriver, you will add something
-like this in 'TBBTestSuite/BrowserBundleTests.pm':
+like this in 'TBBTestSuite/TestSuite/BrowserBundleTests.pm':
 
 ----
     {
@@ -183,7 +183,7 @@ Adding a command test
 ~~~~~~~~~~~~~~~~~~~~~
 
 To run a command on some files, and check the output. You will add
-something like this in 'TBBTestSuite/BrowserBundleTests.pm':
+something like this in 'TBBTestSuite/TestSuite/BrowserBundleTests.pm':
 
 ----
     {

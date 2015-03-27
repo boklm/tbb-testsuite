@@ -1,6 +1,6 @@
-package TBBTestSuite::BrowserBundleVirusTotal;
+package TBBTestSuite::TestSuite::BrowserBundleVirusTotal;
 
-use parent 'TBBTestSuite::BrowserBundleTests';
+use parent 'TBBTestSuite::TestSuite::BrowserBundleTests';
 
 sub description {
     'Tor Browser Bundle Virustotal checks';

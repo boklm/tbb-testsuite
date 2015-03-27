@@ -3,7 +3,7 @@
 use strict;
 use FindBin;
 use TBBTestSuite::Common;
-use TBBTestSuite::BrowserUnitTests;
+use TBBTestSuite::TestSuite::BrowserUnitTests;
 use TBBTestSuite::BrowserGit qw(git_clone_fetch get_commits_by_branch
                                 parent_commit);
 
@@ -39,7 +39,7 @@ for my $commit (reverse @commits) {
         next;
     }
     $res{name} = $name;
-    my $tbbinfos = TBBTestSuite::BrowserUnitTests->new({
+    my $tbbinfos = TBBTestSuite::TestSuite::BrowserUnitTests->new({
             browserdir => $TBBTestSuite::BrowserGit::clone_dir,
             commit => substr($commit, 0, 20),
             $previous ? (parent_results => $previous) : (),
