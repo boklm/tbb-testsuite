@@ -37,7 +37,7 @@
                 <td valign="top"><a href="r/[% report %]/index.html">[% report %]</a></td>
                 <td valign="top">[% date.format(reports.$report.time, '%Y-%m-%d %H:%M') %]</td>
                 <td valign="top">[% IF reports.$report.options.tags %]
-                                        <a href="index-browserbundle-[% reports.$report.options.tags.0 %].html">[% reports.$report.options.tags.0 %]</a>
+                                        <a href="index-[% testsuite_type %]-[% reports.$report.options.tags.0 %].html">[% reports.$report.options.tags.0 %]</a>
                                  [% END %]
                                     </td>
                 <td valign="top">

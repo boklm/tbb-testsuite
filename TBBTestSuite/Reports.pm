@@ -181,7 +181,8 @@ sub make_reports_index {
         my ($t) = values %{$reports{$s[0]}->{tbbfiles}};
         my $tmpl_file = $t->reports_index_tmpl();
         $template->process($tmpl_file,
-          { %$vars, reports_list => \@s, title => $title }, "index-$type.html")
+          { %$vars, reports_list => \@s, title => $title,
+              testsuite_type => $type }, "index-$type.html")
                 || exit_error "Template Error:\n" . $template->error;
         $template->process('tests_index.html', { %$vars, testsuite_type => $type,
                 tests => $t->{tests} }, "tests-$type.html")
@@ -197,7 +198,8 @@ sub make_reports_index {
             my ($t) = values %{$reports{$s[0]}->{tbbfiles}};
             my $tmpl_file = $t->reports_index_tmpl();
             $template->process($tmpl_file,
-                    { %$vars, reports_list => \@s, title => $title, },
+                    { %$vars, reports_list => \@s, title => $title,
+                        testsuite_type => $type },
                     "index-$type-$tag.html")
                         || exit_error "Template Error:\n" . $template->error;
         }
@@ -212,7 +214,8 @@ sub make_reports_index {
             my ($t) = values %{$reports{$s[0]}->{tbbfiles}};
             my $tmpl_file = $t->reports_index_tmpl();
             $template->process($tmpl_file,
-                    { %$vars, reports_list => \@s, title => $title, },
+                    { %$vars, reports_list => \@s, title => $title,
+                        testsuite_type => $type },
                     "index-$type-$month.html")
                         || exit_error "Template Error:\n" . $template->error;
             }
