@@ -178,6 +178,7 @@
         [% END %]
 
         <hr>
+        [% IF tbbfiles.$tbbfile.type == 'browserbundle' %]
         <h1>Screenshots</h1>
         [% FOREACH test IN tbbfiles.$tbbfile.tests %]
           [% IF test.screenshots && test.screenshots.size %]
@@ -186,6 +187,7 @@
             <a href="results-[% tbbfile %]/[% screenshot %]"><img src="results-[% tbbfile %]/t-[% screenshot %]" /></a><br /><br />
             [% END %]
           [% END %]
+        [% END %]
         [% END %]
     </body>
 </html>
