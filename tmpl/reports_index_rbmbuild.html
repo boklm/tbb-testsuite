@@ -34,7 +34,7 @@
             </tr>
             [% FOREACH report IN reports_list %]
             <tr>
-                <td valign="top"><a href="r/[% report %]/index.html">[% report %]</a></td>
+                <td valign="top"><a href="r/[% report %]/[% testsuite_type %].html">[% report %]</a></td>
                 <td valign="top">[% date.format(reports.$report.time, '%Y-%m-%d %H:%M') %]</td>
                 <td valign="top">[% IF reports.$report.options.tags %]
                                         <a href="index-[% testsuite_type %]-[% reports.$report.options.tags.0 %].html">[% reports.$report.options.tags.0 %]</a>
@@ -49,7 +49,7 @@
                       [% END %]
                     [% END %]
                     [% IF failed == 0 %]
-                      <span class="test_ok"><a href="r/[% report %]/index.html">OK</a></span>
+                      <span class="test_ok"><a href="r/[% report %]/[% testsuite_type %].html">OK</a></span>
                     [% END %]
                 </td>
             </tr>
