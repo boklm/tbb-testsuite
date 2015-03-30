@@ -284,7 +284,7 @@ our @tests = (
         descr => 'Check that noscript options are working',
         retry => 1,
         prefs => {
-            'extensions.torbutton.security_slider' => 3,
+            'extensions.torbutton.security_slider' => 2,
         },
         enable       => sub { $_[0]->{version} !~ m/^4.0/ },
     },
