@@ -9,11 +9,6 @@ var testsuite = require("../lib/testsuite");
 
 // The torbutton_sec_* variables have been copy pasted from
 // torbutton/src/chrome/content/torbutton.js
-// The noscript.globalHttpsWhitelist setting has been removed as it is
-// special (a special value is set in level 4)
-var torbutton_sec_l_bool_prefs = {
-  "gfx.font_rendering.opentype_svg.enabled" : false,
-};
 
 var torbutton_sec_ml_bool_prefs = {
   "javascript.options.ion.content" : false,
@@ -22,20 +17,21 @@ var torbutton_sec_ml_bool_prefs = {
   "noscript.forbidMedia" : true,
   "media.webaudio.enabled" : false,
   "network.jar.block-remote-files" : true,
-  // XXX: pref for disabling MathML is missing
+  "mathml.disabled" : true
 };
 
 var torbutton_sec_mh_bool_prefs = {
   "javascript.options.baselinejit.content" : false,
-  // XXX: pref for disableing SVG is missing
+  "gfx.font_rendering.graphite.enabled" : false,
+  "gfx.font_rendering.opentype_svg.enabled" : false,
+  "noscript.global" : false,
+  "noscript.globalHttpsWhitelist" : true
 };
 
 var torbutton_sec_h_bool_prefs = {
   "noscript.forbidFonts" : true,
-  "media.ogg.enabled" : false,
-  "media.opus.enabled" :  false,
-  "media.wave.enabled" : false,
-  "media.apple.mp3.enabled" : false
+  "noscript.global" : false,
+  "svg.in-content.enabled" : false
 };
 
 ////////////////////////////////////
@@ -49,23 +45,65 @@ var testTBBSettingsSlider = function() {
     var slider_mode = prefSrv.getPref('extensions.torbutton.security_slider', 1);
     expect.equal(parseInt(testsuite.test.slider_mode), slider_mode, 'slider mode');
     expect.equal(prefSrv.getPref('extensions.torbutton.security_custom', true), false, 'security_custom');
-    for (var p in torbutton_sec_l_bool_prefs) {
-        var value = prefSrv.getPref(p, !torbutton_sec_l_bool_prefs[p]);
-        expect.equal(torbutton_sec_l_bool_prefs[p], value, p);
+
+    var expected_prefs = {};
+    switch (slider_mode) {
+        case 1:
+            for (p in torbutton_sec_ml_bool_prefs) {
+                expected_prefs[p] = torbutton_sec_ml_bool_prefs[p];
+            }
+            for (p in torbutton_sec_mh_bool_prefs) {
+                expected_prefs[p] = torbutton_sec_mh_bool_prefs[p];
+                // noscript.globalHttpsWhitelist is special: We don't want it in this
+                // mode.
+                if (p === "noscript.globalHttpsWhitelist") {
+                    expected_prefs[p] = !torbutton_sec_mh_bool_prefs[p];
+                }
+            }
+            for (p in torbutton_sec_h_bool_prefs) {
+                expected_prefs[p] = torbutton_sec_h_bool_prefs[p];
+            }
+            break;
+        case 2:
+            for (p in torbutton_sec_ml_bool_prefs) {
+                expected_prefs[p] = torbutton_sec_ml_bool_prefs[p];
+            }
+            // Order matters here as both the high mode and the medium-high mode
+            // share some preferences/values. So, let's revert the high mode
+            // preferences first and set the medium-high mode ones afterwards.
+            for (p in torbutton_sec_h_bool_prefs) {
+                expected_prefs[p] = !torbutton_sec_h_bool_prefs[p];
+            }
+            for (p in torbutton_sec_mh_bool_prefs) {
+                expected_prefs[p] = torbutton_sec_mh_bool_prefs[p];
+            }
+            break;
+        case 3:
+            for (p in torbutton_sec_ml_bool_prefs) {
+                expected_prefs[p] = torbutton_sec_ml_bool_prefs[p];
+            }
+            for (p in torbutton_sec_mh_bool_prefs) {
+                expected_prefs[p] = !torbutton_sec_mh_bool_prefs[p];
+            }
+            for (p in torbutton_sec_h_bool_prefs) {
+                expected_prefs[p] = !torbutton_sec_h_bool_prefs[p];
+            }
+            break;
+        case 4:
+            for (p in torbutton_sec_ml_bool_prefs) {
+                expected_prefs[p] = !torbutton_sec_ml_bool_prefs[p];
+            }
+            for (p in torbutton_sec_mh_bool_prefs) {
+                expected_prefs[p] = !torbutton_sec_mh_bool_prefs[p];
+            }
+            for (p in torbutton_sec_h_bool_prefs) {
+                expected_prefs[p] = !torbutton_sec_h_bool_prefs[p];
+            }
+            break;
     }
-    for (var p in torbutton_sec_ml_bool_prefs) {
-        var value = prefSrv.getPref(p, !torbutton_sec_ml_bool_prefs[p]);
-        var b = torbutton_sec_ml_bool_prefs[p];
-        expect.equal(slider_mode < 2 ? !b : b, value, p);
-    }
-    for (var p in torbutton_sec_mh_bool_prefs) {
-        var value = prefSrv.getPref(p, !torbutton_sec_mh_bool_prefs[p]);
-        var b = torbutton_sec_mh_bool_prefs[p];
-        expect.equal(slider_mode < 3 ? !b : b, value, p);
-    }
-    for (var p in torbutton_sec_h_bool_prefs) {
-        var value = prefSrv.getPref(p, !torbutton_sec_h_bool_prefs[p]);
-        var b = torbutton_sec_h_bool_prefs[p];
-        expect.equal(slider_mode < 4 ? !b : b, value, p);
+
+    for (var p in expected_prefs) {
+        var value = prefSrv.getPref(p, !expected_prefs[p]);
+        expect.equal(expected_prefs[p], value, p);
     }
 }
