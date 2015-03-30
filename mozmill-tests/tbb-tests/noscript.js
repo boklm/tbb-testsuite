@@ -3,6 +3,7 @@
 "use strict";
 
 var {expect} = require("../mozilla-mozmill-tests/lib/assertions");
+var prefs = require("../mozilla-mozmill-tests/firefox/lib/prefs");
 var testsuite = require("../lib/testsuite");
 
 var setupModule = function(aModule) {
@@ -12,6 +13,14 @@ var setupModule = function(aModule) {
 var testNoscript = function () {
     var http_url = testsuite.options.test_data_url + '/noscript/';
     var https_url = testsuite.options.test_data_url_https + '/noscript/';
+    var prefSrv = prefs.preferences;
+
+    var noscript_global = prefSrv.getPref('noscript.global', true);
+    expect.equal(noscript_global, false, 'noscript.global');
+    var noscript_httpswhitelist = prefSrv.getPref('noscript.globalHttpsWhitelist', false);
+    expect.equal(noscript_httpswhitelist, true, 'noscript.globalHttpsWhitelist');
+    var noscript_cascade = prefSrv.getPref('noscript.cascadePermissions', false);
+    expect.equal(noscript_cascade, true, 'noscript.cascadePermissions');
 
     // http page sourcing http js
     controller.open(http_url + 'http_src.html');
