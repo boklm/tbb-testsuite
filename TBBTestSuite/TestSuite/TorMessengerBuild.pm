@@ -47,7 +47,7 @@ sub set_tests {
             project => 'tor-messenger',
             targets => [
                 'noint',
-                'linux-windows',
+                'windows-i686',
                 'tor-messenger',
             ],
             publish_dir => 'windows-i686',
