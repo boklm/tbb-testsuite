@@ -51,7 +51,7 @@ sub pre_tests {
     $gr->cmd('git', 'checkout', 'master');
     chdir $gr->clone_dir();
     system('make', 'submodule-update');
-    #system('make', 'fetch');
+    system('make', 'fetch');
 }
 
 1;
