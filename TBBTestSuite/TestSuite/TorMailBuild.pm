@@ -22,6 +22,7 @@ sub set_tests {
             type  => 'rbm_build',
             project => 'tor-mail',
             targets => [
+                'noint',
                 'linux-x86_64',
                 'tor-mail',
             ],
@@ -33,6 +34,7 @@ sub set_tests {
             type  => 'rbm_build',
             project => 'tor-mail',
             targets => [
+                'noint',
                 'linux-i686',
                 'tor-mail',
             ],

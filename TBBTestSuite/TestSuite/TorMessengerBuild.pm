@@ -22,6 +22,7 @@ sub set_tests {
             type  => 'rbm_build',
             project => 'tor-messenger',
             targets => [
+                'noint',
                 'linux-x86_64',
                 'tor-messenger',
             ],
@@ -33,6 +34,7 @@ sub set_tests {
             type  => 'rbm_build',
             project => 'tor-messenger',
             targets => [
+                'noint',
                 'linux-i686',
                 'tor-messenger',
             ],
@@ -44,6 +46,7 @@ sub set_tests {
             type  => 'rbm_build',
             project => 'tor-messenger',
             targets => [
+                'noint',
                 'linux-windows',
                 'tor-messenger',
             ],
