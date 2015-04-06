@@ -106,6 +106,8 @@ const SETTINGS = {
     "network.http.spdy.enabled": false, // Stores state and may have keepalive issues (both fixable)
     "network.http.spdy.enabled.v2": false, // Seems redundant, but just in case
     "network.http.spdy.enabled.v3": false, // Seems redundant, but just in case
+    "privacy.thirdparty.isolate": 2, // Always enforce third party isolation
+    "dom.workers.sharedWorkers.enabled": false, // See https://bugs.torproject.org/15562
 
     // Proxy and proxy security
     "network.proxy.socks": "127.0.0.1",
