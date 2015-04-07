@@ -1,10 +1,10 @@
 # vim: filetype=perl expandtab
 use strict;
-use TBBTestSuite::TestTestSuite;
+use TBBTestSuite::TestSuite::TestTestSuite;
 
-my $tbbinfos = TBBTestSuite::TestTestSuite::get_tbbinfos({});
+my $testsuite = TBBTestSuite::TestSuite::TestTestSuite->new({});
 
 my %res = (
-    args => [ $tbbinfos ],
+    args => [ $testsuite ],
 );
 %res;

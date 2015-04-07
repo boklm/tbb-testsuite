@@ -3,22 +3,25 @@
 use strict;
 use FindBin;
 use TBBTestSuite::Common;
-use TBBTestSuite::BrowserRebaseTests;
+use TBBTestSuite::TestSuite::BrowserRebaseTests;
 use TBBTestSuite::BrowserGit qw(git_clone_fetch get_commits_by_branch
-                                parent_commit);
-use Data::Dump qw(dd);
+                                parent_commit git_cmd_ch);
 
-my $torbrowser_branch = 'tor-browser-31.2.0esr-4.x-1';
+my $torbrowser_branch = 'tor-browser-31.6.0esr-4.5-1',
 my $esr_branch = 'esr31';
-my $testsuite_version = '2';
+my $testsuite_version = '1';
 
-my $tbbinfos = TBBTestSuite::BrowserRebaseTests::get_tbbinfos({
-        tb_branch => 'tor-browser-31.2.0esr-4.x-1',
-        esr_branch => 'esr31',
+my ($commit) = git_cmd_ch('git', 'show', '-s', '--format=%H',
+                                          "$torbrowser_branch^{commit}");
+my $name = "rebase-$testsuite_version-$commit";
+my $tbbinfos = TBBTestSuite::TestSuite::BrowserRebaseTests->new({
+        tb_branch => $torbrowser_branch,
+        esr_branch => $esr_branch,
     });
-dd $tbbinfos;
 
 my %res = (
+    name => $name,
     args => [ $tbbinfos ],
+    tags => [ $torbrowser_branch ],
 );
 %res;

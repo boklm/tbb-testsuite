@@ -1,0 +1,25 @@
+# vim: filetype=perl expandtab
+use strict;
+use FindBin;
+use DateTime;
+use TBBTestSuite::TestSuite::TorMessengerBuild;
+
+my $date = DateTime->now->ymd;
+my $name = "tor-messenger-$date";
+
+if (-d "$options->{'reports-dir'}/r/$name") {
+    print "Doing nothing: $name already done\n";
+    return ( args => [] );
+}
+
+my $testsuite = TBBTestSuite::TestSuite::TorMessengerBuild->new({
+        publish_dir => "$FindBin::Bin/tor-messenger-builds/$date",
+        publish_url => "http://paganini.erinn.org/~boklm/builds/tor-messenger/$date",
+    });
+
+my %res = (
+    name => $name,
+    args => [ $testsuite ],
+    tags => [ 'nightly' ],
+);
+%res;

@@ -1,23 +1,27 @@
-package TBBTestSuite::BrowserRebaseTests;
+package TBBTestSuite::TestSuite::BrowserRebaseTests;
 
 use strict;
+
+use parent 'TBBTestSuite::TestSuite';
+
 use File::Slurp;
 use IO::CaptureOutput qw(capture_exec);
 use TBBTestSuite::BrowserGit qw(git_clone_fetch get_commits_by_branch
                                 parent_commit git_cmd git_cmd_ch);
 
-my $test_types = {
-    cherry_pick => \&cherry_pick,
-};
+sub test_types {
+    return {
+        cherry_pick => \&cherry_pick,
+    };
+}
 
-our %testsuite = (
-    description => 'Tor Browser rebase tests',
-    test_types  => $test_types,
-    pre_tests   => \&pre_tests,
-    post_tests  => \&post_tests,
-    pre_makereport => \&pre_makereport,
-    pre_reports_index => \&pre_reports_index,
-);
+sub type {
+    'browserrebase';
+}
+
+sub description {
+    'Tor Browser rebase tests';
+}
 
 sub test_name {
     my ($commit) = @_;
@@ -26,15 +30,16 @@ sub test_name {
     return $res;
 }
 
-sub get_tbbinfos {
-    my ($infos) = @_;
+
+sub new {
+    my ($ts, $infos) = @_;
     git_clone_fetch;
-    my %tbbinfos = (
+    my $testsuite = {
         %$infos,
-        type => 'browserrebase',
+        type => $ts->type(),
         filename => 'browser-rebase',
         tests => [],
-    );
+    };
     my @commits = reverse get_commits_by_branch($infos->{tb_branch},
                                         $infos->{esr_branch});
     shift @commits;
@@ -46,9 +51,9 @@ sub get_tbbinfos {
             commit => $commit,
             retry => 1,
         };
-        push @{$tbbinfos{tests}}, $test;
+        push @{$testsuite->{tests}}, $test;
     }
-    return \%tbbinfos;
+    return bless $testsuite, $ts;
 }
 
 sub pre_tests {
@@ -63,16 +68,6 @@ sub pre_tests {
     }
     git_cmd('git', 'branch', '-f', 'rebase-test', 'gecko-dev/master');
     git_cmd('git', 'checkout', '-f', 'rebase-test');
-}
-
-sub post_tests {
-    my ($tbbinfos) = @_;
-}
-
-sub pre_makereport {
-}
-
-sub pre_reports_index {
 }
 
 sub cherry_pick {

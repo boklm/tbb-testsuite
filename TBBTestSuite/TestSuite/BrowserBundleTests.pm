@@ -1,7 +1,10 @@
-package TBBTestSuite::BrowserBundleTests;
+package TBBTestSuite::TestSuite::BrowserBundleTests;
 
 use warnings;
 use strict;
+
+use parent 'TBBTestSuite::TestSuite';
+
 use English;
 use FindBin;
 use File::Slurp;
@@ -19,13 +22,6 @@ use TBBTestSuite::Tests::Command qw(command_run);
 use TBBTestSuite::Tests::TorBootstrap;
 use TBBTestSuite::XServer qw(start_X stop_X set_Xmode);
 
-our (@ISA, @EXPORT_OK);
-BEGIN {
-    require Exporter;
-    @ISA       = qw(Exporter);
-    @EXPORT_OK = qw(tbb_filename_infos);
-}
-
 my $screenshot_thumbnail;
 BEGIN {
     # For some reason that I did not understand yet, Image::Magick does
@@ -40,25 +36,23 @@ BEGIN {
     }
 }
 
-my $test_types = {
-    tor_bootstrap => \&TBBTestSuite::Tests::TorBootstrap::start_tor,
-    mozmill       => \&mozmill_run,
-    selenium      => \&selenium_run,
-    virustotal    => \&virustotal_run,
-    command       => \&command_run,
-};
+sub test_types {
+    return {
+        tor_bootstrap => \&TBBTestSuite::Tests::TorBootstrap::start_tor,
+        mozmill       => \&mozmill_run,
+        selenium      => \&selenium_run,
+        virustotal    => \&virustotal_run,
+        command       => \&command_run,
+    };
+}
 
-our %testsuite = (
-    description => 'Tor Browser Bundle integration tests',
-    test_types  => $test_types,
-    pre_tests   => \&pre_tests,
-    post_tests  => \&post_tests,
-);
+sub type {
+    'browserbundle';
+}
 
-our %testsuite_virustotal = (
-    %testsuite,
-    description => 'Tor Browser Bundle Virustotal checks',
-);
+sub description {
+    'Tor Browser Bundle integration tests';
+}
 
 our @tests = (
     {
@@ -418,36 +412,6 @@ sub get_tbbfile {
                 unless -f $tbbinfos->{tbbfile};
 }
 
-sub tbb_filename_infos {
-    my ($tbbfile) = @_;
-    my (undef, undef, $file) = File::Spec->splitpath($tbbfile);
-    my %res = (filename => $file, tbbfile => $tbbfile);
-    if ($file =~ m/^tor-browser-linux(..)-([^_]+)_(.+)\.tar\.xz$/) {
-        @res{qw(os version language)} = ('Linux', $2, $3);
-        $res{arch} = $1 eq '64' ? 'x86_64' : 'x86';
-    } elsif ($file =~ m/^torbrowser-install-([^_]+)_(.+)\.exe$/) {
-        @res{qw(os arch version language)} = ('Windows', 'x86', $1, $2);
-    } elsif ($file =~ m/^TorBrowserBundle-(.+)-osx32_(.+)\.zip$/) {
-        @res{qw(os arch version language)} = ('MacOSX', 'x86', $1, $2);
-    } else {
-        return undef;
-    }
-    if ($options->{virustotal}) {
-        $res{type} = 'browserbundle_virustotal';
-        $res{tests} = [
-            {
-                name   => 'virustotal',
-                type   => 'virustotal',
-                descr  => 'Analyze files on virustotal.com',
-            },
-        ];
-    } else {
-        $res{type} = 'browserbundle';
-        $res{tests} = [ map { { %$_ } } @tests ];
-    }
-    return \%res;
-}
-
 sub extract_tbb {
     my ($tbbinfos) = @_;
     exit_error "Can't open file $tbbinfos->{tbbfile}" unless -f $tbbinfos->{tbbfile};
@@ -648,6 +612,13 @@ sub set_tbbpaths {
     $tbbinfos->{torbin} = "$tbbinfos->{tordir}/tor";
     $tbbinfos->{ptdir} = winpath("$tbbinfos->{tordir}/PluggableTransports");
     $tbbinfos->{ffprofiledir} = "$tbbinfos->{datadir}/Browser/profile.default";
+}
+
+sub new {
+    my ($ts, $testsuite) = @_;
+    $testsuite->{type} = 'browserbundle';
+    $testsuite->{tests} = [ map { { %$_ } } @tests ];
+    return bless $testsuite, $ts;
 }
 
 sub pre_tests {

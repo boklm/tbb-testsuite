@@ -11,8 +11,8 @@ use TBBTestSuite::Options qw($options);
 use TBBTestSuite::Reports qw(report_dir report_path save_report);
 use TBBTestSuite::Reports::Receive;
 use TBBTestSuite::Reports::Send;
-use TBBTestSuite::Tests;
-use TBBTestSuite::BrowserBundleTests qw(tbb_filename_infos);
+use TBBTestSuite::Tests qw(tbb_filename_infos);
+use TBBTestSuite::TestSuite::BrowserBundleTests;
 
 sub set_report_success {
     my ($report) = @_;
@@ -53,8 +53,7 @@ sub run_tests {
         report_format => '1',
     };
     foreach my $tbbfile (@{$options->{args}}) {
-        my $tbbinfos = ref $tbbfile eq 'HASH' ? $tbbfile
-                         : tbb_filename_infos($tbbfile);
+        my $tbbinfos = ref $tbbfile ? $tbbfile : tbb_filename_infos($tbbfile);
         if (is_shafile($tbbfile)) {
             TBBTestSuite::Tests::test_sha($report, $tbbfile);
         } else {
@@ -108,7 +107,7 @@ sub gen_missing_thumbnails {
 
 my %actions = (
     run_tests => \&run_tests,
-    list_tests => \&TBBTestSuite::BrowserBundleTests::list_tests,
+    list_tests => \&TBBTestSuite::TestSuite::BrowserBundleTests::list_tests,
     reports_index => \&TBBTestSuite::Reports::make_reports_index,
     make_report => \&make_report,
     send_report => \&TBBTestSuite::Reports::Send::send_report,

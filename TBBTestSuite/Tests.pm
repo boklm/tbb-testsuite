@@ -12,17 +12,17 @@ use LWP::UserAgent;
 use TBBTestSuite::Reports;
 use TBBTestSuite::Common qw(exit_error);
 use TBBTestSuite::Options qw($options);
-use TBBTestSuite::BrowserBundleTests qw(tbb_filename_infos);
-use TBBTestSuite::BrowserUnitTests;
+use TBBTestSuite::TestSuites;
+use TBBTestSuite::TestSuite::BrowserBundleTests;
+use TBBTestSuite::TestSuite::BrowserUnitTests;
 use TBBTestSuite::XServer qw(set_Xmode);
 
-our %testsuite_types = (
-    browserunit => \%TBBTestSuite::BrowserUnitTests::testsuite,
-    browserrebase => \%TBBTestSuite::BrowserRebaseTests::testsuite,
-    browserbundle => \%TBBTestSuite::BrowserBundleTests::testsuite,
-    browserbundle_virustotal => \%TBBTestSuite::BrowserBundleTests::testsuite_virustotal,
-    testtestsuite => \%TBBTestSuite::TestTestSuite::testsuite,
-);
+our (@ISA, @EXPORT_OK);
+BEGIN {
+    require Exporter;
+    @ISA       = qw(Exporter);
+    @EXPORT_OK = qw(tbb_filename_infos);
+}
 
 sub run_tests {
     my ($tbbinfos) = @_;
@@ -38,7 +38,7 @@ sub run_tests {
                             @{$options->{'disable-tests'}}
                             : split(',', $options->{'disable-tests'});
     }
-    my $test_types = $testsuite_types{$tbbinfos->{type}}->{test_types};
+    my $test_types = $tbbinfos->test_types();
     foreach my $test (@{$tbbinfos->{tests}}) {
         $test->{fail_type} //= 'error';
     }
@@ -130,6 +130,26 @@ sub test_by_name {
     return undef;
 }
 
+sub tbb_filename_infos {
+    my ($tbbfile) = @_;
+    my (undef, undef, $file) = File::Spec->splitpath($tbbfile);
+    my %res = (filename => $file, tbbfile => $tbbfile);
+    if ($file =~ m/^tor-browser-linux(..)-([^_]+)_(.+)\.tar\.xz$/) {
+        @res{qw(os version language)} = ('Linux', $2, $3);
+        $res{arch} = $1 eq '64' ? 'x86_64' : 'x86';
+    } elsif ($file =~ m/^torbrowser-install-([^_]+)_(.+)\.exe$/) {
+        @res{qw(os arch version language)} = ('Windows', 'x86', $1, $2);
+    } elsif ($file =~ m/^TorBrowserBundle-(.+)-osx32_(.+)\.zip$/) {
+        @res{qw(os arch version language)} = ('MacOSX', 'x86', $1, $2);
+    } else {
+        return undef;
+    }
+    return $options->{virustotal} ?
+        TBBTestSuite::TestSuite::BrowserBundleVirusTotal->new(\%res)
+        : TBBTestSuite::TestSuite::BrowserBundleTests->new(\%res);
+}
+
+
 sub matching_tbbfile {
     my $o = tbb_filename_infos($_[0]);
     return $o && $o->{os} eq $options->{os} && $o->{arch} eq $options->{arch};
@@ -186,18 +206,19 @@ sub test_start {
     my $oldcwd = getcwd;
     my $tmpdir = File::Temp::newdir('XXXXXX', DIR => $options->{tmpdir});
     $tbbinfos->{tmpdir} = $tmpdir->dirname;
-    $tbbinfos->{tests} //= [ map { { %$_ } } @TBBTestSuite::BrowserBundleTests::tests ];
+    $tbbinfos->{tests} //= [ map { { %$_ } } @TBBTestSuite::TestSuite::BrowserBundleTests::tests ];
     $tbbinfos->{'results-dir'} =
         TBBTestSuite::Reports::report_path($report,
                                         "results-$tbbinfos->{filename}");
     mkdir $tbbinfos->{'results-dir'};
-    my $testsuite = $testsuite_types{$tbbinfos->{type}};
-    $testsuite->{pre_tests}($tbbinfos);
+    my %testsuite_infos = TBBTestSuite::TestSuites::testsuite_infos();
+    my $testsuite = $testsuite_infos{$tbbinfos->{type}};
+    $tbbinfos->pre_tests();
     $tbbinfos->{start_time} = time;
     run_tests($tbbinfos);
     $tbbinfos->{finish_time} = time;
     $tbbinfos->{run_time} = $tbbinfos->{finish_time} - $tbbinfos->{start_time};
-    $testsuite->{post_tests}($tbbinfos);
+    $tbbinfos->post_tests();
     chdir $oldcwd;
     check_known_issues($tbbinfos);
     $tbbinfos->{success} = is_success($tbbinfos->{tests});

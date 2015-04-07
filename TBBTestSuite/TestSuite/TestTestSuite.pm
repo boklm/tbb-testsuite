@@ -1,23 +1,23 @@
-package TBBTestSuite::TestTestSuite;
+package TBBTestSuite::TestSuite::TestTestSuite;
 
 use strict;
+use parent 'TBBTestSuite::TestSuite';
 
 my $test_types = {
     test_test => \&test_test,
 };
 
-our %testsuite = (
-    description => 'Tor Browser test testsuite',
-    test_types  => $test_types,
-    pre_tests   => \&pre_tests,
-    post_tests  => \&post_tests,
-    pre_makereport => \&pre_makereport,
-    pre_reports_index => \&pre_reports_index,
-);
+sub description { 'Test Test suite' }
 
-sub get_tbbinfos {
-    my ($infos) = @_;
-    my %tbbinfos = (
+sub type { 'testtestsuite' };
+
+sub test_types {
+    $test_types;
+}
+
+sub new {
+    my ($ts, $infos) = @_;
+    my $testsuite = {
         %$infos,
         type => 'testtestsuite',
         filename => 'testtestsuite',
@@ -39,8 +39,8 @@ sub get_tbbinfos {
                 fail_type => 'warning',
             },
         ],
-    );
-    return \%tbbinfos;
+    };
+    return bless $testsuite, $ts;
 }
 
 sub pre_tests {

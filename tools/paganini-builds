@@ -1,0 +1,5 @@
+#!/bin/sh
+cd $(dirname $0)/..
+export RBM_BUILDNAME=nightly
+./tbb-testsuite --config=tor-mail_build "$@"
+./tbb-testsuite --config=tor-messenger_build "$@"
