@@ -74,7 +74,8 @@ sub get_commits {
 sub get_commits_by_branch {
     my ($tb_branch, $esr_branch) = @_;
     my $base = merge_base($tb_branch, "gecko-dev/$esr_branch");
-    my ($commit) = git_cmd_ch('git', 'show', '-s', '--format=%H', $tb_branch);
+    my ($commit) = git_cmd_ch('git', 'show', '-s', '--format=%H',
+                              "$tb_branch^{commit}");
     return get_commits($commit, $base);
 }
 
