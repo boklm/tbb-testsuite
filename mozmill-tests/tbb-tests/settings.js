@@ -171,7 +171,8 @@ const SETTINGS = {
 
     "dom.enable_resource_timing": false,
 
-    // "torbrowser.version": "UNKNOWN", // TODO: Should we check version using a regexp?
+    // checking torbrowser.version match the version from the filename
+    "torbrowser.version": testsuite.tbbinfos.version,
 };
 
 // Settings for the Tor Browser 4.0 branch
