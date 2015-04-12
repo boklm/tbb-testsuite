@@ -67,4 +67,9 @@ sub test_test {
     $test->{results}{success} = $test->{r};
 }
 
+sub name {
+    my ($tbbinfos) = @_;
+    return $tbbinfos->{name};
+}
+
 1;

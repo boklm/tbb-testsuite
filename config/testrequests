@@ -3,14 +3,16 @@
 use strict;
 use LWP::Simple;
 use YAML::Syck qw(Load);
+use TBBTestSuite::TestSuites;
 
 # list of users who publish builds on their build directory on people.torproject.org
 # email me if you want to be added
 my @tbbteam = qw(arthuredelstein boklm brade dcf gacar gk linus mcs mikeperry);
 
+my %enabled_types = map { $_ => 1 } split ',', $options->{testrequests_types};
+my %testsuite_types = TBBTestSuite::TestSuites::testsuite_types();
 my $system_infos = TBBTestSuite::Common::system_infos;
 my $osname = $system_infos->{osname} . '-' . $system_infos->{arch};
-
 
 foreach my $user (@tbbteam) {
     my $content = get("https://people.torproject.org/~$user/builds/tbb-qa.yml");
@@ -21,17 +23,31 @@ foreach my $user (@tbbteam) {
         next;
     }
     foreach my $qaitem (@$qa) {
-        next if ref $qaitem;
-        my $name = "$user-$qaitem-$osname";
-        my $url = "https://people.torproject.org/~$user/builds/$qaitem/sha256sums.txt";
+        my $name;
+        my $testsuite;
+        if (ref $qaitem) {
+            next unless ref $qaitem eq 'HASH';
+            next unless $qaitem->{type};
+            next unless $enabled_types{$qaitem->{type}};
+            my $ts = "TBBTestSuite::TestSuite::$testsuite_types{$qaitem->{type}}";
+            $testsuite = $ts->new($qaitem);
+            next unless $testsuite;
+            $name = $testsuite->name();
+            next unless $name;
+        } else {
+            next unless $enabled_types{browserbundle};
+            $name = "$user-$qaitem-$osname";
+            my $url = "https://people.torproject.org/~$user/builds/$qaitem/sha256sums.txt";
+            next unless get($url);
+            next unless get("$url.asc");
+            $testsuite = $url;
+        }
         next if -d "$options->{'reports-dir'}/r/$name";
         mkdir "$options->{'reports-dir'}/r/$name";
-        next unless get($url);
-        next unless get("$url.asc");
         my %res = (
             name => $name,
             keyring => [ "$user.gpg", 'torbrowser.gpg' ],
-            args => [ $url ],
+            args => [ $testsuite ],
             tags => [ "user:$user" ],
             'reports-url' => 'http://test-reports.tbb.torproject.org/reports/',
             'email-from'  => 'TBB Tests <boklm@torproject.org>',

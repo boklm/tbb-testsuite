@@ -59,6 +59,7 @@ my %default_options = (
     'email-subject' => '[test result: [% success ? "ok" : "failed" %]] [% options.name %]',
     'mozmill-dir' => 'c:\tbbtestsuite\mozmill-env',
     'http-proxy-port' => '8888',
+    testrequests_types => 'browserbundle',
     test_data_url => 'http://test-data.tbb.torproject.org',
     test_data_url_https => 'https://test-data.tbb.torproject.org',
     test_data_dir => "$FindBin::Bin/test-data",
@@ -72,7 +73,8 @@ sub get_options {
                      action=s enable-tests=s upload-to=s os=s arch=s
                      virustotal! email-to=s@ email-from=s email-subject=s
                      mozmill-dir=s reports-url=s http-proxy-port=i
-                     newlayout! mbox! xdummy! disable-tests=s);
+                     newlayout! mbox! xdummy! disable-tests=s
+                     testrequests_types=s);
     my (%cli, %config);
     Getopt::Long::GetOptionsFromArray(\@_, \%cli, @options) || exit 1;
     $cli{args} = \@_ if @_;

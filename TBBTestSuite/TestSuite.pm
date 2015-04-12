@@ -23,6 +23,10 @@ sub description {
     die "No description";
 }
 
+sub name {
+    undef;
+}
+
 sub pre_tests {
 }
 
