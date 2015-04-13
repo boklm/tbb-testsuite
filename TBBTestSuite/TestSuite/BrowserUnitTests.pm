@@ -51,10 +51,7 @@ sub new {
             },
         ],
     };
-    bless $tbbinfos, $ts;
-    $tbbinfos->find_xpcshell_tests;
-    $tbbinfos->find_mochitest_tests;
-    return $tbbinfos;
+    return bless $tbbinfos, $ts;
 }
 
 sub pre_tests {
@@ -78,6 +75,8 @@ sub pre_tests {
         '--format=%an', $tbbinfos->{commit});
     exit_error "Error getting commit author" unless $success;
     $tbbinfos->{commit_author} = $out;
+    $tbbinfos->find_xpcshell_tests;
+    $tbbinfos->find_mochitest_tests;
     my ($config_guess) = capture_exec('./build/autoconf/config.guess');
     chomp $config_guess;
     $tbbinfos->{topobjdir} = "obj-$config_guess";
