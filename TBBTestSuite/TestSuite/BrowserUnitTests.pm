@@ -51,9 +51,10 @@ sub new {
             },
         ],
     };
-    push @{$tbbinfos->{tests}}, find_xpcshell_tests($tbbinfos);
-    push @{$tbbinfos->{tests}}, find_mochitest_tests($tbbinfos);
-    return bless $tbbinfos, $ts;
+    bless $tbbinfos, $ts;
+    $tbbinfos->find_xpcshell_tests;
+    $tbbinfos->find_mochitest_tests;
+    return $tbbinfos;
 }
 
 sub pre_tests {
@@ -179,7 +180,6 @@ sub pre_reports_index {
 
 sub find_xpcshell_tests {
     my ($tbbinfos) = @_;
-    my @res;
     my $wanted = sub {
         return unless -f $File::Find::name;
         my (undef, $dir, $file) = File::Spec->splitpath($File::Find::name);
@@ -187,7 +187,7 @@ sub find_xpcshell_tests {
         $dir =~ s{^$tbbinfos->{browserdir}/}{};
         $dir =~ s{/$}{};
         return if $dir =~ m/^obj-/;
-        push @res, {
+        push @{$tbbinfos->{tests}}, {
             name  => "xpcshell:$dir",
             type  => 'xpcshell',
             descr => "xpcshell test in directory $dir",
@@ -195,12 +195,10 @@ sub find_xpcshell_tests {
         };
     };
     find($wanted, $tbbinfos->{browserdir});
-    return @res;
 }
 
 sub find_mochitest_tests {
     my ($tbbinfos) = @_;
-    my @res;
     my $wanted = sub {
         return unless -f $File::Find::name;
         my (undef, $dir, $file) = File::Spec->splitpath($File::Find::name);
@@ -215,7 +213,7 @@ sub find_mochitest_tests {
         push @types, 'browser' if grep { m/MOCHITEST_BROWSER_FILES/ } @makefile;
         push @types, 'a11y' if grep { m/MOCHITEST_A11Y_FILES/ } @makefile;
         foreach my $type (@types) {
-            push @res, {
+            push @{$tbbinfos->{tests}}, {
                 name => "mochitest-$type:$dir",
                 type => "mochitest_$type",
                 descr => "$type mochitest in directory $dir",
@@ -224,7 +222,6 @@ sub find_mochitest_tests {
         }
     };
     find($wanted, $tbbinfos->{browserdir});
-    return @res;
 }
 
 sub xpcshell_test {
