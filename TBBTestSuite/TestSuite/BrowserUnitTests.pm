@@ -16,6 +16,7 @@ use TBBTestSuite::Common qw(exit_error get_nbcpu run_to_file);
 use TBBTestSuite::Reports qw(load_report);
 use TBBTestSuite::Options qw($options);
 use TBBTestSuite::XServer qw(start_X stop_X set_Xmode);
+use TBBTestSuite::BrowserGit qw(git_clone_fetch);
 
 sub test_types {
     return {
@@ -38,7 +39,9 @@ sub type {
 
 sub new {
     my ($ts, $infos) = @_;
+    return undef unless $infos->{commit};
     my $tbbinfos = {
+        browserdir => $TBBTestSuite::BrowserGit::clone_dir,
         %$infos,
         type => $ts->type(),
         filename => "browser-$infos->{commit}",
@@ -51,7 +54,21 @@ sub new {
             },
         ],
     };
-    return bless $tbbinfos, $ts;
+    bless $tbbinfos, $ts;
+    git_clone_fetch;
+    chdir $tbbinfos->{browserdir};
+    my ($commit, $err, $success) = capture_exec('git', 'show', '-s',
+        '--abbrev=20', '--format=%h', $tbbinfos->{commit});
+    return undef unless $success;
+    chomp $commit;
+    $tbbinfos->{commit} = $commit;
+    $tbbinfos->{filename} = $tbbinfos->name;
+    return $tbbinfos;
+}
+
+sub name {
+    my ($testsuite) = @_;
+    return $testsuite->{name} // "browser-$testsuite->{commit}";
 }
 
 sub pre_tests {
