@@ -42,6 +42,9 @@ sub clone_fetch {
     if (!-d $gr->clone_dir()) {
         system('git', 'clone', $gr->{git_url}, $gr->clone_dir()) == 0
                 || exit_error "Error cloning $gr->{git_ur}";
+    } else {
+        $gr->cmd('git', 'remote', 'remove', 'origin');
+        $gr->cmd('git', 'remote', 'add', 'origin', $gr->{git_url});
     }
     $gr->cmd('git', 'checkout', '--detach', '-f');
     $gr->cmd('git', 'fetch', 'origin', '+refs/heads/*:refs/heads/*');
