@@ -16,7 +16,7 @@ use TBBTestSuite::Common qw(exit_error get_nbcpu run_to_file);
 use TBBTestSuite::Reports qw(load_report);
 use TBBTestSuite::Options qw($options);
 use TBBTestSuite::XServer qw(start_X stop_X set_Xmode);
-use TBBTestSuite::BrowserGit qw(git_clone_fetch);
+use TBBTestSuite::GitRepo;
 
 sub test_types {
     return {
@@ -41,7 +41,7 @@ sub new {
     my ($ts, $infos) = @_;
     return undef unless $infos->{commit};
     my $tbbinfos = {
-        browserdir => $TBBTestSuite::BrowserGit::clone_dir,
+        git_url => 'https://git.torproject.org/tor-browser.git',
         %$infos,
         type => $ts->type(),
         filename => "browser-$infos->{commit}",
@@ -55,8 +55,12 @@ sub new {
         ],
     };
     bless $tbbinfos, $ts;
-    git_clone_fetch;
-    chdir $tbbinfos->{browserdir};
+    $tbbinfos->{gitrepo} = TBBTestSuite::GitRepo->new({
+            name => 'tor-browser',
+            git_url => $tbbinfos->{git_url},
+        });
+    $tbbinfos->{gitrepo}->clone_fetch;
+    chdir $tbbinfos->{gitrepo}->clone_dir;
     my ($commit, $err, $success) = capture_exec('git', 'show', '-s',
         '--abbrev=20', '--format=%h', $tbbinfos->{commit});
     return undef unless $success;
@@ -73,7 +77,7 @@ sub name {
 
 sub pre_tests {
     my ($tbbinfos) = @_;
-    chdir $tbbinfos->{browserdir};
+    chdir $tbbinfos->{gitrepo}->clone_dir;
     if ($options->{clean_browserdir}) {
         system('git', 'clean', '-fxd');
         system('git', 'reset', '--hard');
@@ -196,11 +200,12 @@ sub pre_reports_index {
 
 sub find_xpcshell_tests {
     my ($tbbinfos) = @_;
+    my $browserdir = $tbbinfos->{gitrepo}->clone_dir;
     my $wanted = sub {
         return unless -f $File::Find::name;
         my (undef, $dir, $file) = File::Spec->splitpath($File::Find::name);
         return unless $file eq 'xpcshell.ini';
-        $dir =~ s{^$tbbinfos->{browserdir}/}{};
+        $dir =~ s{^$browserdir/}{};
         $dir =~ s{/$}{};
         return if $dir =~ m/^obj-/;
         push @{$tbbinfos->{tests}}, {
@@ -210,16 +215,17 @@ sub find_xpcshell_tests {
             dir   => $dir,
         };
     };
-    find($wanted, $tbbinfos->{browserdir});
+    find($wanted, $browserdir);
 }
 
 sub find_mochitest_tests {
     my ($tbbinfos) = @_;
+    my $browserdir = $tbbinfos->{gitrepo}->clone_dir;
     my $wanted = sub {
         return unless -f $File::Find::name;
         my (undef, $dir, $file) = File::Spec->splitpath($File::Find::name);
         return unless $file eq 'Makefile.in';
-        $dir =~ s{^$tbbinfos->{browserdir}/}{};
+        $dir =~ s{^$browserdir/}{};
         $dir =~ s{/$}{};
         return if $dir =~ m/^obj-/;
         my @makefile = read_file $File::Find::name;
@@ -237,7 +243,7 @@ sub find_mochitest_tests {
             };
         }
     };
-    find($wanted, $tbbinfos->{browserdir});
+    find($wanted, $browserdir);
 }
 
 sub xpcshell_test {
