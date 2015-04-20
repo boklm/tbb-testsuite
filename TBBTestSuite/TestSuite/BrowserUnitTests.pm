@@ -60,7 +60,7 @@ sub new {
     my ($commit, $err, $success) = capture_exec('git', 'show', '-s',
         '--abbrev=20', '--format=%h', $tbbinfos->{commit});
     return undef unless $success;
-    chomp $commit;
+    while (chomp $commit) {};
     $tbbinfos->{commit} = $commit;
     $tbbinfos->{filename} = $tbbinfos->name;
     return $tbbinfos;
