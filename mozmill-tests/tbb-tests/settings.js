@@ -190,6 +190,8 @@ const SETTINGS_40 = {
 
 // Settings for the Tor Browser 4.5 and nightly branch
 const SETTINGS_45 = {
+    // Disable device sensors as possible fingerprinting vector (bug 15758)
+    "device.sensors.enabled": false,
 }
 
 var setupModule = function(aModule) {
