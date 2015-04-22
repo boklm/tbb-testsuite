@@ -192,6 +192,8 @@ const SETTINGS_40 = {
 const SETTINGS_45 = {
     // Disable device sensors as possible fingerprinting vector (bug 15758)
     "device.sensors.enabled": false,
+    // Disable video statistics fingerprinting vector (bug 15757)
+    "media.video_stats.enabled": false,
 }
 
 var setupModule = function(aModule) {
