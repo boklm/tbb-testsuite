@@ -134,7 +134,6 @@ const SETTINGS = {
     "network.http.pipelining.ssl": true,
     "network.http.proxy.pipelining": true,
     "security.ssl.enable_false_start": true,
-    "network.http.keep-alive.timeout": 20,
     "network.http.connection-retry-timeout": 0,
     "network.http.max-persistent-connections-per-proxy": 256,
     "network.http.pipelining.reschedule-timeout": 15000,
