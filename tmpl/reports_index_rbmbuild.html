@@ -42,15 +42,17 @@
                                     </td>
                 <td valign="top">
                     [% failed = 0 %]
-                    [% FOREACH tbbfile IN reports.$report.tbbfiles.keys %]
-                      [% IF ! reports.$report.tbbfiles.$tbbfile.success %]
-                        <span class="test_notok">Failed: <a href="r/[% report %]/[% tbbfile %].html">[% tbbfile %]</a></span><br />
-                        [% failed = 1 %]
-                      [% END %]
-                    [% END %]
-                    [% IF failed == 0 %]
-                      <span class="test_ok"><a href="r/[% report %]/[% testsuite_type %].html">OK</a></span>
-                    [% END %]
+                    [% SET tbbfile = reports.$report.tbbfiles.keys.0 -%]
+                    [% FOREACH test IN reports.$report.tbbfiles.$tbbfile.tests %]
+                        [% NEXT UNLESS test.results %]
+                        [% IF test.results.success %]
+                                <img src="static/ok-small.png" />
+                                <span class="test_ok"><a href="r/[% report %]/[% testsuite_type %].html">[% test.name %]</a></span>
+                        [% ELSE -%]
+                                <img src="static/failed-small.png" />
+                                <span class="test_notok"><a href="r/[% report %]/[% tbbfile %].html">[% test.name %]</a></span>
+                        [% END -%]
+                    [% END -%]
                 </td>
             </tr>
             [% END %]
