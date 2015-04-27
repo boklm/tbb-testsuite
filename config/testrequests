@@ -52,6 +52,11 @@ foreach my $user (@tbbteam) {
             'reports-url' => 'http://test-reports.tbb.torproject.org/reports/',
             'email-from'  => 'TBB Tests <boklm@torproject.org>',
             'email-to'    => [ "$user\@torproject.org" ],
+            'disable-tests' => [
+                'mochitest-chrome:toolkit/content/tests/chrome',
+                'mochitest-chrome:toolkit/content/tests/widgets',
+                'mochitest-chrome:toolkit/identity/tests/chrome',
+            ],
         );
         return %res;
     }
