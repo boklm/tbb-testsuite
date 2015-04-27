@@ -16,12 +16,17 @@ Summary
 
 
   [%- FOREACH test IN error_tests.keys.sort -%]
-    - [% test %]:
+    - [% GET test -%]
+    [%- IF tbbfiles.keys.size > 1 %]:
 
-    [%- FOREACH tbbfile IN error_tests.$test.sort -%]
+      [%- FOREACH tbbfile IN error_tests.$test.sort -%]
         [% tbbfile %]
 
-    [%- END -%]
+      [%- END -%]
+    [%- ELSE -%]
+
+
+    [%- END %]
   [%- END -%]
 [% END -%]
 [% IF warning_tests.keys.size -%]
@@ -30,12 +35,17 @@ Summary
 
 
   [%- FOREACH test IN warning_tests.keys.sort -%]
-    - [% test %]:
+    - [% test %]
+    [%- IF tbbfiles.keys.size > 1 %]:
 
-    [%- FOREACH tbbfile IN warning_tests.$test.sort -%]
+      [%- FOREACH tbbfile IN warning_tests.$test.sort -%]
         [% tbbfile %]
 
-    [%- END -%]
+      [%- END -%]
+    [%- ELSE -%]
+
+
+    [%- END %]
   [%- END -%]
 [% END -%]
 [% IF known_tests.keys.size -%]
@@ -44,12 +54,17 @@ Summary
 
 
   [%- FOREACH test IN known_tests.keys.sort -%]
-    - [% test %]:
+    - [% test %]
+    [%- IF tbbfiles.keys.size > 1 %]:
 
-    [%- FOREACH tbbfile IN known_tests.$test.sort -%]
+      [%- FOREACH tbbfile IN known_tests.$test.sort -%]
         [% tbbfile %]
 
-    [%- END -%]
+      [%- END -%]
+    [%- ELSE -%]
+
+
+    [%- END %]
   [%- END -%]
 [% END -%]
 
