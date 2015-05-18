@@ -35,6 +35,11 @@ Available options
         Select a configuration file. See the section about Configuration
         Files below.
 
+--testsuite=<type>::
+        Select a testsuite type to use, when a tarball is specified on
+        the command line. If unspecified, the default Tor Browser
+        testsuite is used.
+
 --no-gpgcheck::
         Disable gpg check when downloading a sha256sum.txt file.
 

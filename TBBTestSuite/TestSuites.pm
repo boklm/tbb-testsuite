@@ -36,4 +36,11 @@ sub testsuite_infos {
     return %testsuite_infos;
 }
 
+sub new_by_type {
+    my ($type, $testsuite) = @_;
+    my %ts = testsuite_types();
+    return $ts{$type} ? "TBBTestSuite::TestSuite::$ts{$type}"->new($testsuite)
+        : undef;
+}
+
 1;

@@ -144,6 +144,9 @@ sub tbb_filename_infos {
     } else {
         return undef;
     }
+    if ($options->{testsuite}) {
+        return TBBTestSuite::TestSuites::new_by_type($options->{testsuite}, \%res);
+    }
     return $options->{virustotal} ?
         TBBTestSuite::TestSuite::BrowserBundleVirusTotal->new(\%res)
         : TBBTestSuite::TestSuite::BrowserBundleTests->new(\%res);
