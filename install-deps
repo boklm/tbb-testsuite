@@ -88,6 +88,7 @@ install_X() {
     then
         packages="$packages xserver-xorg-video-dummy xserver-xorg-input-void"
         packages="$packages libgtk2.0-0"
+        pkg_install lsb-release
         if lsb_release -i | grep -q Debian
         then
             packages="$packages iceweasel"
