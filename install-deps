@@ -32,7 +32,8 @@ Email::Simple Email::Sender File::Type IPC::Run XML::LibXML Storable
 
 if [ -f /etc/debian_version ]
 then
-   apt-get install -y ntp python-virtualenv
+   [ -f /etc/dpkg/origins/Tails ] || apt-get install -y ntp
+   apt-get install -y python-virtualenv
    # - Cwd : in core since perl 5
    # - Digest::SHA : in core since perl v5.9.3
    # - File::Path : in core since perl 5.001
