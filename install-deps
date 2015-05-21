@@ -33,8 +33,17 @@ Email::Simple Email::Sender File::Type IPC::Run XML::LibXML Storable
 if [ -f /etc/debian_version ]
 then
    apt-get install -y ntp python-virtualenv
-   apt-get install -y libdata-dump-perl libdigest-sha-perl libfile-slurp-perl \
-	   libfile-spec-perl libio-captureoutput-perl perlmagick libjson-perl \
+   # - Cwd : in core since perl 5
+   # - Digest::SHA : in core since perl v5.9.3
+   # - File::Path : in core since perl 5.001
+   # - File::Spec : in core since perl 5.00405
+   # - File::Temp : in core since perl v5.6.1
+   # - Getopt::Long : in core since perl 5
+   # - FindBin : in core since perl 5.00307
+   # - IO::Socket::INET in core since perl v5.6.0
+   # - Storable : in core since perl v5.7.3
+   apt-get install -y libdata-dump-perl libfile-slurp-perl \
+	   libio-captureoutput-perl perlmagick libjson-perl \
 	    libwww-perl liblwp-protocol-https-perl libtemplate-perl \
 	    libyaml-syck-perl libdatetime-perl \
             libemail-sender-perl libemail-simple-perl libfile-type-perl \
