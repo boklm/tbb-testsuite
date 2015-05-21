@@ -23,6 +23,10 @@ pkg_install() {
     [ -f /etc/redhat-release ] && which yum > /dev/null 2>&1 && yum_install "$@"
 }
 
+running_on_Tails() {
+   [ -f /etc/dpkg/origins/Tails ]
+}
+
 perlmodules='
 Cwd Data::Dump Digest::SHA File::Path File::Slurp File::Spec File::Temp
 FindBin Getopt::Long IO::CaptureOutput IO::Socket::INET Image::Magick
@@ -32,7 +36,7 @@ Email::Simple Email::Sender File::Type IPC::Run XML::LibXML Storable
 
 if [ -f /etc/debian_version ]
 then
-   [ -f /etc/dpkg/origins/Tails ] || apt-get install -y ntp
+   running_on_Tails || apt-get install -y ntp
    apt-get install -y python-virtualenv
    # - Cwd : in core since perl 5
    # - Digest::SHA : in core since perl v5.9.3
@@ -90,7 +94,7 @@ install_X() {
         packages="$packages xserver-xorg-video-dummy xserver-xorg-input-void"
         packages="$packages libgtk2.0-0"
         pkg_install lsb-release
-        if lsb_release -i | grep -q Debian && ! [ -f /etc/dpkg/origins/Tails ]
+        if lsb_release -i | grep -q Debian && ! running_on_Tails
         then
             packages="$packages iceweasel"
         fi
