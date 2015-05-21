@@ -98,8 +98,7 @@ install_X() {
         then
             packages="$packages iceweasel"
         fi
-    fi
-    if [ -f /etc/redhat-release ]
+    elif [ -f /etc/redhat-release ]
     then
         packages="$packages xorg-x11-drv-dummy xorg-x11-drv-void.x86_64"
         if [ "$(uname -m)" == "x86_64" ]
