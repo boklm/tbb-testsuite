@@ -35,7 +35,8 @@ then
    apt-get install -y ntp python-virtualenv
    apt-get install -y libdata-dump-perl libdigest-sha-perl libfile-slurp-perl \
 	   libfile-spec-perl libio-captureoutput-perl perlmagick libjson-perl \
-	    libwww-perl libtemplate-perl libyaml-syck-perl libdatetime-perl \
+	    libwww-perl liblwp-protocol-https-perl libtemplate-perl \
+	    libyaml-syck-perl libdatetime-perl \
             libemail-sender-perl libemail-simple-perl libfile-type-perl \
             libipc-run-perl libxml-libxml-perl
    apt-get install -y nmap
