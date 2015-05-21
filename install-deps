@@ -44,9 +44,9 @@ then
    # - IO::Socket::INET in core since perl v5.6.0
    # - Storable : in core since perl v5.7.3
    apt-get install -y libdata-dump-perl libfile-slurp-perl \
-	   libio-captureoutput-perl perlmagick libjson-perl \
-	    libwww-perl liblwp-protocol-https-perl libtemplate-perl \
-	    libyaml-syck-perl libdatetime-perl \
+            libio-captureoutput-perl perlmagick libjson-perl \
+            libwww-perl liblwp-protocol-https-perl libtemplate-perl \
+            libyaml-syck-perl libdatetime-perl \
             libemail-sender-perl libemail-simple-perl libfile-type-perl \
             libipc-run-perl libxml-libxml-perl
    apt-get install -y nmap
