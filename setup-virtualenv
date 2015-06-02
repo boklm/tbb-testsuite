@@ -12,7 +12,7 @@ sub run {
 
 sub pip_install {
     my ($pkg) = @_;
-    my ($output) = qxx($pip, 'show', $pkg);
+    my ($output) = qxx($pip, 'show', '--disable-pip-version-check', $pkg);
     run($pip, 'install', $pkg) unless $output;
 }
 
