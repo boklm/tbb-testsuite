@@ -5,6 +5,7 @@
 // Based on:
 // http://hg.mozilla.org/qa/mozmill-tests/file/905bc0ba7a1e/firefox/lib/screenshot.js
 
+Cu.import("resource://gre/modules/Downloads.jsm");
 Cu.import("resource://gre/modules/Services.jsm");
 
 /**
@@ -71,20 +72,16 @@ function _saveCanvas(canvas) {
   // if a file already exists, don't overwrite it and create a new name
   file.createUnique(Ci.nsIFile.NORMAL_FILE_TYPE, parseInt("0666", 8));
 
-  // create a data url from the canvas and then create URIs of the source
-  // and targets
-  var source = Services.io.newURI(canvas.toDataURL("image/png", ""), "UTF8", null);
-  var target = Services.io.newFileURI(file)
+  var taskCompleted = false;
+  Downloads.fetch(canvas.toDataURL("image/png", ""), file).then(() => {
+    taskCompleted = true;
+  }, (aReason) => {
+    taskCompleted = true;
+    expect.fail("Failed to save the screenshot " + file + ", with: " + aReason);
+  });
 
-  // prepare to save the canvas data
-  var wbPersist = Cc["@mozilla.org/embedding/browser/nsWebBrowserPersist;1"].
-                  createInstance(Ci.nsIWebBrowserPersist);
-
-  wbPersist.persistFlags = Ci.nsIWebBrowserPersist.PERSIST_FLAGS_REPLACE_EXISTING_FILES;
-  wbPersist.persistFlags |= Ci.nsIWebBrowserPersist.PERSIST_FLAGS_AUTODETECT_APPLY_CONVERSION;
-
-  // save the canvas data to the file
-  wbPersist.saveURI(source, null, null, null, null, file, null);
+  expect.waitFor(() => taskCompleted,
+                 "Saving the screenshot to the disk action has finished.");
 }
 
 // Export of functions
