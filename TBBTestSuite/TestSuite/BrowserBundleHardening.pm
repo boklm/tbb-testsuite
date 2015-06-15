@@ -17,6 +17,19 @@ sub new {
     return undef unless $testsuite->{os} ne 'MacOSX';
     $testsuite->{type} = $ts->type();
     $testsuite->{tests} = [
+
+        # Windows tests
+        {
+            name         => 'win_DEP_ASLR',
+            type         => 'command',
+            retry        => 1,
+            descr        => 'Check DEP/ASLR',
+            files        => \&TBBTestSuite::TestSuite::BrowserBundleTests::tbb_binfiles,
+            command      => [ "$FindBin::Bin/data/check-windows-dep-aslr" ],
+            enable       => sub { $_[0]->{os} eq 'Windows' },
+        },
+
+        # Linux Tests
         {
             name         => 'readelf_RELRO',
             fail_type    => 'warning',
