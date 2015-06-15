@@ -376,11 +376,14 @@ sub tbb_binfiles {
         $tbbinfos->{ffbin} => 1,
         "$tbbinfos->{tordir}/tor" => 1,
     );
+    my %wanted_types = (
+        'application/x-executable-file' => 1,
+        'application/x-ms-dos-executable' => 1,
+    );
     my $wanted = sub {
         return unless -f $File::Find::name;
-        return unless -x $File::Find::name;
         my $type = File::Type->new->checktype_filename($File::Find::name);
-        return unless $type eq 'application/x-executable-file';
+        return unless $wanted_types{$type};
         $binfiles{$File::Find::name} = 1;
     };
     find($wanted, $tbbinfos->{tbbdir});
