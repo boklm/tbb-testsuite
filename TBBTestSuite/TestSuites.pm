@@ -10,10 +10,11 @@ use TBBTestSuite::TestSuite::BrowserRebaseTests;
 use TBBTestSuite::TestSuite::RBMBuild;
 use TBBTestSuite::TestSuite::TorMailBuild;
 use TBBTestSuite::TestSuite::TorMessengerBuild;
+use TBBTestSuite::TestSuite::BrowserBundleHardening;
 
 my @testsuite_list = qw(TestTestSuite BrowserBundleTests BrowserBundleVirusTotal
                         BrowserUnitTests BrowserRebaseTests RBMBuild TorMailBuild
-                        TorMessengerBuild);
+                        TorMessengerBuild BrowserBundleHardening);
 my %testsuite_types;
 sub testsuite_types {
     return %testsuite_types if %testsuite_types;
