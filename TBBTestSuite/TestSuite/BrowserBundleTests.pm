@@ -372,10 +372,7 @@ sub reset_slider_mode {
 sub tbb_binfiles {
     my ($tbbinfos, $test) = @_;
     return $tbbinfos->{binfiles} if $tbbinfos->{binfiles};
-    my %binfiles = (
-        $tbbinfos->{ffbin} => 1,
-        "$tbbinfos->{tordir}/tor" => 1,
-    );
+    my %binfiles;
     my %wanted_types = (
         'application/x-executable-file' => 1,
         'application/x-ms-dos-executable' => 1,
