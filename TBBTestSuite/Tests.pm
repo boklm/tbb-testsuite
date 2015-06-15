@@ -152,12 +152,6 @@ sub tbb_filename_infos {
         : TBBTestSuite::TestSuite::BrowserBundleTests->new(\%res);
 }
 
-
-sub matching_tbbfile {
-    my $o = tbb_filename_infos($_[0]);
-    return $o && $o->{os} eq $options->{os} && $o->{arch} eq $options->{arch};
-}
-
 sub check_gpgsig {
     my ($file) = @_;
     my @kr_args;
@@ -196,10 +190,11 @@ sub test_sha {
     }
     my (undef, $dir) = File::Spec->splitpath($shafile);
     my @files = map { [ reverse split /  /, $_ ] } split /\n/, $content;
-    @files = grep { matching_tbbfile($_->[0]) } @files;
     foreach my $file (@files) {
         my $tbbinfos = tbb_filename_infos("$dir/$file->[0]");
+        next unless $tbbinfos;
         $tbbinfos->{sha256sum} = $file->[1];
+        print "Running tests on $file->[0]\n";
         test_start($report, $tbbinfos);
     }
 }

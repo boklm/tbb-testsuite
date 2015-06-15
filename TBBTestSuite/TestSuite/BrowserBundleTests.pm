@@ -618,6 +618,8 @@ sub new {
     my ($ts, $testsuite) = @_;
     $testsuite->{type} = 'browserbundle';
     $testsuite->{tests} = [ map { { %$_ } } @tests ];
+    return undef unless $testsuite->{os} eq $options->{os};
+    return undef unless $testsuite->{arch} eq $options->{arch};
     return bless $testsuite, $ts;
 }
 

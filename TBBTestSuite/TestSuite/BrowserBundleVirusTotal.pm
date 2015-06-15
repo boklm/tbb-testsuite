@@ -12,6 +12,7 @@ sub type {
 
 sub new {
     my ($ts, $testsuite) = @_;
+    return undef unless $testsuite->{os} eq 'Windows';
     $testsuite->{type} = 'browserbundle_virustotal';
     $testsuite->{tests} = [
         {

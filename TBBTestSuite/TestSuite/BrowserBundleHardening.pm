@@ -14,6 +14,7 @@ sub type {
 
 sub new {
     my ($ts, $testsuite) = @_;
+    return undef unless $testsuite->{os} ne 'MacOSX';
     $testsuite->{type} = $ts->type();
     $testsuite->{tests} = [
         {
