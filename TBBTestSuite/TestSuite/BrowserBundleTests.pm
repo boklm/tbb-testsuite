@@ -384,7 +384,9 @@ sub tbb_binfiles {
         return unless -f $File::Find::name;
         my $type = File::Type->new->checktype_filename($File::Find::name);
         return unless $wanted_types{$type};
-        $binfiles{$File::Find::name} = 1;
+        my $name = $File::Find::name;
+        $name =~ s/^$tbbinfos->{tbbdir}\///;
+        $binfiles{$name} = 1;
     };
     find($wanted, $tbbinfos->{tbbdir});
     return $tbbinfos->{binfiles} = [ keys %binfiles ];
