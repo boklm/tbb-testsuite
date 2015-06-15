@@ -1,0 +1,84 @@
+#!/usr/bin/env python
+
+import argparse
+import sys
+import os
+import pefile
+
+
+class DllFlags:
+    def __init__(self):
+        self.IMAGE_DLLCHARACTERISTICS_TERMINAL_SERVER_AWARE = False
+        self.IMAGE_DLLCHARACTERISTICS_WDM_DRIVER = False
+        self.IMAGE_DLLCHARACTERISTICS_NO_BIND = False
+        self.IMAGE_DLLCHARACTERISTICS_NO_SEH = False
+        self.IMAGE_DLLCHARACTERISTICS_NO_ISOLATION = False
+        self.IMAGE_DLLCHARACTERISTICS_NX_COMPAT = False
+        self.IMAGE_DLLCHARACTERISTICS_FORCE_INTEGRITY = False
+        self.IMAGE_DLLCHARACTERISTICS_DYNAMIC_BASE = False
+
+
+def get_dll_characteristics(path):
+    foo = DllFlags()
+
+    pe = pefile.PE(path, fast_load=True)
+    dll_characteristics = pe.OPTIONAL_HEADER.DllCharacteristics
+
+    if dll_characteristics > 0:
+        if dll_characteristics >= 32768:
+            foo.IMAGE_DLLCHARACTERISTICS_TERMINAL_SERVER_AWARE = True
+            dll_characteristics -= 32768
+
+        if dll_characteristics >= 8192:
+            foo.IMAGE_DLLCHARACTERISTICS_WDM_DRIVER = True
+            dll_characteristics -= 8192
+
+        if dll_characteristics == 2048 or dll_characteristics > 2080:
+            foo.IMAGE_DLLCHARACTERISTICS_NO_BIND = True
+            dll_characteristics -= 2048
+
+        if dll_characteristics == 1024 or dll_characteristics > 1056:
+            foo.IMAGE_DLLCHARACTERISTICS_NO_SEH = True
+            dll_characteristics -= 1024
+
+        if dll_characteristics == 512 or dll_characteristics > 544:
+            foo.IMAGE_DLLCHARACTERISTICS_NO_ISOLATION = True
+            dll_characteristics -= 512
+
+        if dll_characteristics == 256 or dll_characteristics > 288:
+            foo.IMAGE_DLLCHARACTERISTICS_NX_COMPAT = True
+            dll_characteristics -= 256
+
+        if dll_characteristics >= 128:
+            foo.IMAGE_DLLCHARACTERISTICS_FORCE_INTEGRITY = True
+            dll_characteristics -= 128
+
+        if dll_characteristics == 64:
+            foo.IMAGE_DLLCHARACTERISTICS_DYNAMIC_BASE = True
+            dll_characteristics -= 64
+
+    return foo
+
+
+if __name__ == '__main__':
+    if len(sys.argv) != 2:
+        print >> sys.stderr, 'Wrong number of arguments'
+        sys.exit(1)
+
+    bar = get_dll_characteristics(sys.argv[1])
+
+    if bar.IMAGE_DLLCHARACTERISTICS_DYNAMIC_BASE:
+        print 'ASLR: enabled'
+    else:
+        print 'ASLR: disabled'
+
+    if bar.IMAGE_DLLCHARACTERISTICS_NX_COMPAT:
+        print 'DEP: enabled'
+    else:
+        print 'DEP: disabled'
+
+    if bar.IMAGE_DLLCHARACTERISTICS_DYNAMIC_BASE and bar.IMAGE_DLLCHARACTERISTICS_NX_COMPAT:
+        sys.exit(0)
+    else:
+        sys.exit(2)
+
