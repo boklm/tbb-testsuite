@@ -139,8 +139,8 @@ sub tbb_filename_infos {
         $res{arch} = $1 eq '64' ? 'x86_64' : 'x86';
     } elsif ($file =~ m/^torbrowser-install-([^_]+)_(.+)\.exe$/) {
         @res{qw(os arch version language)} = ('Windows', 'x86', $1, $2);
-    } elsif ($file =~ m/^TorBrowserBundle-(.+)-osx32_(.+)\.zip$/) {
-        @res{qw(os arch version language)} = ('MacOSX', 'x86', $1, $2);
+    } elsif ($file =~ m/^TorBrowser-(.+)-osx64_(.+)\.dmg$/) {
+        @res{qw(os arch version language)} = ('MacOSX', 'x86_64', $1, $2);
     } else {
         return undef;
     }
