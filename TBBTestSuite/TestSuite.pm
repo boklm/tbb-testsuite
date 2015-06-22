@@ -12,6 +12,7 @@ sub new {
 sub load {
     my ($testsuite) = @_;
     my %ts = TBBTestSuite::TestSuites::testsuite_types();
+    return undef unless $ts{$testsuite->{type}};
     return bless $testsuite, "TBBTestSuite::TestSuite::$ts{$testsuite->{type}}";
 }
 

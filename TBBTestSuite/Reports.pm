@@ -179,6 +179,7 @@ sub make_reports_index {
         load_reports_for_index(\%pre_reports_index, @s);
         my $title = "Last 20 reports";
         my ($t) = values %{$reports{$s[0]}->{tbbfiles}};
+        next unless $t;
         my $tmpl_file = $t->reports_index_tmpl();
         $template->process($tmpl_file,
           { %$vars, reports_list => \@s, title => $title,
@@ -196,6 +197,7 @@ sub make_reports_index {
             load_reports_for_index(\%pre_reports_index, @s);
             my $title = "Reports for $tag";
             my ($t) = values %{$reports{$s[0]}->{tbbfiles}};
+            next unless $t;
             my $tmpl_file = $t->reports_index_tmpl();
             $template->process($tmpl_file,
                     { %$vars, reports_list => \@s, title => $title,
@@ -212,6 +214,7 @@ sub make_reports_index {
             load_reports_for_index(\%pre_reports_index, @s);
             my $title = "$month reports";
             my ($t) = values %{$reports{$s[0]}->{tbbfiles}};
+            next unless $t;
             my $tmpl_file = $t->reports_index_tmpl();
             $template->process($tmpl_file,
                     { %$vars, reports_list => \@s, title => $title,
@@ -272,7 +275,11 @@ sub load_report {
     return undef unless -f $reportfile;
     my $r = YAML::Syck::LoadFile($reportfile);
     foreach my $testsuite (values %{$r->{tbbfiles}}) {
-        TBBTestSuite::TestSuite::load($testsuite);
+        my $ts = TBBTestSuite::TestSuite::load($testsuite);
+        if (!$ts) {
+            print STDERR "Warning: could not load report $report_name\n";
+            return undef;
+        }
     }
     return $reports{$report_name} = $r;
 }
@@ -281,6 +288,7 @@ sub load_reports_for_index {
     my ($pre_reports_index, @reports) = @_;
     foreach my $rname (@reports) {
         my $r = load_report($rname);
+        next unless $r;
         next if $pre_reports_index->{$rname};
         $pre_reports_index->{$rname} = 1;
         foreach my $testsuite (values %{$r->{tbbfiles}}) {
