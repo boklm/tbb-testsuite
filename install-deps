@@ -122,6 +122,10 @@ install_win() {
     pkg_install $packages
 }
 
+install_hardening() {
+    pkg_install python-pefile binutils
+}
+
 while test $# != 0
 do
     case "$1" in
@@ -129,6 +133,8 @@ do
             install_X ;;
         win)
             install_win ;;
+        hardening)
+            install_hardening ;;
         *)
             echo "Unknown option $1" >&2 ;;
     esac
