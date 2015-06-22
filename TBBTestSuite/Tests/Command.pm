@@ -15,7 +15,10 @@ sub command_run {
     my ($tbbinfos, $test) = @_;
     $test->{results}{success} = 1;
     my $files = get_var($test->{files}, $tbbinfos, $test);
+    my %skip = map { $_ => 1 } @{$test->{skip_files}}
+                        if $test->{skip_files};
     for my $file (@$files) {
+        next if $skip{$file};
         my ($out, $err, $success) = capture_exec(@{$test->{command}}, $file);
         if ($success && $test->{check_output}) {
             $success = $test->{check_output}($out);
