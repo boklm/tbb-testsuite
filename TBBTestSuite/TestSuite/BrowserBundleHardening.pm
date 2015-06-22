@@ -106,6 +106,8 @@ sub new {
                 TorBrowser/Tor/PluggableTransports/twisted/runner/portmap.so
                 TorBrowser/Tor/PluggableTransports/twisted/test/raiser.so
                 TorBrowser/Tor/PluggableTransports/zope/interface/_zope_interface_coptimizations.so
+                TorBrowser/Tor/PluggableTransports/meek-client
+                TorBrowser/Tor/PluggableTransports/obfs4proxy
                 ) ],
         },
         {
