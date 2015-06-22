@@ -153,7 +153,7 @@ sub tbb_filename_infos {
 }
 
 sub check_gpgsig {
-    my ($file) = @_;
+    my (@files) = @_;
     my @kr_args;
     my @keyrings = ref $options->{keyring} eq 'ARRAY' ?
                         @{$options->{keyring}} : ($options->{keyring});
@@ -163,7 +163,7 @@ sub check_gpgsig {
         push @kr_args, '--keyring', $kr;
     }
     return system('gpg', '--no-default-keyring', @kr_args,
-        '--verify', '--', $file) == 0;
+        '--verify', '--', @files) == 0;
 }
 
 sub test_sha {
@@ -183,7 +183,7 @@ sub test_sha {
             write_file("$tmpdir/sha256sum.txt", $content);
             write_file("$tmpdir/sha256sum.txt.asc", $resp->decoded_content);
             exit_error "Error checking gpg signature of $shafile"
-                unless check_gpgsig("$tmpdir/sha256sum.txt.asc");
+                unless check_gpgsig("$tmpdir/sha256sum.txt.asc", "$tmpdir/sha256sum.txt");
         }
     } else {
         $content = read_file($shafile);
