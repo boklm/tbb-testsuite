@@ -52,6 +52,18 @@ sub set_tests {
             ],
             publish_dir => 'windows-i686',
         },
+        {
+            name  => 'osx-x86_64',
+            descr => 'build tor-messenger osx-x86_64',
+            type  => 'rbm_build',
+            project => 'tor-messenger',
+            targets => [
+                'noint',
+                'osx-x86_64',
+                'tor-messenger',
+            ],
+            publish_dir => 'osx-x86_64',
+        },
     ];
 }
 
