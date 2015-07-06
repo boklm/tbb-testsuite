@@ -5,8 +5,8 @@ var prefs = require("../mozilla-mozmill-tests/firefox/lib/prefs");
 var common = require("../lib/common");
 
 const PREF_ENABLE_HE = "extensions.https_everywhere.globalEnabled";
-const HTTP_URL = "http://www.mediawiki.org/wiki/MediaWiki";
-const HTTPS_URL = "https://www.mediawiki.org/wiki/MediaWiki";
+const HTTP_URL = "http://docs.fedoraproject.org/en-US/index.html";
+const HTTPS_URL = "https://docs.fedoraproject.org/en-US/index.html";
 
 var setupModule = function(aModule) {
   aModule.controller = mozmill.getBrowserController();
