@@ -2,13 +2,14 @@
 
 var {expect} = require("../mozilla-mozmill-tests/lib/assertions");
 var screenshot = require("../lib/screenshot");
+var testsuite = require("../lib/testsuite");
 
 var setupModule = function(aModule) {
   aModule.controller = mozmill.getBrowserController();
 }
 
 var testAcid3 = function() {
-    var acid_page = 'http://acid3.acidtests.org/';
+    var acid_page = testsuite.options.test_data_url + '/acid3/';
     controller.open(acid_page);
     controller.waitForPageLoad();
     controller.sleep(4000);
