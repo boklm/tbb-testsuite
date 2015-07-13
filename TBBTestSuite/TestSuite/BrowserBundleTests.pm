@@ -315,6 +315,28 @@ our @tests = (
         timeout => 50000,
         interval => 100,
     },
+    {
+        name => 'svg-disable',
+        type => 'mozmill',
+        descr => 'Check if disabling svg is working',
+        mozmill_test => 'svg',
+        svg_enabled => 0,
+        prefs => {
+            'extensions.torbutton.security_custom' => 'true',
+            'svg.in-content.enabled' => 'false',
+        },
+    },
+    {
+        name => 'svg-enable',
+        type => 'mozmill',
+        descr => 'Check if enabling svg is working',
+        mozmill_test => 'svg',
+        svg_enabled => 1,
+        prefs => {
+            'extensions.torbutton.security_custom' => 'true',
+            'svg.in-content.enabled' => 'true',
+        },
+    },
 );
 
 sub toggle_https_everywhere {

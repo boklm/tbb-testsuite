@@ -1,0 +1,6 @@
+The file fuji1.svg used in the tests has been downloaded from this page:
+http://plurib.us/1shot/2009/fuji/
+
+ © Copyright 2009 Brian Lukis
+ Licensed under a Creative Commons License.
+
