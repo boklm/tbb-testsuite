@@ -98,12 +98,12 @@ sub latest_builds {
         next unless $version;
         foreach my $user (@tbb_builders) {
             my $buildname;
-            my $url = "https://people.torproject.org/~$user/builds/$version-$build/sha256sums.txt";
+            my $url = "https://people.torproject.org/~$user/builds/$version-$build/sha256sums-unsigned-build.txt";
             my $sha = get($url);
             if ($sha && head("$url.asc")) {
                 $buildname = "$version-$build";
             } else {
-                $url = "https://people.torproject.org/~$user/builds/$version/sha256sums.txt";
+                $url = "https://people.torproject.org/~$user/builds/$version/sha256sums-unsigned-build.txt";
                 $sha = get($url);
                 next unless $sha;
                 next unless head("$url.asc");

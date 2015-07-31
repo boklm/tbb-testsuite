@@ -37,7 +37,7 @@ foreach my $user (@tbbteam) {
         } else {
             next unless $enabled_types{browserbundle};
             $name = "$user-$qaitem-$osname";
-            my $url = "https://people.torproject.org/~$user/builds/$qaitem/sha256sums.txt";
+            my $url = "https://people.torproject.org/~$user/builds/$qaitem/sha256sums-unsigned-build.txt";
             next unless get($url);
             next unless get("$url.asc");
             $testsuite = $url;

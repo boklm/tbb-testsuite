@@ -40,7 +40,7 @@ sub is_shafile {
     my ($tbbfile) = @_;
     return 0 if ref $tbbfile;
     my (undef, undef, $file) = File::Spec->splitpath($tbbfile);
-    return $file eq 'sha256sums.txt';
+    return $file eq 'sha256sums.txt' || $file eq 'sha256sums-unsigned-build.txt';
 }
 
 sub run_tests {

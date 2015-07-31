@@ -113,15 +113,15 @@ Available options
 
 --os=<os>::
         Select the OS for which you want to run tests, when using a
-        sha256sums.txt file. By default, it is the OS you are currently
-        running. This option can be useful to run some tests from a
-        different OS than what you are running, for instance testing
-        the Windows bundles from Linux.
+        sha256sums-unsigned-build.txt file. By default, it is the OS
+        you are currently running. This option can be useful to run some
+        tests from a different OS than what you are running, for instance
+        testing the Windows bundles from Linux.
 
 --arch=<arch>::
         Select the architecture for which you want to run tests, when
-        using a sha256sums.txt file. By default, it is the architecture
-        you are currently running.
+        using a sha256sums-unsigned-build.txt file. By default, it is
+        the architecture you are currently running.
 
 --virustotal::
         Enable upload of files for analysis on virustotal.com instead
