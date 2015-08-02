@@ -16,11 +16,16 @@ my @sign_users = ( 'mikeperry', 'gk', );
 my @tbb_builders = ( 'mikeperry', 'gk', 'linus', 'erinn', 'boklm', );
 my $clone_dir = "$FindBin::Bin/clones/tbb";
 
-sub git_cmd {
+sub git_cmd_noerr {
     my $oldcwd = getcwd;
     chdir $clone_dir || exit_error "Error entering directory $clone_dir";
     my @res = capture_exec(@_);
     chdir $oldcwd;
+    return @res;
+}
+
+sub git_cmd {
+    my @res = git_cmd_noerr(@_);
     if (!$res[2]) {
         exit_error 'Error running ' . join(' ', @_) . ":\n" . $res[1];
     }
@@ -69,7 +74,8 @@ sub latest_tagged_version {
     pop @t;
     pop @t;
     my $tag = join('-', @t);
-    git_cmd('git', 'tag', '-v', $tag);
+    my (undef, undef, $sig_ok) = git_cmd_noerr('git', 'tag', '-v', $tag);
+    return () unless $sig_ok;
     if ($t[0] ne 'tbb' || @t != 3) {
         exit_error "Unknown tag format $tag";
     }
