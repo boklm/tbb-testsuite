@@ -1,0 +1,22 @@
+# vim: filetype=perl expandtab
+
+use strict;
+use TBBTestSuite::Common;
+use TBBTestSuite::TBBVersion;
+
+my @latest_builds = TBBTestSuite::TBBVersion::latest_builds($options);
+foreach my $build (@latest_builds) {
+    my $name = "$build->{buildname}-browserbundle_hardening";
+    next if -d "$options->{'reports-dir'}/r/$name";
+    return (
+        name => $name,
+        testsuite => 'browserbundle_hardening',
+        keyring => [ "$build->{user}.gpg", 'torbrowser.gpg' ],
+        args => [ $build->{url} ],
+        tags => [ "$build->{version}-$build->{build}" ],
+        'reports-url' => 'http://test-reports.tbb.torproject.org/reports/',
+        'email-from'  => 'TBB Tests <boklm@torproject.org>',
+        'email-to'    => [ 'tor-qa@lists.torproject.org', 'boklm@mars-attacks.org', ],
+    );
+}
+return ( args => [] );
