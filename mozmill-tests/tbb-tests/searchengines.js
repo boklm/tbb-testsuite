@@ -20,8 +20,8 @@ var testSearchEngines = function () {
   // Do we have Startpage as default search engine?
   let searchbarTextbox = controller.window.document.
     getAnonymousElementByAttribute(searchbar, "anonid", "searchbar-textbox");
-  expect.match(searchbarTextbox.label, /Search/,
-          "Search is not the default search engine!");
+  expect.match(searchbarTextbox.label, /Disconnect/,
+          "Disconnect is not the default search engine!");
 
   // XXX: Test whether the second and third engine are the ones we want as well.
 }
