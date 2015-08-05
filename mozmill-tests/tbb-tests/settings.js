@@ -27,7 +27,6 @@ const SETTINGS = {
     // #16632 : Turn on the background autoupdater
     "app.update.auto": true,
 
-    "app.update.enabled": false,
     "browser.search.update": false,
     "browser.rights.3.shown": true,
     "browser.startup.homepage_override.mstone": "ignore",
