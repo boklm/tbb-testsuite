@@ -11,7 +11,6 @@ var {expect} = require("../mozilla-mozmill-tests/lib/assertions");
 // The list of expected DOM objects
 const interfaceNamesInGlobalScope =
   [
-    "__XBLClassObjectMap__",
     "addEventListener",
     "adjustToolbarIconArrow",
     "alert",
@@ -844,6 +843,7 @@ const interfaceNamesInGlobalScope =
     "WindowPerformance",
     "WindowUtils",
     "Worker",
+    "__XBLClassObjectMap__",
     "XMLDocument",
     "XMLHttpRequest",
     "XMLHttpRequestEventTarget",
