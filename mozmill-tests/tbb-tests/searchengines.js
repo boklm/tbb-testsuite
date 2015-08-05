@@ -10,7 +10,6 @@
 
 var {expect} = require("../mozilla-mozmill-tests/lib/assertions");
 var common = require("../lib/common");
-var testsuite = require("../lib/testsuite");
 
 var setupModule = function(aModule) {
   aModule.controller = mozmill.getBrowserController();
@@ -21,13 +20,8 @@ var testSearchEngines = function () {
   // Do we have Startpage as default search engine?
   let searchbarTextbox = controller.window.document.
     getAnonymousElementByAttribute(searchbar, "anonid", "searchbar-textbox");
-  if (testsuite.tbbinfos.version.startsWith("4.0")) {
-      expect.match(searchbarTextbox.label, /Startpage/,
-              "Startpage is not the default search engine!");
-  } else {
-      expect.match(searchbarTextbox.label, /Search/,
-              "Search is not the default search engine!");
-  }
+  expect.match(searchbarTextbox.label, /Search/,
+          "Search is not the default search engine!");
 
   // XXX: Test whether the second and third engine are the ones we want as well.
 }
