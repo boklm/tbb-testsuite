@@ -49,7 +49,7 @@ var testStartTBB = function() {
     common.load_page(controller, svgdir + 'inline_svg.html');
     var svg_elem = elementslib.ID(controller.window.document, "inlineSVG");
     if (svg_enabled)
-        expect.equal(svg_elem.getNode().nodeName, "svg", "inline svg tag");
+        expect.equal(svg_elem.getNode().width.baseVal.value, 1, "inline svg tag");
     else
-        expect.equal(svg_elem.getNode(), null, "no inline svg tag");
+        expect.equal(svg_elem.getNode().width, undefined, "no inline svg tag");
 }
