@@ -650,7 +650,7 @@ const interfaceNamesInGlobalScope =
     "scrollMaxX",
     "scrollMaxY",
     "scrollTo",
-    "ScrollViewChangeEvent,",
+    "ScrollViewChangeEvent",
     "scrollX",
     "scrollY",
     "Selection",
