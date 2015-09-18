@@ -7,7 +7,7 @@ var prefs = require("../mozilla-mozmill-tests/firefox/lib/prefs");
 var common = require("../lib/common");
 
 const PREF_ENABLE_HE = "extensions.https_everywhere.globalEnabled";
-const HTTP_URL = "http://docs.fedoraproject.org/en-US/index.html";
+const HTTP_URL = "http://www.freedomboxfoundation.org/images/freedombox_large.png";
 
 var setupModule = function(aModule) {
   aModule.controller = mozmill.getBrowserController();
