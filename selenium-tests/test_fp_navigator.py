@@ -34,15 +34,13 @@ nav_props = {"appCodeName": "Mozilla",
 "registerProtocolHandler": """function registerProtocolHandler() {
     [native code]
 }""",
-"mozIsLocallyAvailable": """function mozIsLocallyAvailable() {
-    [native code]
-}""",
-"mozId":  "null",
+"mozIsLocallyAvailable": "undefined",
+"mozId":  "undefined",
 "mozPay":  "null",
-"mozAlarms":  "null",
+"mozAlarms":  "undefined",
 "mozContacts":  "[object ContactManager]",
-"mozPhoneNumberService":  "[object PhoneNumberService]",
-"mozApps":  "[xpconnect wrapped (nsISupports, mozIDOMApplicationRegistry, mozIDOMApplicationRegistry2)]",
+"mozPhoneNumberService":  "undefined",
+"mozApps":  "[object DOMApplicationsRegistry]",
 "mozTCPSocket":  "null",
 }
 
