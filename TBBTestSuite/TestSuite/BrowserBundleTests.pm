@@ -349,6 +349,11 @@ our @tests = (
         },
         enable          => sub { $OSNAME eq 'linux' },
     },
+    {
+        name => 'unknown_issuer',
+        type => 'marionette',
+        descr => 'Check error raised by certificate with unknown issuer',
+    },
 );
 
 sub toggle_https_everywhere {
