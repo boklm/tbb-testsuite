@@ -189,5 +189,10 @@
           [% END %]
         [% END %]
         [% END %]
+        <script language="JavaScript" type="text/javascript">
+                var hash = document.location.hash;
+                if (hash && document.getElementById('test_' + hash.substring(1)))
+                        togglecontent('test_' + hash.substring(1));
+        </script>
     </body>
 </html>
