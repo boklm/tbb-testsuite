@@ -40,6 +40,7 @@ sub test_types {
     return {
         tor_bootstrap => \&TBBTestSuite::Tests::TorBootstrap::start_tor,
         mozmill       => \&mozmill_run,
+        marionette    => \&marionette_run,
         selenium      => \&selenium_run,
         virustotal    => \&virustotal_run,
         command       => \&command_run,
@@ -580,6 +581,11 @@ sub parse_strace {
     $test->{results}{connections} = {};
     my %modified_files;
     my %removed_files;
+    if (-f "$logfile.tmp") {
+        my $txt = read_file("$logfile.tmp");
+        write_file($logfile, { append => 1 }, $txt);
+        unlink "$logfile.tmp";
+    }
     my @lines = read_file($logfile) if -f $logfile;
     push @lines, read_file($logfile_tmp) if -f $logfile_tmp;
     foreach my $line (@lines) {
@@ -588,7 +594,9 @@ sub parse_strace {
             next if $2 =~ m/O_RDONLY/;
             next if $1 =~ m/^$tbbinfos->{tbbdir}/;
             next if $ignore_files{$1};
-            next if $1 =~ m/^$ENV{'MOZMILL_SCREENSHOTS'}/;
+            if ($ENV{'MOZMILL_SCREENSHOTS'}) {
+                next if $1 =~ m/^$ENV{'MOZMILL_SCREENSHOTS'}/;
+            }
             $modified_files{$1}++;
         }
         if ($line =~ m/^\d+ unlink\("((?:[^"\\]++|\\.)*+)"/) {
@@ -626,6 +634,12 @@ sub ff_strace_wrapper {
     my $logfile = "$tbbinfos->{'results-dir'}/$test->{name}.strace";
     my $wrapper = <<EOF;
 #!/bin/sh
+if [ -f $logfile.tmp ]
+then
+   cat $logfile.tmp >> $logfile
+   rm $logfile.tmp
+fi
+echo \$@ >> /tmp/ff_run.log
 strace -f -o $logfile.tmp -- \'$ff_wrapper\' "\$@"
 exit_code=\$?
 cat $logfile.tmp >> $logfile
@@ -643,7 +657,8 @@ sub ffbin_path {
     if ($OSNAME eq 'cygwin') {
         return winpath("$tbbinfos->{ffbin}.exe");
     }
-    if ($options->{use_strace} && $test->{type} eq 'mozmill') {
+    my %t = map { $_ => 1 } qw(mozmill marionette);
+    if ($options->{use_strace} && $t{$test->{type}}) {
         return ff_strace_wrapper($tbbinfos, $test);
     }
     return ff_wrapper($tbbinfos, $test);
@@ -665,6 +680,33 @@ exports.test = test;
 exports.tbbinfos = tbbinfos;
 EOF
     write_file($options_file, $content);
+}
+
+sub marionette_run {
+    my ($tbbinfos, $test) = @_;
+    if ($test->{tried} && $test->{use_net}) {
+        TBBTestSuite::Tests::TorBootstrap::send_newnym($tbbinfos);
+    }
+    set_test_prefs($tbbinfos, $test);
+
+    my $result_file_html = "$tbbinfos->{'results-dir'}/$test->{name}.html";
+    my $result_file_txt = "$tbbinfos->{'results-dir'}/$test->{name}.txt";
+    #--log-unittest  ./res.txt --log-html ./res.html
+    my $bin = $OSNAME eq 'cygwin' ? 'Scripts' : 'bin';
+    system(xvfb_run($test), "$FindBin::Bin/virtualenv-marionette/$bin/tor-browser-tests",
+        '--log-unittest', winpath($result_file_txt),
+        '--log-html', winpath($result_file_html),
+        '--binary', ffbin_path($tbbinfos, $test),
+        '--profile', winpath($tbbinfos->{ffprofiledir}),
+        winpath("$FindBin::Bin/marionette/tor_browser_tests/test_$test->{name}.py"));
+    my @txt_log = read_file($result_file_txt);
+    my $res_line = shift @txt_log;
+    $test->{results}{success} = $res_line eq ".\n" || $res_line eq ".\r\n";
+    $test->{results}{log} = join '', @txt_log;
+    reset_test_prefs($tbbinfos, $test);
+    parse_strace($tbbinfos, $test);
+    check_opened_connections($tbbinfos, $test);
+    check_modified_files($tbbinfos, $test);
 }
 
 sub mozmill_run {
