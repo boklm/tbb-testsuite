@@ -40,6 +40,7 @@ sub test_types {
     return {
         tor_bootstrap => \&TBBTestSuite::Tests::TorBootstrap::start_tor,
         mozmill       => \&mozmill_run,
+        marionette    => \&marionette_run,
         selenium      => \&selenium_run,
         virustotal    => \&virustotal_run,
         command       => \&command_run,
@@ -617,6 +618,29 @@ exports.test = test;
 exports.tbbinfos = tbbinfos;
 EOF
     write_file($options_file, $content);
+}
+
+sub marionette_run {
+    my ($tbbinfos, $test) = @_;
+    if ($test->{tried} && $test->{use_net}) {
+        TBBTestSuite::Tests::TorBootstrap::send_newnym($tbbinfos);
+    }
+    set_test_prefs($tbbinfos, $test);
+
+    my $result_file_html = "$tbbinfos->{'results-dir'}/$test->{name}.html";
+    my $result_file_txt = "$tbbinfos->{'results-dir'}/$test->{name}.txt";
+    #--log-unittest  ./res.txt --log-html ./res.html
+    system(xvfb_run($test), "$FindBin::Bin/virtualenv_marionette/bin/tor-browser-tests",
+        '--log-unittest', $result_file_txt, '--log-html', $result_file_html,
+        '--binary', ffbin_path($tbbinfos, $test),
+        '--profile', winpath($tbbinfos->{ffprofiledir}),
+        "$FindBin::Bin/marionette/tor_browser_tests/test_$test->{name}.py");
+    my @txt_log = read_file($result_file_txt);
+    $test->{results}{success} = shift @txt_log eq ".\n";
+    $test->{results}{log} = join '', @txt_log;
+    reset_test_prefs($tbbinfos, $test);
+    check_opened_connections($tbbinfos, $test);
+    check_modified_files($tbbinfos, $test);
 }
 
 sub mozmill_run {
