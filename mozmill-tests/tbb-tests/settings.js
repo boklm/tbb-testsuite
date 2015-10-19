@@ -172,27 +172,19 @@ const SETTINGS = {
 
     // checking torbrowser.version match the version from the filename
     "torbrowser.version": testsuite.tbbinfos.version,
-};
 
-// Settings for the Tor Browser 4.0 branch
-const SETTINGS_40 = {
-    // Omnibox settings
-    "keyword.URL": "https://startpage.com/do/search?q=",
-
-    // Security enhancements
-    // https://trac.torproject.org/projects/tor/ticket/9387#comment:17
-    "javascript.options.ion.content": false,
-    "javascript.options.baselinejit.content": false,
-    "javascript.options.asmjs": false,
-    "javascript.options.typeinference": false,
-}
-
-// Settings for the Tor Browser 4.5 and nightly branch
-const SETTINGS_45 = {
     // Disable device sensors as possible fingerprinting vector (bug 15758)
     "device.sensors.enabled": false,
     // Disable video statistics fingerprinting vector (bug 15757)
     "media.video_stats.enabled": false,
+};
+
+// Settings for the Tor Browser 5.0 branch
+const SETTINGS_50 = {
+}
+
+// Settings for the Tor Browser 5.5 and nightly branch
+const SETTINGS_55 = {
 }
 
 var setupModule = function(aModule) {
@@ -214,15 +206,15 @@ var testTBBSettings = function() {
     for (let prefname in SETTINGS)
         expect.equal(prefSrv.getPref(prefname, dval(SETTINGS[prefname])),
                      SETTINGS[prefname], prefname);
-    if (testsuite.tbbinfos.version.startsWith("4.0")) {
-        for (let prefname in SETTINGS_40)
-            expect.equal(prefSrv.getPref(prefname, dval(SETTINGS_40[prefname])),
-                         SETTINGS_40[prefname], prefname);
+    if (testsuite.tbbinfos.version.startsWith("5.0")) {
+        for (let prefname in SETTINGS_50)
+            expect.equal(prefSrv.getPref(prefname, dval(SETTINGS_50[prefname])),
+                         SETTINGS_50[prefname], prefname);
     }
-    if (testsuite.tbbinfos.version.startsWith("4.5")
+    if (testsuite.tbbinfos.version.startsWith("5.5")
             || testsuite.tbbinfos.version == "tbb-nightly") {
-        for (let prefname in SETTINGS_45)
-            expect.equal(prefSrv.getPref(prefname, dval(SETTINGS_45[prefname])),
-                         SETTINGS_45[prefname], prefname);
+        for (let prefname in SETTINGS_55)
+            expect.equal(prefSrv.getPref(prefname, dval(SETTINGS_55[prefname])),
+                         SETTINGS_55[prefname], prefname);
     }
 }
