@@ -29,9 +29,7 @@ const SETTINGS = {
 
     "browser.search.update": false,
     "browser.rights.3.shown": true,
-    "browser.startup.homepage_override.mstone": "ignore",
     "startup.homepage_welcome_url": "",
-    "startup.homepage_override_url": "",
 
     // Disk activity: Disable Browsing History Storage
     "browser.privatebrowsing.autostart": true,
@@ -89,7 +87,6 @@ const SETTINGS = {
     "general.useragent.override": "Mozilla/5.0 (Windows NT 6.1; rv:38.0) Gecko/20100101 Firefox/38.0",
     "general.productSub.override": "20100101",
     "general.buildID.override": "20100101",
-    "browser.startup.homepage_override.buildID": "20100101",
     "general.useragent.vendor": "",
     "general.useragent.vendorSub": "",
     "dom.enable_performance": false,
@@ -181,10 +178,15 @@ const SETTINGS = {
 
 // Settings for the Tor Browser 5.0 branch
 const SETTINGS_50 = {
+    "startup.homepage_override_url": "",
+    "browser.startup.homepage_override.buildID": "20100101",
+    "browser.startup.homepage_override.mstone": "ignore",
 }
 
 // Settings for the Tor Browser 5.5 and nightly branch
 const SETTINGS_55 = {
+    "startup.homepage_override_url": "https://blog.torproject.org/category/tags/tor-browser",
+    "browser.startup.homepage_override.buildID": "20000101000000",
 }
 
 var setupModule = function(aModule) {
