@@ -11,7 +11,7 @@ my @dates = last_days(3);
 my $ok = 0;
 
 foreach my $date (@dates) {
-    $shaurl = "https://people.torproject.org/~linus/builds/tbb-nightly-$date/sha256sums-unsigned-build.txt";
+    $shaurl = "https://people.torproject.org/~linus/builds/tbb-nightly-$date/sha256sums.txt";
     $name = "tbb-nightly-$date-win32-virustotal";
     if (-d "$options->{'reports-dir'}/r/$name") {
         print "Doing nothing: $name already done\n";
