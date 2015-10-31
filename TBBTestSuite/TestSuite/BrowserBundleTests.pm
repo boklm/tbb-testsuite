@@ -446,7 +446,11 @@ sub extract_tbb {
     chdir $tmpdir;
     if ($tbbinfos->{os} eq 'Linux') {
         system('tar', 'xf', $tbbfile);
-        $tbbinfos->{tbbdir} = "$tmpdir/tor-browser_$tbbinfos->{language}";
+        if ($tbbinfos->{language} eq 'ALL') {
+            $tbbinfos->{tbbdir} = "$tmpdir/tor-browser";
+        } else {
+            $tbbinfos->{tbbdir} = "$tmpdir/tor-browser_$tbbinfos->{language}";
+        }
         $tbbinfos->{tbbdir} .= '/Browser' if $options->{newlayout};
     } elsif ($tbbinfos->{os} eq 'Windows') {
         my (undef, undef, $f) = File::Spec->splitpath($tbbfile);
