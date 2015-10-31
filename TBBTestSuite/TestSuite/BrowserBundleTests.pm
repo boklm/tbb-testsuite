@@ -345,6 +345,9 @@ sub toggle_https_everywhere {
     my ($tbbinfos, $t) = @_;
     my $prefs = $tbbinfos->{ffprofiledir} . '/extensions/'
         . 'https-everywhere@eff.org/defaults/preferences/preferences.js';
+    my $prefs_eff = $tbbinfos->{ffprofiledir} . '/extensions/'
+        . 'https-everywhere-eff@eff.org/defaults/preferences/preferences.js';
+    $prefs = $prefs_eff unless -f $prefs;
     my @f = read_file($prefs);
     foreach (@f) {
         if ($t) {
