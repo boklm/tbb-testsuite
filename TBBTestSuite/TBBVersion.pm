@@ -70,15 +70,11 @@ sub get_taggerdate {
 sub latest_tagged_version {
     my ($branch, $min_date) = @_;
     my ($d) = git_cmd('git', 'describe', '--long', '--match=tbb-*', $branch);
-    my @t = split /-/, $d;
-    pop @t;
-    pop @t;
+    my @t = $d =~ m/^(tbb)-(.+)-(build.+)-.+-.+$/;
+    return () unless @t;
     my $tag = join('-', @t);
     my (undef, undef, $sig_ok) = git_cmd_noerr('git', 'tag', '-v', $tag);
     return () unless $sig_ok;
-    if ($t[0] ne 'tbb' || @t != 3) {
-        exit_error "Unknown tag format $tag";
-    }
     if ($min_date && get_taggerdate($tag) < $min_date) {
         return ();
     }
