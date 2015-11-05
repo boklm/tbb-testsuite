@@ -188,17 +188,20 @@ our @tests = (
     {
         name => 'check',
         type  => 'selenium',
+        use_net => 1,
         descr => 'Check that http://check.torproject.org/ think we are using tor',
     },
     {
         name  => 'https-everywhere',
         type  => 'mozmill',
+        use_net => 1,
         descr => 'Check that https everywhere is enabled and working',
     },
     {
         name  => 'https-everywhere-disabled',
         type  => 'mozmill',
         descr => 'Check that https everywhere is not doing anything when disabled',
+        use_net => 1,
         pre   => sub { toggle_https_everywhere($_[0], 0) },
         post  => sub { toggle_https_everywhere($_[0], 1) },
     },
@@ -211,6 +214,7 @@ our @tests = (
         name  => 'acid3',
         type  => 'mozmill',
         descr => 'acid3 tests',
+        use_net => 1,
     },
     {
         name         => 'slider_settings_1',
@@ -261,11 +265,13 @@ our @tests = (
         name  => 'navigation-timing',
         type  => 'mozmill',
         descr => 'Check that the Navigation Timing API is really disabled',
+        use_net => 1,
     },
     {
         name  => 'resource-timing',
         type  => 'mozmill',
         descr => 'Check that the Resource Timing API is really disabled',
+        use_net => 1,
     },
     {
         name  => 'searchengines',
@@ -276,6 +282,7 @@ our @tests = (
         name  => 'noscript',
         type  => 'mozmill',
         descr => 'Check that noscript options are working',
+        use_net => 1,
         prefs => {
             'extensions.torbutton.security_slider' => 2,
         },
@@ -309,6 +316,7 @@ our @tests = (
         name => 'play_videos',
         type => 'mozmill',
         descr => 'Play some videos',
+        use_net => 1,
         mozmill_test => 'test_page',
         remote => 1,
         timeout => 50000,
@@ -320,6 +328,7 @@ our @tests = (
         descr => 'Check if disabling svg is working',
         mozmill_test => 'svg',
         svg_enabled => 0,
+        use_net => 1,
         prefs => {
             'extensions.torbutton.security_custom' => 'true',
             'svg.in-content.enabled' => 'false',
@@ -331,6 +340,7 @@ our @tests = (
         type => 'mozmill',
         descr => 'Check if enabling svg is working',
         mozmill_test => 'svg',
+        use_net => 1,
         svg_enabled => 1,
         prefs => {
             'extensions.torbutton.security_custom' => 'true',
@@ -590,6 +600,9 @@ EOF
 sub mozmill_run {
     my ($tbbinfos, $test) = @_;
     return unless $options->{mozmill};
+    if ($test->{tried} && $test->{use_net}) {
+        TBBTestSuite::Tests::TorBootstrap::send_newnym($tbbinfos);
+    }
     mozmill_export_options($tbbinfos, $test);
     set_test_prefs($tbbinfos, $test);
     $test->{screenshots} = [];
@@ -619,6 +632,9 @@ sub mozmill_run {
 sub selenium_run {
     my ($tbbinfos, $test) = @_;
     return unless $options->{selenium};
+    if ($test->{tried} && $test->{use_net}) {
+        TBBTestSuite::Tests::TorBootstrap::send_newnym($tbbinfos);
+    }
     my $result_file = $ENV{SELENIUM_TEST_RESULT_FILE} =
         "$tbbinfos->{'results-dir'}/$test->{name}.json";
     $ENV{TBB_BIN} = ffbin_path($tbbinfos, $test);

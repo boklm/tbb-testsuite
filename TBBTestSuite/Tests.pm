@@ -62,9 +62,9 @@ sub run_tests {
         $test->{pre}->($tbbinfos, $test) if $test->{pre};
         $test->{tried} = 0;
         while ($test->{tried} < ($test->{retry} // 2)) {
-            $test->{tried} += 1;
             $test_types->{$test->{type}}->($tbbinfos, $test)
                 if $test_types->{$test->{type}};
+            $test->{tried} += 1;
             if (!defined $test->{results} || $test->{results}{success}) {
                 last;
             }

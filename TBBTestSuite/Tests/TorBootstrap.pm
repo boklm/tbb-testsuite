@@ -32,6 +32,20 @@ sub winpid {
     $OSNAME eq 'cygwin' ? Cygwin::pid_to_winpid($_[0]) : $_[0];
 }
 
+sub send_newnym {
+    my ($tbbinfos) = @_;
+    my $sock = new IO::Socket::INET(
+        PeerAddr => 'localhost',
+        PeerPort => $options->{'tor-control-port'},
+        Proto => 'tcp',
+    );
+    print $sock 'AUTHENTICATE "', $tbbinfos->{tor_control_passwd}, "\"\n";
+    my $r = <$sock>;
+    return undef unless $r =~ m/^250 OK/;
+    print $sock "SIGNAL NEWNYM\n";
+    return <$sock> =~ m/^250 OK/;
+}
+
 sub monitor_bootstrap {
     my ($tbbinfos, $test, $control_passwd) = @_;
     sleep 10;
@@ -92,6 +106,8 @@ sub start_tor {
         return;
     }
     my $control_passwd = map { ('a'..'z', 'A'..'Z', 0..9)[rand 62] } 0..8;
+    $tbbinfos->{tor_control_passwd} = $control_passwd
+                        if $test->{name} eq 'tor_bootstrap';
     my $cwd = getcwd;
     start_httpproxy($tbbinfos, $test) if $test->{httpproxy};
     $ENV{TOR_SOCKS_PORT} = $options->{'tor-socks-port'};
