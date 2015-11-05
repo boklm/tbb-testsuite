@@ -276,7 +276,6 @@ our @tests = (
         name  => 'noscript',
         type  => 'mozmill',
         descr => 'Check that noscript options are working',
-        retry => 1,
         prefs => {
             'extensions.torbutton.security_slider' => 2,
         },
