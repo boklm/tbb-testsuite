@@ -104,7 +104,6 @@ const SETTINGS = {
     "network.http.spdy.enabled.v2": false, // Seems redundant, but just in case
     "network.http.spdy.enabled.v3": false, // Seems redundant, but just in case
     "privacy.thirdparty.isolate": 2, // Always enforce third party isolation
-    "dom.workers.sharedWorkers.enabled": false, // See https://bugs.torproject.org/15562
 
     // Proxy and proxy security
     "network.proxy.socks": "127.0.0.1",
@@ -181,12 +180,14 @@ const SETTINGS_50 = {
     "startup.homepage_override_url": "",
     "browser.startup.homepage_override.buildID": "20100101",
     "browser.startup.homepage_override.mstone": "ignore",
+    "dom.workers.sharedWorkers.enabled": false, // See https://bugs.torproject.org/15562
 }
 
 // Settings for the Tor Browser 5.5 and nightly branch
 const SETTINGS_55 = {
     "startup.homepage_override_url": "https://blog.torproject.org/category/tags/tor-browser",
     "browser.startup.homepage_override.buildID": "20000101000000",
+    "dom.workers.sharedWorkers.enabled": true, // See #15564
 }
 
 var setupModule = function(aModule) {
