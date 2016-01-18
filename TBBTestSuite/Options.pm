@@ -50,7 +50,7 @@ my %default_options = (
     resolution => '1280x1024',
     xvfb       => 0,
     xdummy     => $OSNAME ne 'cygwin',
-    mbox       => has_bin('mbox'),
+    use_strace => $OSNAME eq 'linux',
     virustotal => 0,
     newlayout  => 1,
     'virustotal-api-key-file' => "$ENV{HOME}/.virustotal.api-key",
@@ -74,7 +74,7 @@ sub get_options {
                      action=s enable-tests=s upload-to=s os=s arch=s
                      virustotal! email-to=s@ email-from=s email-subject=s
                      mozmill-dir=s reports-url=s http-proxy-port=i
-                     newlayout! mbox! xdummy! disable-tests=s
+                     newlayout! xdummy! disable-tests=s
                      testrequests_types=s testsuite=s);
     my (%cli, %config);
     Getopt::Long::GetOptionsFromArray(\@_, \%cli, @options) || exit 1;

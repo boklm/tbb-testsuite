@@ -491,13 +491,7 @@ sub mozmill_cmd {
 
 sub check_opened_connections {
     my ($tbbinfos, $test) = @_;
-    return unless $options->{mbox};
-    my $mbox_log = "$tbbinfos->{'results-dir'}/$test->{name}.mbox.log";
-    $test->{results}{connections} = {};
-    foreach my $line (read_file($mbox_log)) {
-        next unless $line =~ m/ > \[\d+\] -> (.+)/;
-        $test->{results}{connections}{$1}++;
-    }
+    return unless $options->{use_strace};
     my %bad_connections =  %{$test->{results}{connections}};
     delete $bad_connections{"127.0.0.1:$options->{'tor-control-port'}"};
     delete $bad_connections{"127.0.0.1:$options->{'tor-socks-port'}"};
@@ -514,25 +508,40 @@ sub check_opened_connections {
 
 sub check_modified_files {
     my ($tbbinfos, $test) = @_;
-    return unless $options->{mbox};
-    my $sandbox_dir = "$tbbinfos->{'results-dir'}/$test->{name}.sandbox";
-    return unless -d $sandbox_dir;
-    my $add_modified_file = sub {
-        return if -d $File::Find::name;
-        my $fname = $File::Find::name;
-        $fname =~ s{^\Q$sandbox_dir\E}{};
-        $fname =~ s{^\Q$tbbinfos->{tbbdir}\E/}{};
-        push @{$test->{results}{modified_files}}, $fname;
-    };
-    find($add_modified_file, $sandbox_dir);
-    return unless -f "$sandbox_dir.meta";
-    foreach my $meta (read_file("$sandbox_dir.meta")) {
-        if ($meta =~ m/^D:(.*):1$/) {
-            my $fname = $1;
-            $fname =~ s{^\Q$tbbinfos->{tbbdir}\E/}{};
-            push @{$test->{results}{removed_files}}, $fname;
+    return unless $options->{use_strace};
+    my @bad_modified_files = @{$test->{results}{modified_files}};
+    $test->{results}{success} = 0 if @bad_modified_files;
+    $test->{results}{bad_modified_files} = \@bad_modified_files;
+}
+
+sub parse_strace {
+    my ($tbbinfos, $test) = @_;
+    my %ignore_files = map { $_ => 1 } qw(/dev/null /dev/tty);
+    my %files;
+    my $logfile = "$tbbinfos->{'results-dir'}/$test->{name}.strace";
+    $test->{results}{connections} = {};
+    my %modified_files;
+    my %removed_files;
+    foreach my $line (read_file($logfile)) {
+        if ($line =~ m/^\d+ open\("((?:[^"\\]++|\\.)*+)", ([^\)]+)/ ||
+            $line =~ m/^\d+ openat\([^,]+, "((?:[^"\\]++|\\.)*+)", ([^\)]+)/) {
+            next if $2 =~ m/O_RDONLY/;
+            next if $1 =~ m/^$tbbinfos->{tbbdir}/;
+            next if $ignore_files{$1};
+            next if $1 eq $ENV{'MOZMILL_SCREENSHOTS'} . '/screenshot.png';
+            $modified_files{$1}++;
+        }
+        if ($line =~ m/^\d+ unlink\("((?:[^"\\]++|\\.)*+)"/) {
+            next if $1 =~ m/^$tbbinfos->{tbbdir}/;
+            $removed_files{$1}++;
+            delete $modified_files{$1} unless -f $1;
+        }
+        if ($line =~ m/^\d+ connect\(\d+, {sa_family=AF_INET, sin_port=htons\((\d+)\), sin_addr=inet_addr\("((?:[^"\\]++|\\.)*+)"\)/) {
+            $test->{results}{connections}{"$2:$1"}++;
         }
     }
+    $test->{results}{modified_files} = [ keys %modified_files ];
+    $test->{results}{removed_files} = [ keys %removed_files ];
 }
 
 sub ff_wrapper {
@@ -551,19 +560,17 @@ EOF
     return $wrapper_file;
 }
 
-sub ff_mbox_wrapper {
+sub ff_strace_wrapper {
     my ($tbbinfos, $test) = @_;
-    mkdir "$tbbinfos->{'results-dir'}/$test->{name}.sandbox";
     my $ff_wrapper = ff_wrapper($tbbinfos, $test);
+    my $logfile = "$tbbinfos->{'results-dir'}/$test->{name}.strace";
     my $wrapper = <<EOF;
 #!/bin/sh
-set -e
-echo log file: $tbbinfos->{'results-dir'}/$test->{name}.mbox.log
-exec mbox -i -r \'$tbbinfos->{'results-dir'}/$test->{name}.sandbox\' \\
-        -o \'!cat >> $tbbinfos->{'results-dir'}/$test->{name}.mbox.log\' \\
-        -s -p $FindBin::Bin/mbox.profile \\
-        -- \\
-        \'$ff_wrapper\' "\$@"
+strace -f -o $logfile.tmp -- \'$ff_wrapper\' "\$@"
+exit_code=\$?
+cat $logfile.tmp >> $logfile
+rm $logfile.tmp
+exit \$?
 EOF
     my $wrapper_file = "$tbbinfos->{tbbdir}/ff_$test->{name}";
     write_file($wrapper_file, $wrapper);
@@ -576,8 +583,8 @@ sub ffbin_path {
     if ($OSNAME eq 'cygwin') {
         return winpath("$tbbinfos->{ffbin}.exe");
     }
-    return $options->{mbox} ? ff_mbox_wrapper($tbbinfos, $test)
-           : ff_wrapper($tbbinfos, $test);
+    return ff_strace_wrapper($tbbinfos, $test) if $options->{use_strace};
+    return ff_wrapper($tbbinfos, $test);
 }
 
 sub mozmill_export_options {
@@ -626,6 +633,7 @@ sub mozmill_run {
     $test->{results}{success} = $test->{results}{results}->[0]->{passed} ?
                         !$test->{results}{results}->[0]->{failed} : 0;
     reset_test_prefs($tbbinfos, $test);
+    parse_strace($tbbinfos, $test);
     check_opened_connections($tbbinfos, $test);
     check_modified_files($tbbinfos, $test);
 }
@@ -643,6 +651,7 @@ sub selenium_run {
     system(xvfb_run($test), "$options->{virtualenv}/bin/python",
         "$FindBin::Bin/selenium-tests/run_test", $test->{name});
     $test->{results} = decode_json(read_file($result_file));
+    parse_strace($tbbinfos, $test);
     check_opened_connections($tbbinfos, $test);
     check_modified_files($tbbinfos, $test);
 }
