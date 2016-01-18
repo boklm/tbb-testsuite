@@ -60,6 +60,7 @@ sub run_tests {
             TBBTestSuite::Tests::test_start($report, $tbbinfos);
         }
     }
+    return unless %{$report->{tbbfiles}};
     set_report_success($report);
     save_report($report);
     print 'Report directory: ', report_dir($report), "\n";

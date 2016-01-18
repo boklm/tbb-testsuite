@@ -191,6 +191,13 @@ sub test_sha {
     my (undef, $dir) = File::Spec->splitpath($shafile);
     my @files = map { [ reverse split /  /, $_ ] } split /\n/, $content;
     foreach my $file (@files) {
+        if (tbb_filename_infos("$dir/$file->[0]")) {
+            my $ua = LWP::UserAgent->new;
+            my $resp = $ua->head("$dir/$file->[0]");
+            return unless $resp->is_success;
+        }
+    }
+    foreach my $file (@files) {
         my $tbbinfos = tbb_filename_infos("$dir/$file->[0]");
         next unless $tbbinfos;
         $tbbinfos->{sha256sum} = $file->[1];
