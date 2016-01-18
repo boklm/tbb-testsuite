@@ -542,6 +542,7 @@ sub ff_wrapper {
     my $wrapper = <<EOF;
 #!/bin/sh
 set -e
+export HOME="$tbbinfos->{tbbdir}"
 export LD_LIBRARY_PATH="$tbbinfos->{tbbdir}:$tbbinfos->{tordir}"
 exec \'$tbbinfos->{ffbin}\' "\$@"
 EOF
