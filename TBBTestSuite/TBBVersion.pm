@@ -102,16 +102,9 @@ sub latest_builds {
             my $buildname;
             my $url = "https://people.torproject.org/~$user/builds/$version-$build/sha256sums-unsigned-build.txt";
             my $sha = get($url);
-            if ($sha && head("$url.asc")) {
-                $buildname = "$version-$build";
-            } else {
-                $url = "https://people.torproject.org/~$user/builds/$version/sha256sums-unsigned-build.txt";
-                $sha = get($url);
-                next unless $sha;
-                next unless head("$url.asc");
-                my $shasha = substr(sha256_hex($sha), 0, 5);
-                $buildname = "$version-$shasha";
-            }
+            next unless $sha;
+            next unless head("$url.asc");
+            $buildname = "$version-$build";
             push @res, {
                 buildname => $buildname,
                 version => $version,
