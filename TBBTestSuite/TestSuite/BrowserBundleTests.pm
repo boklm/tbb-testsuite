@@ -526,7 +526,7 @@ sub parse_strace {
             next if $2 =~ m/O_RDONLY/;
             next if $1 =~ m/^$tbbinfos->{tbbdir}/;
             next if $ignore_files{$1};
-            next if $1 eq $ENV{'MOZMILL_SCREENSHOTS'} . '/screenshot.png';
+            next if $1 =~ m/^$ENV{'MOZMILL_SCREENSHOTS'}/;
             $modified_files{$1}++;
         }
         if ($line =~ m/^\d+ unlink\("((?:[^"\\]++|\\.)*+)"/) {
