@@ -491,7 +491,6 @@ sub mozmill_cmd {
 
 sub check_opened_connections {
     my ($tbbinfos, $test) = @_;
-    return unless $options->{use_strace};
     my %bad_connections =  %{$test->{results}{connections}};
     delete $bad_connections{"127.0.0.1:$options->{'tor-control-port'}"};
     delete $bad_connections{"127.0.0.1:$options->{'tor-socks-port'}"};
@@ -508,7 +507,6 @@ sub check_opened_connections {
 
 sub check_modified_files {
     my ($tbbinfos, $test) = @_;
-    return unless $options->{use_strace};
     my @bad_modified_files = @{$test->{results}{modified_files}};
     $test->{results}{success} = 0 if @bad_modified_files;
     $test->{results}{bad_modified_files} = \@bad_modified_files;
@@ -633,9 +631,11 @@ sub mozmill_run {
     $test->{results}{success} = $test->{results}{results}->[0]->{passed} ?
                         !$test->{results}{results}->[0]->{failed} : 0;
     reset_test_prefs($tbbinfos, $test);
-    parse_strace($tbbinfos, $test);
-    check_opened_connections($tbbinfos, $test);
-    check_modified_files($tbbinfos, $test);
+    if ($options->{use_strace}) {
+        parse_strace($tbbinfos, $test);
+        check_opened_connections($tbbinfos, $test);
+        check_modified_files($tbbinfos, $test);
+    }
 }
 
 sub selenium_run {
@@ -651,9 +651,11 @@ sub selenium_run {
     system(xvfb_run($test), "$options->{virtualenv}/bin/python",
         "$FindBin::Bin/selenium-tests/run_test", $test->{name});
     $test->{results} = decode_json(read_file($result_file));
-    parse_strace($tbbinfos, $test);
-    check_opened_connections($tbbinfos, $test);
-    check_modified_files($tbbinfos, $test);
+    if ($options->{use_strace}) {
+        parse_strace($tbbinfos, $test);
+        check_opened_connections($tbbinfos, $test);
+        check_modified_files($tbbinfos, $test);
+    }
 }
 
 sub set_tbbpaths {
