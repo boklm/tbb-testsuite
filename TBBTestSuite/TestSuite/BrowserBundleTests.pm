@@ -693,6 +693,10 @@ sub pre_tests {
     $tbbinfos->{sha256sum} //= sha256_hex(read_file($tbbinfos->{tbbfile}));
     extract_tbb($tbbinfos);
     set_tbbpaths($tbbinfos);
+    my $prefs_file = "$tbbinfos->{ffprofiledir}/preferences/extension-overrides.js";
+    open(my $prefs_fh, '>>', $prefs_file);
+    print $prefs_fh 'pref("extensions.torbutton.prompted_language", true);', "\n";
+    close $prefs_fh;
     chdir $tbbinfos->{tbbdir} || exit_error "Can't enter directory $tbbinfos->{tbbdir}";
     copy "$FindBin::Bin/data/cert_override.txt",
           "TorBrowser/Data/Browser/profile.default/cert_override.txt";
