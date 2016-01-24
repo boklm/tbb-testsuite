@@ -521,7 +521,8 @@ sub parse_strace {
     $test->{results}{connections} = {};
     my %modified_files;
     my %removed_files;
-    foreach my $line (read_file($logfile)) {
+    my @lines = read_file($logfile) if -f $logfile;
+    foreach my $line (@lines) {
         if ($line =~ m/^\d+ open\("((?:[^"\\]++|\\.)*+)", ([^\)]+)/ ||
             $line =~ m/^\d+ openat\([^,]+, "((?:[^"\\]++|\\.)*+)", ([^\)]+)/) {
             next if $2 =~ m/O_RDONLY/;
