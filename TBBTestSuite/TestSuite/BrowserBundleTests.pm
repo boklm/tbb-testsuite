@@ -215,6 +215,7 @@ our @tests = (
         type            => 'mozmill',
         descr           => 'acid3 tests',
         use_net         => 1,
+        retry           => 4,
     },
     {
         name            => 'slider_settings_1',
