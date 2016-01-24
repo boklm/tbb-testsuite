@@ -582,7 +582,9 @@ sub ffbin_path {
     if ($OSNAME eq 'cygwin') {
         return winpath("$tbbinfos->{ffbin}.exe");
     }
-    return ff_strace_wrapper($tbbinfos, $test) if $options->{use_strace};
+    if ($options->{use_strace} && $test->{type} eq 'mozmill') {
+        return ff_strace_wrapper($tbbinfos, $test);
+    }
     return ff_wrapper($tbbinfos, $test);
 }
 
@@ -652,11 +654,6 @@ sub selenium_run {
     system(xvfb_run($test), "$options->{virtualenv}/bin/python",
         "$FindBin::Bin/selenium-tests/run_test", $test->{name});
     $test->{results} = decode_json(read_file($result_file));
-    if ($options->{use_strace}) {
-        parse_strace($tbbinfos, $test);
-        check_opened_connections($tbbinfos, $test);
-        check_modified_files($tbbinfos, $test);
-    }
 }
 
 sub set_tbbpaths {
