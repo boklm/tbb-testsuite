@@ -502,14 +502,20 @@ sub check_opened_connections {
         && $bad_connections{'127.0.0.1:9150'} <= 2) {
         delete $bad_connections{'127.0.0.1:9150'}
     }
-    $test->{results}{success} = 0 if %bad_connections;
+    if (%bad_connections) {
+        $test->{results}{success} = 0;
+        $test->{retry} = 0;
+    }
     $test->{results}{bad_connections} = \%bad_connections;
 }
 
 sub check_modified_files {
     my ($tbbinfos, $test) = @_;
     my @bad_modified_files = @{$test->{results}{modified_files}};
-    $test->{results}{success} = 0 if @bad_modified_files;
+    if (@bad_modified_files) {
+        $test->{results}{success} = 0;
+        $test->{retry} = 0;
+    }
     $test->{results}{bad_modified_files} = \@bad_modified_files;
 }
 
