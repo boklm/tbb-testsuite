@@ -519,6 +519,12 @@ sub check_modified_files {
     $test->{results}{bad_modified_files} = \@bad_modified_files;
 }
 
+sub clean_strace {
+    my ($tbbinfos, $test) = @_;
+    my $logfile = "$tbbinfos->{'results-dir'}/$test->{name}.strace";
+    unlink $logfile;
+}
+
 sub parse_strace {
     my ($tbbinfos, $test) = @_;
     my %ignore_files = map { $_ => 1 } qw(/dev/null /dev/tty);
@@ -619,6 +625,7 @@ sub mozmill_run {
     if ($test->{tried} && $test->{use_net}) {
         TBBTestSuite::Tests::TorBootstrap::send_newnym($tbbinfos);
     }
+    clean_strace($tbbinfos, $test) if $options->{use_strace};
     mozmill_export_options($tbbinfos, $test);
     set_test_prefs($tbbinfos, $test);
     $test->{screenshots} = [];
