@@ -652,6 +652,7 @@ sub mozmill_run {
         parse_strace($tbbinfos, $test);
         check_opened_connections($tbbinfos, $test);
         check_modified_files($tbbinfos, $test);
+        clean_strace($tbbinfos, $test) if $test->{results}{success};
     }
 }
 
