@@ -7,7 +7,7 @@ use TBBTestSuite::Common qw(last_days);
 
 my $system_infos = TBBTestSuite::Common::system_infos;
 my ($name, $shaurl);
-my @dates = last_days(3);
+my @dates = last_days(6);
 my $ok = 0;
 
 foreach my $date (@dates) {
