@@ -233,7 +233,7 @@ our @tests = (
     },
     {
         name            => 'check',
-        type            => 'selenium',
+        type            => 'marionette',
         use_net         => 1,
         descr           => 'Check that http://check.torproject.org/ think we are using tor',
     },
@@ -337,26 +337,27 @@ our @tests = (
     },
     {
         name            => 'fp_screen_dimensions',
-        type            => 'selenium',
+        type            => 'marionette',
         descr           => 'Check that screen dimensions are spoofed correctly',
     },
     {
         name            => 'fp_screen_coords',
-        type            => 'selenium',
+        type            => 'marionette',
         descr           => 'Check that screenX, screenY, screenLeft, screenTop, mozInnerScreenX, mozInnerScreenY are 0',
     },
     {
         name            => 'fp_plugins',
-        type            => 'selenium',
+        type            => 'marionette',
         descr           => 'Check that plugins are disabled',
     },
     {
         name            => 'fp_useragent',
-        type            => 'selenium',
+        type            => 'marionette',
         descr           => 'Check that userAgent is as expected',
-    },        {
+    },
+    {
         name            => 'fp_navigator',
-        type            => 'selenium',
+        type            => 'marionette',
         descr           => 'Check that navigator properties are as expected',
     },
     {
