@@ -33,5 +33,5 @@ for my $pkg (qw(selenium mozmill)) {
 
 run('virtualenv', $virtenv_marionette) unless -d $virtenv_marionette;
 run_from_dir('marionette/firefox-ui-tests',
-    "$virtenv/bin/python", 'setup.py', 'develop');
-run_from_dir('marionette', "$virtenv/bin/python", 'setup.py', 'develop');
+    "$virtenv_marionette/bin/python", 'setup.py', 'develop');
+run_from_dir('marionette', "$virtenv_marionette/bin/python", 'setup.py', 'develop');
