@@ -645,13 +645,16 @@ sub marionette_run {
     my $result_file_html = "$tbbinfos->{'results-dir'}/$test->{name}.html";
     my $result_file_txt = "$tbbinfos->{'results-dir'}/$test->{name}.txt";
     #--log-unittest  ./res.txt --log-html ./res.html
-    system(xvfb_run($test), "$FindBin::Bin/virtualenv-marionette/bin/tor-browser-tests",
-        '--log-unittest', $result_file_txt, '--log-html', $result_file_html,
+    my $bin = $OSNAME eq 'cygwin' ? 'Scripts' : 'bin';
+    system(xvfb_run($test), "$FindBin::Bin/virtualenv-marionette/$bin/tor-browser-tests",
+        '--log-unittest', winpath($result_file_txt),
+        '--log-html', winpath($result_file_html),
         '--binary', ffbin_path($tbbinfos, $test),
         '--profile', winpath($tbbinfos->{ffprofiledir}),
-        "$FindBin::Bin/marionette/tor_browser_tests/test_$test->{name}.py");
+        winpath("$FindBin::Bin/marionette/tor_browser_tests/test_$test->{name}.py"));
     my @txt_log = read_file($result_file_txt);
-    $test->{results}{success} = shift @txt_log eq ".\n";
+    my $res_line = shift @txt_log;
+    $test->{results}{success} = $res_line eq ".\n" || $res_line eq ".\r\n";
     $test->{results}{log} = join '', @txt_log;
     reset_test_prefs($tbbinfos, $test);
     parse_strace($tbbinfos, $test);
