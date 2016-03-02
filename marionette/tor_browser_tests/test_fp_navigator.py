@@ -50,7 +50,7 @@ nav_props = {"appCodeName": "Mozilla",
 class Test(FirefoxTestCase):
     def test_navigator(self):
         with self.marionette.using_context('content'):
-            self.marionette.navigate('file://')
+            self.marionette.navigate('about:robots')
             js = self.marionette.execute_script
             for nav_prop, expected_value in nav_props.iteritems():
                 # cast to string on the JS side, otherwise we have issues

@@ -6,7 +6,7 @@ from firefox_ui_harness import FirefoxTestCase
 class Test(FirefoxTestCase):
     def test_useragent(self):
         with self.marionette.using_context('content'):
-            self.marionette.navigate('file://')
+            self.marionette.navigate('about:robots')
             js = self.marionette.execute_script
             # Check that useragent string is as expected
             # We better know the ESR version we're testing
