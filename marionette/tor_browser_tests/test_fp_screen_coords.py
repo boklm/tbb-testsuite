@@ -8,7 +8,7 @@ class Test(FirefoxTestCase):
     def test_screen_coords(self):
         # https://gitweb.torproject.org/torbrowser.git/blob/HEAD:/src/current-patches/firefox/0021-Do-not-expose-physical-screen-info.-via-window-and-w.patch
         with self.marionette.using_context('content'):
-            self.marionette.navigate('file://')
+            self.marionette.navigate('about:robots')
             js = self.marionette.execute_script
             # check that screenX, screenY are 0
             self.assertEqual(True, js("return screenX === 0"))
