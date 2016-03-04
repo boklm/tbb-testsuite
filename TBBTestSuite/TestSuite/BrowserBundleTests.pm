@@ -536,7 +536,7 @@ sub parse_strace {
     my %modified_files;
     my %removed_files;
     my @lines = read_file($logfile) if -f $logfile;
-    push @lines, read_file($logfile) if -f $logfile_tmp;
+    push @lines, read_file($logfile_tmp) if -f $logfile_tmp;
     foreach my $line (@lines) {
         if ($line =~ m/^\d+ open\("((?:[^"\\]++|\\.)*+)", ([^\)]+)/ ||
             $line =~ m/^\d+ openat\([^,]+, "((?:[^"\\]++|\\.)*+)", ([^\)]+)/) {
