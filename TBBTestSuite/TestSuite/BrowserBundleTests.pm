@@ -523,6 +523,7 @@ sub clean_strace {
     my ($tbbinfos, $test) = @_;
     my $logfile = "$tbbinfos->{'results-dir'}/$test->{name}.strace";
     unlink $logfile;
+    unlink "$logfile.tmp";
 }
 
 sub parse_strace {
@@ -530,10 +531,12 @@ sub parse_strace {
     my %ignore_files = map { $_ => 1 } qw(/dev/null /dev/tty);
     my %files;
     my $logfile = "$tbbinfos->{'results-dir'}/$test->{name}.strace";
+    my $logfile_tmp = "$tbbinfos->{'results-dir'}/$test->{name}.strace.tmp";
     $test->{results}{connections} = {};
     my %modified_files;
     my %removed_files;
     my @lines = read_file($logfile) if -f $logfile;
+    push @lines, read_file($logfile) if -f $logfile_tmp;
     foreach my $line (@lines) {
         if ($line =~ m/^\d+ open\("((?:[^"\\]++|\\.)*+)", ([^\)]+)/ ||
             $line =~ m/^\d+ openat\([^,]+, "((?:[^"\\]++|\\.)*+)", ([^\)]+)/) {
