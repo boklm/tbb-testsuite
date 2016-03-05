@@ -647,9 +647,13 @@ sub mozmill_run {
         push @{$test->{screenshots}}, "$test->{name}-$i.png";
         $i++;
     }
-    $test->{results} = decode_json(read_file($results_file));
-    $test->{results}{success} = $test->{results}{results}->[0]->{passed} ?
-                        !$test->{results}{results}->[0]->{failed} : 0;
+    if (-f $results_file) {
+        $test->{results} = decode_json(read_file($results_file));
+        $test->{results}{success} = $test->{results}{results}->[0]->{passed} ?
+                                !$test->{results}{results}->[0]->{failed} : 0;
+    } else {
+        $test->{results}{success} = 0;
+    }
     reset_test_prefs($tbbinfos, $test);
     if ($options->{use_strace}) {
         parse_strace($tbbinfos, $test);
