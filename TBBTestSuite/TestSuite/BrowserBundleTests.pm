@@ -173,6 +173,24 @@ our @tests = (
         enable          => sub { $OSNAME eq 'linux' },
     },
     {
+        name            => 'tor_meek-google',
+        type            => 'tor_bootstrap',
+        descr           => 'Access tor using meek-google',
+        enable          => sub { $OSNAME eq 'linux' },
+    },
+    {
+        name            => 'tor_meek-amazon',
+        type            => 'tor_bootstrap',
+        descr           => 'Access tor using meek-amazon',
+        enable          => sub { $OSNAME eq 'linux' },
+    },
+    {
+        name            => 'tor_meek-azure',
+        type            => 'tor_bootstrap',
+        descr           => 'Access tor using meek-azure',
+        enable          => sub { $OSNAME eq 'linux' },
+    },
+    {
         name            => 'tor_bootstrap',
         type            => 'tor_bootstrap',
         descr           => 'Check that we can bootstrap tor',

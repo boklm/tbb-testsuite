@@ -1,0 +1,4 @@
+[% INCLUDE main_config %]
+
+ClientTransportPlugin meek exec [% tbbinfos.ptdir %]/meek-client-torbrowser -- [% tbbinfos.ptdir %]/meek-client
+
