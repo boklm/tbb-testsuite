@@ -12,6 +12,7 @@ use File::Spec;
 use File::Find;
 use File::Type;
 use File::Copy;
+use File::Temp;
 use JSON;
 use Digest::SHA qw(sha256_hex);
 use LWP::UserAgent;
@@ -635,6 +636,18 @@ EOF
     write_file($options_file, $content);
 }
 
+sub marionette_export_options {
+    my ($tbbinfos, $test) = @_;
+    my $options_file = File::Temp->new();
+    my $json = {
+        options  => clone_strip_coderef($options),
+        test     => clone_strip_coderef($test),
+        tbbinfos => clone_strip_coderef({ %$tbbinfos, tests => undef }),
+    };
+    write_file($options_file, encode_json($json));
+    return $options_file;
+}
+
 sub marionette_run {
     my ($tbbinfos, $test) = @_;
     if ($test->{tried} && $test->{use_net}) {
@@ -642,16 +655,23 @@ sub marionette_run {
     }
     set_test_prefs($tbbinfos, $test);
 
+    my $options_file = marionette_export_options($tbbinfos, $test);
+    $ENV{TESTSUITE_DATA_FILE} = winpath($options_file);
     my $result_file_html = "$tbbinfos->{'results-dir'}/$test->{name}.html";
     my $result_file_txt = "$tbbinfos->{'results-dir'}/$test->{name}.txt";
     #--log-unittest  ./res.txt --log-html ./res.html
     my $bin = $OSNAME eq 'cygwin' ? 'Scripts' : 'bin';
+    my $pypath = $ENV{PYTHONPATH};
+    $ENV{PYTHONPATH} //= '';
+    $ENV{PYTHONPATH} = winpath("$FindBin::Bin/marionette/tor_browser_tests/lib")
+        . ":$ENV{PYTHONPATH}";
     system(xvfb_run($test), "$FindBin::Bin/virtualenv-marionette/$bin/tor-browser-tests",
         '--log-unittest', winpath($result_file_txt),
         '--log-html', winpath($result_file_html),
         '--binary', ffbin_path($tbbinfos, $test),
         '--profile', winpath($tbbinfos->{ffprofiledir}),
         winpath("$FindBin::Bin/marionette/tor_browser_tests/test_$test->{name}.py"));
+    $ENV{PYTHONPATH} = $pypath;
     my @txt_log = read_file($result_file_txt);
     my $res_line = shift @txt_log;
     $test->{results}{success} = $res_line eq ".\n" || $res_line eq ".\r\n";
