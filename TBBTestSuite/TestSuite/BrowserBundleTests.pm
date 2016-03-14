@@ -209,7 +209,7 @@ our @tests = (
     },
     {
         name            => 'settings',
-        type            => 'mozmill',
+        type            => 'marionette',
         descr           => 'Check that some important settings are correctly set',
     },
     {
