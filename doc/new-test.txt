@@ -120,8 +120,8 @@ Adding a simple test page
 ~~~~~~~~~~~~~~~~~~~~~~~~~
 
 If what you want to test is the behavior of some specific page and you
-don't need any of the mozmill specific features, you can reuse the
-'test_page' mozmill test.
+don't need any of the marionette specific features, you can reuse the
+'page' marionette test.
 
 To do that, put your page in the directory 'test-data'. The name of the
 test will be the name of the page without the '.html' extension.
@@ -143,12 +143,11 @@ The test definition will look like this:
 ----
     {
         name => 'some_name',
-        type => 'mozmill',
+        type => 'marionette',
         descr => 'Some description',
-        mozmill_test => 'test_page',
+        marionette_test => 'page',
         remote => 1,
         timeout => 50000,
-        interval => 100,
     },
 ----
 
@@ -159,9 +158,6 @@ locally with the 'test_data_dir' option.
 The 'timeout' value is the time in milliseconds after which the test
 should be considered as failed if the 'test_result' element is still
 not present.
-
-The 'interval' value is how often we should check if the test_result
-element appeared.
 
 
 Adding a selenium test
