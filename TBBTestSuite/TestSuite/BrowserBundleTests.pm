@@ -319,13 +319,12 @@ our @tests = (
     },
     {
         name            => 'play_videos',
-        type            => 'mozmill',
+        type            => 'marionette',
         descr           => 'Play some videos',
         use_net         => 1,
-        mozmill_test    => 'test_page',
+        marionette_test => 'page',
         remote          => 1,
         timeout         => 50000,
-        interval        => 100,
     },
     {
         name            => 'svg-disable',
