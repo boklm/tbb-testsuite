@@ -240,13 +240,14 @@ our @tests = (
     },
     {
         name            => 'https-everywhere',
-        type            => 'mozmill',
+        type            => 'marionette',
         use_net         => 1,
         descr           => 'Check that https everywhere is enabled and working',
     },
     {
         name            => 'https-everywhere-disabled',
-        type            => 'mozmill',
+        marionette_test => 'https-everywhere',
+        type            => 'marionette',
         descr           => 'Check that https everywhere is not doing anything when disabled',
         use_net         => 1,
         pre             => sub { toggle_https_everywhere($_[0], 0) },
@@ -709,6 +710,7 @@ sub marionette_run {
     my $result_file_txt = "$tbbinfos->{'results-dir'}/$test->{name}.txt";
     #--log-unittest  ./res.txt --log-html ./res.html
     my $bin = $OSNAME eq 'cygwin' ? 'Scripts' : 'bin';
+    my $marionette_test = $test->{marionette_test} // $test->{name};
     my $pypath = $ENV{PYTHONPATH};
     $ENV{PYTHONPATH} //= '';
     $ENV{PYTHONPATH} = winpath("$FindBin::Bin/marionette/tor_browser_tests/lib")
@@ -718,7 +720,7 @@ sub marionette_run {
         '--log-html', winpath($result_file_html),
         '--binary', ffbin_path($tbbinfos, $test),
         '--profile', winpath($tbbinfos->{ffprofiledir}),
-        winpath("$FindBin::Bin/marionette/tor_browser_tests/test_$test->{name}.py"));
+        winpath("$FindBin::Bin/marionette/tor_browser_tests/test_${marionette_test}.py"));
     $ENV{PYTHONPATH} = $pypath;
     my @txt_log = read_file($result_file_txt);
     my $res_line = shift @txt_log;
