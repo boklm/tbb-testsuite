@@ -124,14 +124,18 @@ our @tests = (
         name            => 'tor_bridge',
         type            => 'tor_bootstrap',
         descr           => 'Access tor using a bridge',
-        enable          => sub { $OSNAME eq 'linux' },
+        #enable          => sub { $OSNAME eq 'linux' },
+        # Disable temporarily until the bridge used in the test is fixed
+        enable          => sub { 0 },
     },
     {
         name            => 'tor_bridge_httpproxy',
         type            => 'tor_bootstrap',
         descr           => 'Access tor using a bridge and an http proxy',
         httpproxy       => 1,
-        enable          => sub { $OSNAME eq 'linux' },
+        #enable          => sub { $OSNAME eq 'linux' },
+        # Disable temporarily until the bridge used in the test is fixed
+        enable          => sub { 0 },
     },
     {
         name            => 'tor_obfs3',
