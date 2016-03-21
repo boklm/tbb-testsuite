@@ -85,12 +85,19 @@ then
     fi
 fi
 
-if [ a$(uname -o) = aCygwin ]
+if [ a$(uname -s) = aDarwin ] || [ a$(uname -o) = aCygwin ]
 then
     for perlmod in $perlmodules
     do
         cpan_install $perlmod
     done
+fi
+
+if [ a$(uname -s) = aDarwin ]
+then
+    brew install python
+    brew install p7zip
+    brew install imagemagick
 fi
 
 install_X() {

@@ -29,6 +29,7 @@ sub get_os_name {
 
 sub get_arch {
     return 'x86_64' if $Config{archname} =~ m/^x86_64/;
+    return 'x86_64' if $Config{archname} eq 'darwin-thread-multi-2level';
     return 'x86';
 }
 

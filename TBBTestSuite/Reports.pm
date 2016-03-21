@@ -33,7 +33,7 @@ BEGIN {
     # not work on Windows, so we're not creating thumbnails if we're
     # on Windows. In that case, the thumbnails should be created by the
     # server that receives the results.
-    if ($OSNAME ne 'cygwin') {
+    if ($OSNAME ne 'cygwin' && $OSNAME ne 'darwin') {
         require TBBTestSuite::Thumbnail;
         $screenshot_thumbnail = \&TBBTestSuite::Thumbnail::screenshot_thumbnail;
     } else {

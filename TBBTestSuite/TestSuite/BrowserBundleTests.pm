@@ -29,7 +29,7 @@ BEGIN {
     # not work on Windows, so we're not creating thumbnails if we're
     # on Windows. In that case, the thumbnails should be created by the
     # server that receives the results.
-    if ($OSNAME ne 'cygwin') {
+    if ($OSNAME ne 'cygwin' && $OSNAME ne 'darwin') {
         require TBBTestSuite::Thumbnail;
         $screenshot_thumbnail = \&TBBTestSuite::Thumbnail::screenshot_thumbnail;
     } else {
@@ -475,6 +475,12 @@ sub extract_tbb {
         $tbbinfos->{tbbdir} = "$tmpdir/torbrowser/Browser";
         move("$tmpdir/\$_OUTDIR", "$tmpdir/torbrowser");
         move ("$tmpdir/Start Tor Browser.exe", "$tmpdir/torbrowser/");
+    } elsif ($tbbinfos->{os} eq 'MacOSX') {
+        my $mountpoint = File::Temp::newdir('XXXXXX', DIR => $options->{tmpdir});
+        system('hdiutil', 'mount', '-mountpoint', $mountpoint, $tbbfile);
+        system('cp', '-a', "$mountpoint/TorBrowser.app", "$tmpdir/TorBrowser.app");
+        system('hdiutil', 'unmount', $mountpoint);
+        $tbbinfos->{tbbdir} = "$tmpdir/TorBrowser.app";
     }
 }
 
@@ -615,6 +621,7 @@ sub ffbin_path {
     if ($options->{use_strace} && $t{$test->{type}}) {
         return ff_strace_wrapper($tbbinfos, $test);
     }
+    return $tbbinfos->{ffbin} if $OSNAME eq 'darwin';
     return ff_wrapper($tbbinfos, $test);
 }
 
@@ -745,6 +752,9 @@ sub set_tbbpaths {
         $tbbinfos->{ffbin} =  "$tbbinfos->{tbbdir}/Browser/firefox";
         $tbbinfos->{tordir} = "$tbbinfos->{tbbdir}/Tor";
         $tbbinfos->{datadir} = "$tbbinfos->{tbbdir}/Data";
+    }
+    if ($tbbinfos->{os} eq 'MacOSX') {
+        $tbbinfos->{ffbin} = "$tbbinfos->{tbbdir}/Contents/MacOS/firefox";
     }
     $tbbinfos->{torbin} = "$tbbinfos->{tordir}/tor";
     $tbbinfos->{ptdir} = winpath("$tbbinfos->{tordir}/PluggableTransports");
