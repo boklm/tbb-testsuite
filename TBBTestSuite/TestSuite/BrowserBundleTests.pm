@@ -173,6 +173,19 @@ our @tests = (
         enable          => sub { $OSNAME eq 'linux' },
     },
     {
+        name            => 'tor_scramblesuit',
+        type            => 'tor_bootstrap',
+        descr           => 'Access tor using scramblesuit',
+        enable          => sub { $OSNAME eq 'linux' },
+    },
+    {
+        name            => 'tor_scramblesuit_httpproxy',
+        type            => 'tor_bootstrap',
+        descr           => 'Access tor using scramblesuit and an http proxy',
+        httpproxy       => 1,
+        enable          => sub { $OSNAME eq 'linux' },
+    },
+    {
         name            => 'tor_meek-google',
         type            => 'tor_bootstrap',
         descr           => 'Access tor using meek-google',
