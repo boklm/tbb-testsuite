@@ -218,16 +218,16 @@ the tests to try your new test. In this case, the '--enable-tests'
 option is useful to run only the test that you added:
 
 ----
-$ ./tbb-testsuite --no-newlayout --enable-tests my_new_test /path/to/tor-browser-linux64-3.6.6_ko.tar.xz
+$ ./tbb-testsuite --enable-tests my_new_test /path/to/tor-browser-linux64-3.6.6_ko.tar.xz
 ----
 
 If your test requires a running Tor daemon, you may need to enable the 'tor_bootstrap' test too:
 ----
-$ ./tbb-testsuite --no-newlayout --enable-tests tor_bootstrap,my_new_test /path/to/tor-browser-linux64-3.6.6_ko.tar.xz
+$ ./tbb-testsuite --enable-tests tor_bootstrap,my_new_test /path/to/tor-browser-linux64-3.6.6_ko.tar.xz
 ----
 
 Alternatively you may use an already running Tor daemon with the '--tor-socks-port' option:
 ----
-$ ./tbb-testsuite --no-newlayout --enable-tests my_new_test --tor-socks-port=9150 /path/to/tor-browser-linux64-3.6.6_ko.tar.xz
+$ ./tbb-testsuite --enable-tests my_new_test --tor-socks-port=9150 /path/to/tor-browser-linux64-3.6.6_ko.tar.xz
 ----
 

@@ -52,7 +52,6 @@ my %default_options = (
     xdummy     => $OSNAME ne 'cygwin',
     use_strace => 0,
     virustotal => 0,
-    newlayout  => 1,
     'virustotal-api-key-file' => "$ENV{HOME}/.virustotal.api-key",
     'email-to' => [],
     'email-from' => 'TBB Test Report <tbbtest@example.com>',
@@ -74,8 +73,7 @@ sub get_options {
                      action=s enable-tests=s upload-to=s os=s arch=s
                      virustotal! email-to=s@ email-from=s email-subject=s
                      mozmill-dir=s reports-url=s http-proxy-port=i
-                     newlayout! xdummy! disable-tests=s
-                     testrequests_types=s testsuite=s);
+                     xdummy! disable-tests=s testrequests_types=s testsuite=s);
     my (%cli, %config);
     Getopt::Long::GetOptionsFromArray(\@_, \%cli, @options) || exit 1;
     $cli{args} = \@_ if @_;

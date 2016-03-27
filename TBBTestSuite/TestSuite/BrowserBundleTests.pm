@@ -509,7 +509,7 @@ sub extract_tbb {
         } else {
             $tbbinfos->{tbbdir} = "$tmpdir/tor-browser_$tbbinfos->{language}";
         }
-        $tbbinfos->{tbbdir} .= '/Browser' if $options->{newlayout};
+        $tbbinfos->{tbbdir} .= '/Browser';
     } elsif ($tbbinfos->{os} eq 'Windows') {
         my (undef, undef, $f) = File::Spec->splitpath($tbbfile);
         copy($tbbfile, "$tmpdir/$f");
@@ -725,15 +725,9 @@ sub selenium_run {
 
 sub set_tbbpaths {
     my ($tbbinfos) = @_;
-    if ($options->{newlayout}) {
-        $tbbinfos->{ffbin} = "$tbbinfos->{tbbdir}/firefox";
-        $tbbinfos->{tordir} = "$tbbinfos->{tbbdir}/TorBrowser/Tor";
-        $tbbinfos->{datadir} = "$tbbinfos->{tbbdir}/TorBrowser/Data";
-    } else {
-        $tbbinfos->{ffbin} =  "$tbbinfos->{tbbdir}/Browser/firefox";
-        $tbbinfos->{tordir} = "$tbbinfos->{tbbdir}/Tor";
-        $tbbinfos->{datadir} = "$tbbinfos->{tbbdir}/Data";
-    }
+    $tbbinfos->{ffbin} = "$tbbinfos->{tbbdir}/firefox";
+    $tbbinfos->{tordir} = "$tbbinfos->{tbbdir}/TorBrowser/Tor";
+    $tbbinfos->{datadir} = "$tbbinfos->{tbbdir}/TorBrowser/Data";
     $tbbinfos->{torbin} = "$tbbinfos->{tordir}/tor";
     $tbbinfos->{ptdir} = winpath("$tbbinfos->{tordir}/PluggableTransports");
     $tbbinfos->{ffprofiledir} = "$tbbinfos->{datadir}/Browser/profile.default";
