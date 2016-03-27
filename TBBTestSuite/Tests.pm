@@ -2,6 +2,7 @@ package TBBTestSuite::Tests;
 
 use warnings;
 use strict;
+use feature 'state';
 use English;
 use FindBin;
 use Cwd qw(getcwd);
@@ -26,6 +27,7 @@ BEGIN {
 
 sub run_tests {
     my ($tbbinfos) = @_;
+    state %once_tests;
     my @enable_tests;
     if ($options->{'enable-tests'}) {
         @enable_tests = ref $options->{'enable-tests'} ?
@@ -51,6 +53,10 @@ sub run_tests {
         }
         if ($test->{enable} && !$test->{enable}->($tbbinfos, $test)) {
             next;
+        }
+        if ($test->{run_once}) {
+            next if $once_tests{$test->{name}};
+            $once_tests{$test->{name}} = 1;
         }
         print "\n", '*' x (17 + length($test->{name})), "\n";
         print "* Running test $test->{name} *\n";

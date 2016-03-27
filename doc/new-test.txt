@@ -68,6 +68,10 @@ enable::
         A reference to a perl subroutine that should return false when
         the test should be skipped.
 
+run_once::
+        If set to a true value, when running the testsuite on a series
+        of bundles, this test will only be run on the first bundle.
+
 
 Adding a mozmill test
 ~~~~~~~~~~~~~~~~~~~~~

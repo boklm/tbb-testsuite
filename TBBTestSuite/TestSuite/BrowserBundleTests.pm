@@ -119,12 +119,14 @@ our @tests = (
         descr           => 'Access tor using an http proxy',
         httpproxy       => 1,
         enable          => sub { $OSNAME eq 'linux' },
+        run_once        => 1,
     },
     {
         name            => 'tor_bridge',
         type            => 'tor_bootstrap',
         descr           => 'Access tor using a bridge',
         enable          => sub { $OSNAME eq 'linux' },
+        run_once        => 1,
     },
     {
         name            => 'tor_bridge_httpproxy',
@@ -132,12 +134,14 @@ our @tests = (
         descr           => 'Access tor using a bridge and an http proxy',
         httpproxy       => 1,
         enable          => sub { $OSNAME eq 'linux' },
+        run_once        => 1,
     },
     {
         name            => 'tor_obfs3',
         type            => 'tor_bootstrap',
         descr           => 'Access tor using obfs3',
         enable          => sub { $OSNAME eq 'linux' },
+        run_once        => 1,
     },
     {
         name            => 'tor_obfs3_httpproxy',
@@ -145,12 +149,14 @@ our @tests = (
         descr           => 'Access tor using obfs3 and an http proxy',
         httpproxy       => 1,
         enable          => sub { $OSNAME eq 'linux' },
+        run_once        => 1,
     },
     {
         name            => 'tor_obfs4',
         type            => 'tor_bootstrap',
         descr           => 'Access tor using obfs4',
         enable          => sub { $OSNAME eq 'linux' && $_[0]->{version} !~ m/^4.0/ },
+        run_once        => 1,
     },
     {
         name            => 'tor_obfs4_httpproxy',
@@ -158,12 +164,14 @@ our @tests = (
         descr           => 'Access tor using obfs4 and an http proxy',
         httpproxy       => 1,
         enable          => sub { $OSNAME eq 'linux' && $_[0]->{version} !~ m/^4.0/ },
+        run_once        => 1,
     },
     {
         name            => 'tor_fte',
         type            => 'tor_bootstrap',
         descr           => 'Access tor using fteproxy',
         enable          => sub { $OSNAME eq 'linux' },
+        run_once        => 1,
     },
     {
         name            => 'tor_fte_httpproxy',
@@ -171,12 +179,14 @@ our @tests = (
         descr           => 'Access tor using fteproxy and an http proxy',
         httpproxy       => 1,
         enable          => sub { $OSNAME eq 'linux' },
+        run_once        => 1,
     },
     {
         name            => 'tor_scramblesuit',
         type            => 'tor_bootstrap',
         descr           => 'Access tor using scramblesuit',
         enable          => sub { $OSNAME eq 'linux' },
+        run_once        => 1,
     },
     {
         name            => 'tor_scramblesuit_httpproxy',
@@ -184,24 +194,28 @@ our @tests = (
         descr           => 'Access tor using scramblesuit and an http proxy',
         httpproxy       => 1,
         enable          => sub { $OSNAME eq 'linux' },
+        run_once        => 1,
     },
     {
         name            => 'tor_meek-google',
         type            => 'tor_bootstrap',
         descr           => 'Access tor using meek-google',
         enable          => sub { $OSNAME eq 'linux' },
+        run_once        => 1,
     },
     {
         name            => 'tor_meek-amazon',
         type            => 'tor_bootstrap',
         descr           => 'Access tor using meek-amazon',
         enable          => sub { $OSNAME eq 'linux' },
+        run_once        => 1,
     },
     {
         name            => 'tor_meek-azure',
         type            => 'tor_bootstrap',
         descr           => 'Access tor using meek-azure',
         enable          => sub { $OSNAME eq 'linux' },
+        run_once        => 1,
     },
     {
         name            => 'tor_bootstrap',
