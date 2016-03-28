@@ -34,6 +34,7 @@ sub winpid {
 
 sub send_newnym {
     my ($tbbinfos) = @_;
+    return unless ($options->{starttor} && $tbbinfos->{torpid});
     my $sock = new IO::Socket::INET(
         PeerAddr => 'localhost',
         PeerPort => $options->{'tor-control-port'},
