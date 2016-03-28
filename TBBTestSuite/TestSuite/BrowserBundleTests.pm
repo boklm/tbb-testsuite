@@ -724,9 +724,10 @@ sub marionette_run {
     my $bin = $OSNAME eq 'cygwin' ? 'Scripts' : 'bin';
     my $marionette_test = $test->{marionette_test} // $test->{name};
     my $pypath = $ENV{PYTHONPATH};
-    $ENV{PYTHONPATH} //= '';
-    $ENV{PYTHONPATH} = winpath("$FindBin::Bin/marionette/tor_browser_tests/lib")
-        . ":$ENV{PYTHONPATH}";
+    my $old_pypath = $ENV{PYTHONPATH};
+    $ENV{PYTHONPATH} = winpath("$FindBin::Bin/marionette/tor_browser_tests/lib");
+    my $sep = $OSNAME eq 'cygwin' ? ';' : ':';
+    $ENV{PYTHONPATH} .= $sep . $old_pypath if $old_pypath;
     system(xvfb_run($test), "$FindBin::Bin/virtualenv-marionette/$bin/tor-browser-tests",
         '--log-unittest', winpath($result_file_txt),
         '--log-html', winpath($result_file_html),
