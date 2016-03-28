@@ -319,12 +319,13 @@ our @tests = (
     {
         name            => 'resource-timing',
         type            => 'marionette',
-        descr           => 'Check that the Resource Timing API is really disabled',
+        descr           => 'Check that the Resource Timing and User Timing APIs are really disabled',
         use_net         => 1,
-        # To check that the test fails when resource timing is enabled,
-        # uncomment this:
+        # To check that the test fails when resource timing or user
+        # timing is enabled, uncomment this:
         #prefs           => {
         #    'dom.enable_resource_timing' => 'true',
+        #    'dom.enable_user_timing' => 'true',
         #},
     },
     {
