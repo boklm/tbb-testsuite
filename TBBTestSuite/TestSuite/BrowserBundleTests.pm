@@ -312,7 +312,7 @@ our @tests = (
     },
     {
         name            => 'navigation-timing',
-        type            => 'mozmill',
+        type            => 'marionette',
         descr           => 'Check that the Navigation Timing API is really disabled',
         use_net         => 1,
     },
