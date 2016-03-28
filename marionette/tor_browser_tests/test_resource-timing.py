@@ -3,6 +3,11 @@
 # Tor Browser. Setting |dom.enable_resource_timing| to |false| and testing that
 # might not be sufficient.
 
+# This test also checks where the User Timing API (see:
+# https://www.w3.org/TR/user-timing/) is really disabled in the default
+# Tor Browser. Setting |dom.enable_user_timing| to |false| and testing that
+# might not be sufficient.
+
 from marionette_driver import By
 from marionette_driver.errors import MarionetteException
 
@@ -24,7 +29,7 @@ class Test(FirefoxTestCase):
 
             # If resource timing is disabled we should not be able to get resource
             # entries at all in the first place. We test all three methods for safety's
-            # sake.
+            # sake. We also test the user timing mark and measure methods.
 
             # getEntriesByType()
             err_msg = 'resource entries found (getEntriesByType())'
@@ -68,3 +73,28 @@ class Test(FirefoxTestCase):
                 """),
                 msg=err_msg)
 
+            # measure()
+            err_msg = 'user timing is working (performance.measure())'
+            self.assertTrue(self.marionette.execute_script("""
+                var pass = false;
+                try {
+                        document.defaultView.performance.measure("measure1");
+                } catch (e) {
+                        pass = true;
+                }
+                return pass;
+                """),
+                msg=err_msg)
+
+            # mark()
+            err_msg = 'user timing is working (performance.mark())'
+            self.assertTrue(self.marionette.execute_script("""
+                var pass = false;
+                try {
+                        document.defaultView.performance.mark("startTask1");
+                } catch (e) {
+                        pass = true;
+                }
+                return pass;
+                """),
+                msg=err_msg)
