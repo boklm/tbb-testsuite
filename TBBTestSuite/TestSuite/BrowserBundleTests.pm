@@ -318,9 +318,14 @@ our @tests = (
     },
     {
         name            => 'resource-timing',
-        type            => 'mozmill',
+        type            => 'marionette',
         descr           => 'Check that the Resource Timing API is really disabled',
         use_net         => 1,
+        # To check that the test fails when resource timing is enabled,
+        # uncomment this:
+        #prefs           => {
+        #    'dom.enable_resource_timing' => 'true',
+        #},
     },
     {
         name            => 'searchengines',
