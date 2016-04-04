@@ -260,7 +260,7 @@ our @tests = (
     },
     {
         name            => 'acid3',
-        type            => 'mozmill',
+        type            => 'marionette',
         descr           => 'acid3 tests',
         use_net         => 1,
         retry           => 4,
