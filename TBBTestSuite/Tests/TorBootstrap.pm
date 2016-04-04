@@ -122,7 +122,7 @@ sub start_tor {
     chomp $hashed_password;
     my $torrc_file;
     if ($test->{use_default_config}) {
-        $torrc_file = "$tbbinfos->{datadir}/Tor/torrc-defaults";
+        $torrc_file = $tbbinfos->{torrcdefaults};
         my @torrc = read_file($torrc_file);
         foreach (@torrc) {
             s/^ControlPort .*/ControlPort $options->{'tor-control-port'}/;
@@ -149,11 +149,13 @@ sub start_tor {
         $torrc_file = File::Temp->new;
         write_file($torrc_file, $config);
     }
+    write_file("$tbbinfos->{datadir}/Tor/torrc", ())
+                unless -f "$tbbinfos->{datadir}/Tor/torrc";
     my @cmd = (winpath($tbbinfos->{torbin}), '--defaults-torrc',
         winpath($torrc_file),
         '-f', winpath("$tbbinfos->{datadir}/Tor/torrc"),
         'DataDirectory', winpath("$tbbinfos->{datadir}/Tor"),
-        'GeoIPFile', winpath("$tbbinfos->{datadir}/Tor/geoip"),
+        'GeoIPFile', winpath($tbbinfos->{torgeoip}),
         '__OwningControllerProcess', winpid($$));
     $tbbinfos->{torpid} = fork;
     if ($tbbinfos->{torpid} == 0) {

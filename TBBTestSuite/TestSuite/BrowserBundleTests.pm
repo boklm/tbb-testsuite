@@ -808,10 +808,21 @@ sub set_tbbpaths {
     $tbbinfos->{datadir} = "$tbbinfos->{tbbdir}/TorBrowser/Data";
     if ($tbbinfos->{os} eq 'MacOSX') {
         $tbbinfos->{ffbin} = "$tbbinfos->{tbbdir}/Contents/MacOS/firefox";
+        unless ($tbbinfos->{version} =~ m/^5./) {
+            $tbbinfos->{ffprofiledir} = "$tbbinfos->{tbbdir}/Contents/Resources/distribution";
+            $tbbinfos->{tordir} = "$tbbinfos->{tbbdir}/Contents/Resources/TorBrowser/Tor";
+            $tbbinfos->{datadir} = "$tbbinfos->{tbbdir}/../TorBrowser-data";
+            $tbbinfos->{torrcdefaults} = "$tbbinfos->{tordir}/torrc-defaults";
+            $tbbinfos->{torgeoip} = "$tbbinfos->{tordir}/geoip";
+            mkdir $tbbinfos->{datadir} unless -d $tbbinfos->{datadir};
+            mkdir "$tbbinfos->{datadir}/Tor" unless -d "$tbbinfos->{datadir}/Tor";
+        }
     }
+    $tbbinfos->{torrcdefaults} //= "$tbbinfos->{datadir}/Tor/torrc-defaults";
+    $tbbinfos->{torgeoip} //= "$tbbinfos->{datadir}/Tor/geoip";
     $tbbinfos->{torbin} = "$tbbinfos->{tordir}/tor";
     $tbbinfos->{ptdir} = winpath("$tbbinfos->{tordir}/PluggableTransports");
-    $tbbinfos->{ffprofiledir} = "$tbbinfos->{datadir}/Browser/profile.default";
+    $tbbinfos->{ffprofiledir} //= "$tbbinfos->{datadir}/Browser/profile.default";
 }
 
 sub new {
