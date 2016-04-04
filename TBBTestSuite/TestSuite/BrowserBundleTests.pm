@@ -330,7 +330,7 @@ our @tests = (
     },
     {
         name            => 'searchengines',
-        type            => 'mozmill',
+        type            => 'marionette',
         descr           => 'Check that we have the default search engines set',
     },
     {
