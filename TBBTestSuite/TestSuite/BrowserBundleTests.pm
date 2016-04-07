@@ -267,8 +267,8 @@ our @tests = (
     },
     {
         name            => 'slider_settings_1',
-        mozmill_test    => 'slider_settings',
-        type            => 'mozmill',
+        marionette_test => 'slider_settings',
+        type            => 'marionette',
         descr           => 'Check that settings are set according to security slider mode',
         slider_mode     => 1,
         pre             => \&set_slider_mode,
@@ -277,8 +277,8 @@ our @tests = (
     },
     {
         name            => 'slider_settings_2',
-        mozmill_test    => 'slider_settings',
-        type            => 'mozmill',
+        marionette_test => 'slider_settings',
+        type            => 'marionette',
         descr           => 'Check that settings are set according to security slider mode',
         slider_mode     => 2,
         pre             => \&set_slider_mode,
@@ -287,8 +287,8 @@ our @tests = (
     },
     {
         name            => 'slider_settings_3',
-        mozmill_test    => 'slider_settings',
-        type            => 'mozmill',
+        marionette_test => 'slider_settings',
+        type            => 'marionette',
         descr           => 'Check that settings are set according to security slider mode',
         slider_mode     => 3,
         pre             => \&set_slider_mode,
@@ -297,8 +297,8 @@ our @tests = (
     },
     {
         name            => 'slider_settings_4',
-        mozmill_test    => 'slider_settings',
-        type            => 'mozmill',
+        marionette_test => 'slider_settings',
+        type            => 'marionette',
         descr           => 'Check that settings are set according to security slider mode',
         slider_mode     => 4,
         pre             => \&set_slider_mode,
