@@ -307,7 +307,7 @@ our @tests = (
     },
     {
         name            => 'dom-objects-enumeration',
-        type            => 'mozmill',
+        type            => 'marionette',
         descr           => 'Check the list of DOM Objects exposed in the global namespace',
     },
     {
