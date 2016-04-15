@@ -345,7 +345,7 @@ our @tests = (
     },
     {
         name            => 'noscript',
-        type            => 'mozmill',
+        type            => 'marionette',
         descr           => 'Check that noscript options are working',
         use_net         => 1,
         prefs           => {
