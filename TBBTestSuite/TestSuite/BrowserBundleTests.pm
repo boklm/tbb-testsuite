@@ -229,7 +229,7 @@ our @tests = (
     },
     {
         name            => 'screenshots',
-        type            => 'mozmill',
+        type            => 'marionette',
         descr           => 'Take some screenshots',
     },
     {
@@ -738,6 +738,9 @@ sub marionette_run {
     $ENV{PYTHONPATH} = winpath("$FindBin::Bin/marionette/tor_browser_tests/lib");
     my $sep = $OSNAME eq 'cygwin' ? ';' : ':';
     $ENV{PYTHONPATH} .= $sep . $old_pypath if $old_pypath;
+    $test->{screenshots} = [];
+    my $screenshots_tmp = File::Temp::newdir('XXXXXX', DIR => $options->{tmpdir});
+    $ENV{'MARIONETTE_SCREENSHOTS'} = winpath($screenshots_tmp);
     system(xvfb_run($test), "$FindBin::Bin/virtualenv-marionette/$bin/tor-browser-tests",
         '--log-unittest', winpath($result_file_txt),
         '--log-html', winpath($result_file_html),
@@ -749,6 +752,13 @@ sub marionette_run {
     my $res_line = shift @txt_log;
     $test->{results}{success} = $res_line eq ".\n" || $res_line eq ".\r\n";
     $test->{results}{log} = join '', @txt_log;
+    my $i = 0;
+    for my $screenshot_file (sort glob "$screenshots_tmp/*.png") {
+        move($screenshot_file, "$tbbinfos->{'results-dir'}/$test->{name}-$i.png");
+        $screenshot_thumbnail->($tbbinfos->{'results-dir'}, "$test->{name}-$i.png");
+        push @{$test->{screenshots}}, "$test->{name}-$i.png";
+        $i++;
+    }
     reset_test_prefs($tbbinfos, $test);
     parse_strace($tbbinfos, $test);
     check_opened_connections($tbbinfos, $test);
