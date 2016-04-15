@@ -176,6 +176,7 @@ class Test(FirefoxTestCase):
                 "DocumentXBL",
                 "DOMApplication",
                 "DOMApplicationsManager",
+                "DOMConstructor",
                 "DOMCursor",
                 "DOMError",
                 "DOMException",
