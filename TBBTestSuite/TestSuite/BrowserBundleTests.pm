@@ -389,10 +389,9 @@ our @tests = (
     },
     {
         name            => 'svg-disable',
-        type            => 'mozmill',
+        type            => 'marionette',
         descr           => 'Check if disabling svg is working',
-        mozmill_test    => 'svg',
-        svg_enabled     => 0,
+        marionette_test => 'svg',
         use_net         => 1,
         prefs           => {
             'extensions.torbutton.security_custom' => 'true',
@@ -402,11 +401,10 @@ our @tests = (
     },
     {
         name            => 'svg-enable',
-        type            => 'mozmill',
+        type            => 'marionette',
         descr           => 'Check if enabling svg is working',
-        mozmill_test    => 'svg',
+        marionette_test => 'svg',
         use_net         => 1,
-        svg_enabled     => 1,
         prefs           => {
             'extensions.torbutton.security_custom' => 'true',
             'svg.in-content.enabled' => 'true',
