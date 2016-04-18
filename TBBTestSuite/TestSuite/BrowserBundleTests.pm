@@ -443,7 +443,6 @@ sub set_test_prefs {
         $new_prefs .= "pref(\"$prefname\", $t->{prefs}{$prefname});\n";
     }
     write_file($prefs, {append => 1}, $new_prefs);
-    print "prefs file: $prefs\n";
 }
 
 sub reset_test_prefs {
