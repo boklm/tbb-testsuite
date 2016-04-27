@@ -74,7 +74,7 @@ sub virustotal_run {
     my ($tbbinfos, $test) = @_;
     return unless $options->{virustotal};
     my $files = {};
-    $files->{$tbbinfos->{filename}} = scan_file($tbbinfos->{tbbfile});
+    $files->{$tbbinfos->{filename}} = scan_file("$tbbinfos->{tmpdir}/$tbbinfos->{filename}");
     my $cwd = getcwd;
     my $scanfile = sub {
         my $file = $File::Find::name;
