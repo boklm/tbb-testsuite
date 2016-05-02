@@ -189,13 +189,19 @@ class Test(MarionetteTestCase):
                 "dom.workers.sharedWorkers.enabled": False, # See https://bugs.torproject.org/15562
                 }
 
-        # Settings for the Tor Browser 5.5 and nightly branch
+        # Settings for the Tor Browser 5.5
         self.SETTINGS_55 = {
                 "startup.homepage_override_url": "https://blog.torproject.org/category/tags/tor-browser",
                 "browser.startup.homepage_override.buildID": "20000101000000",
                 "dom.workers.sharedWorkers.enabled": True, # See #15564
                 }
 
+        # Settings for the Tor Browser 6.0 and nightly branch
+        self.SETTINGS_60 = {
+                "startup.homepage_override_url": "https://blog.torproject.org/category/tags/tor-browser",
+                "browser.startup.homepage_override.buildID": "20000101000000",
+                "dom.workers.sharedWorkers.enabled": True, # See #15564
+                }
 
     def test_settings(self):
         ts = testsuite.TestSuite()
@@ -206,9 +212,12 @@ class Test(MarionetteTestCase):
             if self.ts.t['tbbinfos']['version'].startswith('5.0'):
                 settings.update(self.SETTINGS_50)
 
-            if self.ts.t['tbbinfos']['version'].startswith('5.5') or \
-                    self.ts.t['tbbinfos']['version'] == 'tbb-nightly':
+            if self.ts.t['tbbinfos']['version'].startswith('5.5'):
                 settings.update(self.SETTINGS_55)
+
+            if self.ts.t['tbbinfos']['version'].startswith('6.0') or \
+                    self.ts.t['tbbinfos']['version'] == 'tbb-nightly':
+                settings.update(self.SETTINGS_60)
 
             errors = ''
             for name, val in settings.iteritems():
