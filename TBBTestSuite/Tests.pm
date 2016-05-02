@@ -215,7 +215,8 @@ sub test_sha {
 sub test_start {
     my ($report, $tbbinfos) = @_;
     my $oldcwd = getcwd;
-    my $tmpdir = File::Temp::newdir('XXXXXX', DIR => $options->{tmpdir});
+    my $tmpdir = File::Temp::newdir('XXXXXX', DIR => $options->{tmpdir},
+                                              CLEANUP => $options->{cleanup});
     $tbbinfos->{tmpdir} = $tmpdir->dirname;
     $tbbinfos->{tests} //= [ map { { %$_ } } @TBBTestSuite::TestSuite::BrowserBundleTests::tests ];
     $tbbinfos->{'results-dir'} =

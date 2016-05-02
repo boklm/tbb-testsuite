@@ -64,6 +64,7 @@ my %default_options = (
     test_data_url_https => 'https://test-data.tbb.torproject.org',
     test_data_dir => "$FindBin::Bin/test-data",
     testsuite => undef,
+    cleanup   => 1,
 );
 
 
@@ -74,7 +75,8 @@ sub get_options {
                      action=s enable-tests=s upload-to=s os=s arch=s
                      virustotal! email-to=s@ email-from=s email-subject=s
                      mozmill-dir=s reports-url=s http-proxy-port=i
-                     xdummy! disable-tests=s testrequests_types=s testsuite=s);
+                     xdummy! disable-tests=s testrequests_types=s testsuite=s
+                     cleanup!);
     my (%cli, %config);
     Getopt::Long::GetOptionsFromArray(\@_, \%cli, @options) || exit 1;
     $cli{args} = \@_ if @_;

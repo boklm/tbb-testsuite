@@ -147,6 +147,9 @@ Available options
         Select the port used to start an http proxy, for tor_bootstrap
         tests that require an http proxy.
 
+--no-cleanup::
+        Disable cleanup of tmp directory after running the testsuite.
+        This can be useful for debugging.
 
 Configuration Files
 -------------------
