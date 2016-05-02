@@ -43,7 +43,7 @@ nav_props = {"appCodeName": "Mozilla",
 "mozContacts":  "[object ContactManager]",
 "mozPhoneNumberService":  "undefined",
 "mozApps":  "[object DOMApplicationsRegistry]",
-"mozTCPSocket":  "null",
+"mozTCPSocket":  "undefined",
 }
 
 
