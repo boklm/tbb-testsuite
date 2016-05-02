@@ -6,12 +6,12 @@
 from marionette_driver import By
 from marionette_driver.errors import MarionetteException
 
-from firefox_ui_harness import FirefoxTestCase
+from marionette import MarionetteTestCase
 
-class Test(FirefoxTestCase):
+class Test(MarionetteTestCase):
 
     def setUp(self):
-        FirefoxTestCase.setUp(self)
+        MarionetteTestCase.setUp(self)
 
         self.TEST_URL = "https://www.mediawiki.org/wiki/MediaWiki"
 

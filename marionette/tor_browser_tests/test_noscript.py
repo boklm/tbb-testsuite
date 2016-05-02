@@ -3,15 +3,15 @@
 from marionette_driver import By
 from marionette_driver.errors import MarionetteException, NoSuchElementException
 
-from firefox_ui_harness import FirefoxTestCase
+from marionette import MarionetteTestCase
 
 import testsuite
 
 
-class Test(FirefoxTestCase):
+class Test(MarionetteTestCase):
 
     def setUp(self):
-        FirefoxTestCase.setUp(self)
+        MarionetteTestCase.setUp(self)
 
         ts = testsuite.TestSuite()
         self.ts = ts
@@ -21,11 +21,11 @@ class Test(FirefoxTestCase):
 
 
     def test_noscript(self):
-        self.assertEqual(self.prefs.get_pref('noscript.global'), False,
+        self.assertEqual(self.marionette.get_pref('noscript.global'), False,
             msg="pref noscript.global is not false")
-        self.assertEqual(self.prefs.get_pref('noscript.globalHttpsWhitelist'), True,
+        self.assertEqual(self.marionette.get_pref('noscript.globalHttpsWhitelist'), True,
             msg="pref noscript.globalHttpsWhitelist is not true")
-        self.assertEqual(self.prefs.get_pref('noscript.cascadePermissions'), True,
+        self.assertEqual(self.marionette.get_pref('noscript.cascadePermissions'), True,
             msg="pref noscript.cascadePermissions is not true")
 
         self.marionette.set_search_timeout(1000)

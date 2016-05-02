@@ -1,9 +1,9 @@
 from marionette_driver import By
 from marionette_driver.errors import MarionetteException
 
-from firefox_ui_harness import FirefoxTestCase
+from marionette import MarionetteTestCase
 
-class Test(FirefoxTestCase):
+class Test(MarionetteTestCase):
     def test_useragent(self):
         with self.marionette.using_context('content'):
             self.marionette.navigate('about:robots')

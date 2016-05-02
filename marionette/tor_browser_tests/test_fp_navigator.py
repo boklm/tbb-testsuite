@@ -1,7 +1,7 @@
 from marionette_driver import By
 from marionette_driver.errors import MarionetteException
 
-from firefox_ui_harness import FirefoxTestCase
+from marionette import MarionetteTestCase
 
 # expected values for navigation properties
 nav_props = {"appCodeName": "Mozilla",
@@ -47,7 +47,7 @@ nav_props = {"appCodeName": "Mozilla",
 }
 
 
-class Test(FirefoxTestCase):
+class Test(MarionetteTestCase):
     def test_navigator(self):
         with self.marionette.using_context('content'):
             self.marionette.navigate('about:robots')

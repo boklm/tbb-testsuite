@@ -1,9 +1,9 @@
 from marionette_driver import By
 from marionette_driver.errors import MarionetteException
 
-from firefox_ui_harness import FirefoxTestCase
+from marionette import MarionetteTestCase
 
-class Test(FirefoxTestCase):
+class Test(MarionetteTestCase):
     def test_screen_dims(self):
         with self.marionette.using_context('content'):
             # https://gitweb.torproject.org/torbrowser.git/blob/HEAD:/src/current-patches/firefox/0021-Do-not-expose-physical-screen-info.-via-window-and-w.patch

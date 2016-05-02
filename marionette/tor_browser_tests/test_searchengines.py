@@ -9,15 +9,15 @@
 from marionette_driver import By, Wait
 from marionette_driver.errors import MarionetteException
 
-from firefox_ui_harness import FirefoxTestCase
+from marionette import MarionetteTestCase
 
 import testsuite
 
 
-class Test(FirefoxTestCase):
+class Test(MarionetteTestCase):
 
     def setUp(self):
-        FirefoxTestCase.setUp(self)
+        MarionetteTestCase.setUp(self)
         ts = testsuite.TestSuite()
 
     def test_searchengines(self):

@@ -4,9 +4,8 @@ use FindBin;
 use IO::CaptureOutput qw(qxx);
 use Cwd;
 
-my $virtenv = "$FindBin::Bin/virtualenv";
 my $virtenv_marionette = "$FindBin::Bin/virtualenv-marionette";
-my $pip = "$virtenv/bin/pip";
+my $pip = "$virtenv_marionette/bin/pip";
 
 sub run {
     system(@_) == 0 || die "Error running " . join(' ', @_);
@@ -26,12 +25,5 @@ sub pip_install {
     run($pip, 'install', $pkg) unless $output;
 }
 
-run('virtualenv', $virtenv) unless -d $virtenv;
-for my $pkg (qw(selenium mozmill)) {
-    pip_install($pkg);
-}
-
 run('virtualenv', $virtenv_marionette) unless -d $virtenv_marionette;
-run_from_dir('marionette/firefox-ui-tests',
-    "$virtenv_marionette/bin/python", 'setup.py', 'develop');
 run_from_dir('marionette', "$virtenv_marionette/bin/python", 'setup.py', 'develop');

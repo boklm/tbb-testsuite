@@ -1,15 +1,15 @@
 from marionette_driver import By
 from marionette_driver.errors import MarionetteException
 
-from firefox_ui_harness import FirefoxTestCase
+from marionette import MarionetteTestCase
 
 import testsuite
 
 
-class Test(FirefoxTestCase):
+class Test(MarionetteTestCase):
 
     def setUp(self):
-        FirefoxTestCase.setUp(self)
+        MarionetteTestCase.setUp(self)
 
         ts = testsuite.TestSuite()
         self.ts = ts
@@ -47,7 +47,7 @@ class Test(FirefoxTestCase):
 
             slider_mode = int(self.ts.t['test']['slider_mode'])
             self.assertEqual(slider_mode,
-                self.prefs.get_pref('extensions.torbutton.security_slider'),
+                self.marionette.get_pref('extensions.torbutton.security_slider'),
                 msg='Slider mode is not set correctly')
 
             expected_prefs = {}
@@ -93,7 +93,7 @@ class Test(FirefoxTestCase):
 
             errors = ''
             for name, val in expected_prefs.iteritems():
-                if self.prefs.get_pref(name) != val:
-                    errors += "%s: %s != %s\n" % (name, self.prefs.get_pref(name), val)
+                if self.marionette.get_pref(name) != val:
+                    errors += "%s: %s != %s\n" % (name, self.marionette.get_pref(name), val)
 
             self.assertEqual(errors, '', msg=errors)

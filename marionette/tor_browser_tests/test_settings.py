@@ -1,15 +1,15 @@
 from marionette_driver import By
 from marionette_driver.errors import MarionetteException
 
-from firefox_ui_harness import FirefoxTestCase
+from marionette import MarionetteTestCase
 
 import testsuite
 
 
-class Test(FirefoxTestCase):
+class Test(MarionetteTestCase):
 
     def setUp(self):
-        FirefoxTestCase.setUp(self)
+        MarionetteTestCase.setUp(self)
 
         ts = testsuite.TestSuite()
         self.ts = ts
@@ -212,8 +212,8 @@ class Test(FirefoxTestCase):
 
             errors = ''
             for name, val in settings.iteritems():
-                if self.prefs.get_pref(name) != val:
-                    errors += "%s: %s != %s\n" % (name, self.prefs.get_pref(name), val)
+                if self.marionette.get_pref(name) != val:
+                    errors += "%s: %s != %s\n" % (name, self.marionette.get_pref(name), val)
 
 
 

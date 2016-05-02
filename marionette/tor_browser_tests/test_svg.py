@@ -1,15 +1,15 @@
 from marionette_driver import By
 from marionette_driver.errors import MarionetteException, JavascriptException
 
-from firefox_ui_harness import FirefoxTestCase
+from marionette import MarionetteTestCase
 
 import testsuite
 
 
-class Test(FirefoxTestCase):
+class Test(MarionetteTestCase):
 
     def setUp(self):
-        FirefoxTestCase.setUp(self)
+        MarionetteTestCase.setUp(self)
 
         ts = testsuite.TestSuite()
         self.ts = ts
@@ -20,7 +20,7 @@ class Test(FirefoxTestCase):
     def test_svg(self):
         m = self.marionette
         svg_enabled = self.ts.t['test']['name'] == 'svg-enable'
-        self.assertEqual(self.prefs.get_pref('svg.in-content.enabled'),
+        self.assertEqual(self.marionette.get_pref('svg.in-content.enabled'),
                 svg_enabled,
                 msg="svg.in-content.enabled is not set correctly")
 

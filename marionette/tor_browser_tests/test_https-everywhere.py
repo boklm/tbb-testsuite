@@ -1,15 +1,15 @@
 from marionette_driver import By
 from marionette_driver.errors import MarionetteException
 
-from firefox_ui_harness import FirefoxTestCase
+from marionette import MarionetteTestCase
 
 import testsuite
 
 
-class Test(FirefoxTestCase):
+class Test(MarionetteTestCase):
 
     def setUp(self):
-        FirefoxTestCase.setUp(self)
+        MarionetteTestCase.setUp(self)
 
         ts = testsuite.TestSuite()
         self.ts = ts
@@ -20,7 +20,7 @@ class Test(FirefoxTestCase):
 
 
     def test_https_everywhere(self):
-        self.assertEqual(self.prefs.get_pref(self.PREF_ENABLE_HE), \
+        self.assertEqual(self.marionette.get_pref(self.PREF_ENABLE_HE), \
                 self.ts.t['test']['name'] == 'https-everywhere')
 
         with self.marionette.using_context('content'):
