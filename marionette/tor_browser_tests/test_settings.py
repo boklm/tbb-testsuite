@@ -200,7 +200,6 @@ class Test(MarionetteTestCase):
         self.SETTINGS_60 = {
                 "startup.homepage_override_url": "https://blog.torproject.org/category/tags/tor-browser",
                 "browser.startup.homepage_override.buildID": "20000101000000",
-                "dom.workers.sharedWorkers.enabled": True, # See #15564
                 }
 
     def test_settings(self):
