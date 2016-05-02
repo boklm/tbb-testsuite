@@ -531,7 +531,11 @@ sub extract_tbb {
         copy($tbbfile, "$tmpdir/$f");
         system('7z', 'x', $f);
         $tbbinfos->{tbbdir} = "$tmpdir/torbrowser/Browser";
-        move("$tmpdir/\$_OUTDIR", "$tmpdir/torbrowser");
+        move("$tmpdir/\$_OUTDIR", "$tmpdir/torbrowser") if -d "$tmpdir/\$_OUTDIR";
+        if (-d "$tmpdir/Browser") {
+            mkdir "$tmpdir/torbrowser";
+            move("$tmpdir/Browser", "$tmpdir/torbrowser/Browser");
+        }
         move ("$tmpdir/Start Tor Browser.exe", "$tmpdir/torbrowser/");
     } elsif ($tbbinfos->{os} eq 'MacOSX') {
         my $mountpoint = File::Temp::newdir('XXXXXX', DIR => $options->{tmpdir});
