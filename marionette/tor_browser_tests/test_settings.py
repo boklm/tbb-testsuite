@@ -90,7 +90,6 @@ class Test(MarionetteTestCase):
                 "general.appversion.override": "5.0 (Windows)",
                 "general.oscpu.override": "Windows NT 6.1",
                 "general.platform.override": "Win32",
-                "general.useragent.override": "Mozilla/5.0 (Windows NT 6.1; rv:38.0) Gecko/20100101 Firefox/38.0",
                 "general.productSub.override": "20100101",
                 "general.buildID.override": "20100101",
                 "general.useragent.vendor": "",
@@ -187,6 +186,7 @@ class Test(MarionetteTestCase):
                 "browser.startup.homepage_override.buildID": "20100101",
                 "browser.startup.homepage_override.mstone": "ignore",
                 "dom.workers.sharedWorkers.enabled": False, # See https://bugs.torproject.org/15562
+                "general.useragent.override": "Mozilla/5.0 (Windows NT 6.1; rv:38.0) Gecko/20100101 Firefox/38.0",
                 }
 
         # Settings for the Tor Browser 5.5
@@ -194,12 +194,14 @@ class Test(MarionetteTestCase):
                 "startup.homepage_override_url": "https://blog.torproject.org/category/tags/tor-browser",
                 "browser.startup.homepage_override.buildID": "20000101000000",
                 "dom.workers.sharedWorkers.enabled": True, # See #15564
+                "general.useragent.override": "Mozilla/5.0 (Windows NT 6.1; rv:38.0) Gecko/20100101 Firefox/38.0",
                 }
 
         # Settings for the Tor Browser 6.0 and nightly branch
         self.SETTINGS_60 = {
                 "startup.homepage_override_url": "https://blog.torproject.org/category/tags/tor-browser",
                 "browser.startup.homepage_override.buildID": "20000101000000",
+                "general.useragent.override": "Mozilla/5.0 (Windows NT 6.1; rv:45.0) Gecko/20100101 Firefox/45.0",
                 }
 
     def test_settings(self):
