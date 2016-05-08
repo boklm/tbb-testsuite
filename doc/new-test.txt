@@ -14,9 +14,9 @@ There are two categories of tests that we are running:
   that we find in the sources tree.
 
 - The tor browser bundle tests. Those tests are run on a complete bundle.
-  The tests in the browser can be implemented using mozmill or selenium.
-  We also have other types of tests checking that pluggable transports
-  are working with and without using an http proxy, or checking that
+  The tests in the browser can be implemented using marionette. We also
+  have other types of tests checking that pluggable transports are
+  working with and without using an http proxy, or checking that
   binary files have been compiled with hardenning options.
 
 If the goal is to check that the behavior of the browser is correct
@@ -39,14 +39,14 @@ The list of tests to be run by the test suite is defined in file
 Each test is defined with the following properties:
 
 name::
-        The name of the test. For 'mozmill', 'selenium' and 'tor_bootstrap'
-        tests this name is used to find the test filename.
+        The name of the test. For 'marionette', 'tor_bootstrap' tests
+        this name is used to find the test filename.
 
 type::
-        The type of tests. This can be 'mozmill', 'selenium',
-        'tor_bootstrap', 'command', or something else if you want to
-        write the test in perl. In the later case, you need to define
-        it in the '%test_types' variable.
+        The type of tests. This can be 'marionette', 'tor_bootstrap',
+        'command', or something else if you want to write the test in
+        perl. In the later case, you need to define it in the
+        '%test_types' variable.
 
 descr::
         A short description.
@@ -73,39 +73,40 @@ run_once::
         of bundles, this test will only be run on the first bundle.
 
 
-Adding a mozmill test
-~~~~~~~~~~~~~~~~~~~~~
+Adding a marionette test
+~~~~~~~~~~~~~~~~~~~~~~~~
 
-To add a new test based on mozmill, you will add something like this in
-'TBBTestSuite/TestSuite/BrowserBundleTests.pm':
+To add a new test based on marionette, you will add something like this
+in 'TBBTestSuite/TestSuite/BrowserBundleTests.pm':
 
 ----
     {
         name  => 'example-test',
-        type  => 'mozmill',
-        descr => 'Example mozmill test',
+        type  => 'marionette',
+        descr => 'Example marionette test',
     },
 ----
 
-The mozmill test files are stored in the directory
-'mozmill/mozmill-tests/tbb-tests/'. The name of the file is the name
-of the test with '.js' at the end, unless mozmill_test is defined, in
-which case it is used instead of the name.
+The marionette test files are stored in the directory
+'marionette/tor_browser_tests/'. The name of the file is 'test_$name.py'
+where '$name' is the name of the test, unless marionette_test is defined,
+in which case it is used instead of the name.
 
-It is possible to share a single mozmill file for multiple tests. The
-mozmill test can access values from the test definition to do something
+It is possible to share a single marionette file for multiple tests. The
+marionette test can access values from the test definition to do something
 different in each test. It is also possible to access the test suite options.
 In this example, we are accessing the "timeout" value from the test
 definition, and the "test_data_url" from the the testsuite options:
 
 ----
-var testsuite = require("../lib/testsuite");
+import testsuite
 
-var testThings = function() {
-    var test_data_url = testsuite.options.test_data_url;
-    var timeout = testsuite.test.timeout;
-    ...
-}
+class Test(MarionetteTestCase):
+   def setUp(self):
+        MarionetteTestCase.setUp(self)
+        ts = testsuite.TestSuite()
+        timeout = ts.t['test']['timeout']
+        test_data_url = ts.t['options']['test_data_url']
 ----
 
 A common option is 'test_data_url' which is an URL where test data have
@@ -158,26 +159,6 @@ locally with the 'test_data_dir' option.
 The 'timeout' value is the time in milliseconds after which the test
 should be considered as failed if the 'test_result' element is still
 not present.
-
-
-Adding a selenium test
-~~~~~~~~~~~~~~~~~~~~~~
-
-To add a new test based on selenium webdriver, you will add something
-like this in 'TBBTestSuite/TestSuite/BrowserBundleTests.pm':
-
-----
-    {
-        name  => 'example-test',
-        type  => 'selenium',
-        descr => 'Example selenium test',
-    },
-----
-
-The selenium test files are stored in the directory 'selenium-tests'.
-The name of the file that will be executed is 'test_$name.py' (with
-$name replaced by the test name).
-
 
 Adding a command test
 ~~~~~~~~~~~~~~~~~~~~~

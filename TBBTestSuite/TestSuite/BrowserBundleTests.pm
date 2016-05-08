@@ -40,9 +40,7 @@ BEGIN {
 sub test_types {
     return {
         tor_bootstrap => \&TBBTestSuite::Tests::TorBootstrap::start_tor,
-        mozmill       => \&mozmill_run,
         marionette    => \&marionette_run,
-        selenium      => \&selenium_run,
         virustotal    => \&virustotal_run,
         command       => \&command_run,
     };
@@ -554,13 +552,6 @@ sub xvfb_run {
     return ('xvfb-run', '--auto-servernum', '-s', "-screen 0 ${resolution}x24");
 }
 
-sub mozmill_cmd {
-    if ($OSNAME eq 'cygwin') {
-        return ( "$options->{'mozmill-dir'}\\run.cmd", 'mozmill' );
-    }
-    return ("$options->{virtualenv}/bin/mozmill");
-}
-
 sub check_opened_connections {
     my ($tbbinfos, $test) = @_;
     my %bad_connections =  %{$test->{results}{connections}};
@@ -682,30 +673,12 @@ sub ffbin_path {
     if ($OSNAME eq 'cygwin') {
         return winpath("$tbbinfos->{ffbin}.exe");
     }
-    my %t = map { $_ => 1 } qw(mozmill marionette);
+    my %t = map { $_ => 1 } qw(marionette);
     if ($options->{use_strace} && $t{$test->{type}}) {
         return ff_strace_wrapper($tbbinfos, $test);
     }
     return $tbbinfos->{ffbin} if $OSNAME eq 'darwin';
     return ff_wrapper($tbbinfos, $test);
-}
-
-sub mozmill_export_options {
-    my ($tbbinfos, $test) = @_;
-    my $options_file = winpath("$FindBin::Bin/mozmill-tests/lib/testsuite.js");
-    my $json_opts = encode_json clone_strip_coderef $options;
-    my $json_test = encode_json clone_strip_coderef $test;
-    my $json_tbbinfos = encode_json clone_strip_coderef
-                                { %$tbbinfos, tests => undef };
-    my $content = <<EOF;
-var options = $json_opts;
-var test = $json_test;
-var tbbinfos = $json_tbbinfos;
-exports.options = options;
-exports.test = test;
-exports.tbbinfos = tbbinfos;
-EOF
-    write_file($options_file, $content);
 }
 
 sub marionette_export_options {
@@ -764,62 +737,6 @@ sub marionette_run {
     parse_strace($tbbinfos, $test);
     check_opened_connections($tbbinfos, $test);
     check_modified_files($tbbinfos, $test);
-}
-
-sub mozmill_run {
-    my ($tbbinfos, $test) = @_;
-    return unless $options->{mozmill};
-    if ($test->{tried} && $test->{use_net}) {
-        TBBTestSuite::Tests::TorBootstrap::send_newnym($tbbinfos);
-    }
-    clean_strace($tbbinfos, $test) if $options->{use_strace};
-    mozmill_export_options($tbbinfos, $test);
-    set_test_prefs($tbbinfos, $test);
-    $test->{screenshots} = [];
-    my $screenshots_tmp = File::Temp::newdir('XXXXXX', DIR => $options->{tmpdir});
-    $ENV{'MOZMILL_SCREENSHOTS'} = winpath($screenshots_tmp);
-    my $results_file = "$tbbinfos->{'results-dir'}/$test->{name}.json";
-    my $mozmill_test = $test->{mozmill_test} // $test->{name};
-    system(xvfb_run($test), mozmill_cmd(), '-b', ffbin_path($tbbinfos, $test),
-        '-p', winpath($tbbinfos->{ffprofiledir}),
-        '-t', winpath("$FindBin::Bin/mozmill-tests/tbb-tests/$mozmill_test.js"),
-        '--report', 'file://' . winpath($results_file));
-    my $i = 0;
-    for my $screenshot_file (reverse sort glob "$screenshots_tmp/*.png") {
-        move($screenshot_file, "$tbbinfos->{'results-dir'}/$test->{name}-$i.png");
-        $screenshot_thumbnail->($tbbinfos->{'results-dir'}, "$test->{name}-$i.png");
-        push @{$test->{screenshots}}, "$test->{name}-$i.png";
-        $i++;
-    }
-    if (-f $results_file) {
-        $test->{results} = decode_json(read_file($results_file));
-        $test->{results}{success} = $test->{results}{results}->[0]->{passed} ?
-                                !$test->{results}{results}->[0]->{failed} : 0;
-    } else {
-        $test->{results}{success} = 0;
-    }
-    reset_test_prefs($tbbinfos, $test);
-    if ($options->{use_strace}) {
-        parse_strace($tbbinfos, $test);
-        check_opened_connections($tbbinfos, $test);
-        check_modified_files($tbbinfos, $test);
-        clean_strace($tbbinfos, $test) if $test->{results}{success};
-    }
-}
-
-sub selenium_run {
-    my ($tbbinfos, $test) = @_;
-    return unless $options->{selenium};
-    if ($test->{tried} && $test->{use_net}) {
-        TBBTestSuite::Tests::TorBootstrap::send_newnym($tbbinfos);
-    }
-    my $result_file = $ENV{SELENIUM_TEST_RESULT_FILE} =
-        "$tbbinfos->{'results-dir'}/$test->{name}.json";
-    $ENV{TBB_BIN} = ffbin_path($tbbinfos, $test);
-    $ENV{TBB_PROFILE} = $tbbinfos->{ffprofiledir};
-    system(xvfb_run($test), "$options->{virtualenv}/bin/python",
-        "$FindBin::Bin/selenium-tests/run_test", $test->{name});
-    $test->{results} = decode_json(read_file($result_file));
 }
 
 sub set_tbbpaths {

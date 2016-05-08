@@ -55,12 +55,6 @@ Available options
         not given, the files are downloaded in a temporary directory
         which is removed at the end of the tests.
 
---no-mozmill::
-        Don't run mozmill tests.
-
---no-selenium::
-        Don't run the Selenium tests.
-
 --no-starttor::
         Don't start a tor daemon. If you use this option, you should
         already have a tor daemon running.
@@ -82,11 +76,6 @@ Available options
         The name of the tests run. This is used as directory name to
         save the results inside the reports-dir. If not set, a random
         name is used.
-
---virtualenv=<directory>::
-        Path to the virtualenv where selenium and mozmill are installed.
-        The default is the 'virtualenv' directory created by the
-        'setup-virtualenv' script.
 
 --xvfb::
         Run the tests using a virtual frame buffer X server. You should
@@ -138,10 +127,6 @@ Available options
 
 --email-subject::
         Set the template used to create the subject of the reports emails.
-
---mozmill-dir::
-        On windows this sets the directory where mozmill-env has been
-        installed. The default is c:\tbbtestsuite\mozmill-env.
 
 --http-proxy-port::
         Select the port used to start an http proxy, for tor_bootstrap

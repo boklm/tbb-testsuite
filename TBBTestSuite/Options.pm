@@ -38,8 +38,6 @@ my %default_options = (
     action   => 'run_tests',
     os       => get_os_name(),
     arch     => get_arch(),
-    mozmill  => $OSNAME ne 'darwin',
-    selenium => $OSNAME ne 'cygwin',
     starttor => 1,
     gpgcheck => 1,
     clean_browserdir => 1,
@@ -47,7 +45,6 @@ my %default_options = (
     'tor-control-port' => '9551',
     'tor-socks-port'   => '9550',
     'reports-dir'      => "$FindBin::Bin/reports",
-    virtualenv => "$FindBin::Bin/virtualenv",
     resolution => '1280x1024',
     xvfb       => 0,
     xdummy     => $OSNAME ne 'cygwin',
@@ -57,7 +54,6 @@ my %default_options = (
     'email-to' => [],
     'email-from' => 'TBB Test Report <tbbtest@example.com>',
     'email-subject' => '[test result: [% success ? "ok" : "failed" %]] [% options.name %]',
-    'mozmill-dir' => 'c:\tbbtestsuite\mozmill-env',
     'http-proxy-port' => '8888',
     testrequests_types => 'browserbundle',
     test_data_url => 'http://test-data.tbb.torproject.org',
@@ -69,12 +65,12 @@ my %default_options = (
 
 
 sub get_options {
-    my @options = qw(mozmill! selenium! starttor! tor-control-port=i
+    my @options = qw(starttor! tor-control-port=i
                      tor-socks-port=i reports-dir=s gpgcheck! keyring=s
-                     virtualenv=s xvfb! name=s download-dir=s config=s
+                     xvfb! name=s download-dir=s config=s
                      action=s enable-tests=s upload-to=s os=s arch=s
                      virustotal! email-to=s@ email-from=s email-subject=s
-                     mozmill-dir=s reports-url=s http-proxy-port=i
+                     reports-url=s http-proxy-port=i
                      xdummy! disable-tests=s testrequests_types=s testsuite=s
                      cleanup!);
     my (%cli, %config);

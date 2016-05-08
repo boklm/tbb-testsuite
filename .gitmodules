@@ -1,3 +1,0 @@
-[submodule "mozmill-tests/mozilla-mozmill-tests"]
-	path = mozmill-tests/mozilla-mozmill-tests
-	url = https://github.com/boklm/mozilla-mozmill-tests
