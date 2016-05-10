@@ -658,6 +658,8 @@ sub ff_wrapper {
 set -e
 export HOME="$tbbinfos->{tbbdir}"
 export LD_LIBRARY_PATH="$tbbinfos->{tbbdir}:$tbbinfos->{tordir}"
+export FONTCONFIG_PATH="\${HOME}/TorBrowser/Data/fontconfig"
+export FONTCONFIG_FILE="fonts.conf"
 exec \'$tbbinfos->{ffbin}\' "\$@"
 EOF
     write_file($wrapper_file, $wrapper);
