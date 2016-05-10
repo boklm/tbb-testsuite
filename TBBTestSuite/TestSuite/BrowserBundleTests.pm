@@ -579,6 +579,7 @@ sub check_opened_connections {
         $test->{results}{success} = 0;
         $test->{retry} = 0;
     }
+    $test->{clean_strace} //= !%bad_connections;
     $test->{results}{bad_connections} = \%bad_connections;
 }
 
@@ -589,11 +590,13 @@ sub check_modified_files {
         $test->{results}{success} = 0;
         $test->{retry} = 0;
     }
+    $test->{clean_strace} //= !@bad_modified_files;
     $test->{results}{bad_modified_files} = \@bad_modified_files;
 }
 
 sub clean_strace {
     my ($tbbinfos, $test) = @_;
+    return unless $test->{clean_strace};
     my $logfile = "$tbbinfos->{'results-dir'}/$test->{name}.strace";
     unlink $logfile;
     unlink "$logfile.tmp";
@@ -602,9 +605,10 @@ sub clean_strace {
 sub parse_strace {
     my ($tbbinfos, $test) = @_;
     my %ignore_files = map { $_ => 1 } qw(/dev/null /dev/tty);
+    my @ignore_re = ( qr/^\/dev\/dri/ );
+    push @ignore_re, qr/^$test->{workspace}/ if $test->{workspace};
     my %files;
     my $logfile = "$tbbinfos->{'results-dir'}/$test->{name}.strace";
-    my $logfile_tmp = "$tbbinfos->{'results-dir'}/$test->{name}.strace.tmp";
     $test->{results}{connections} = {};
     my %modified_files;
     my %removed_files;
@@ -614,8 +618,7 @@ sub parse_strace {
         unlink "$logfile.tmp";
     }
     my @lines = read_file($logfile) if -f $logfile;
-    push @lines, read_file($logfile_tmp) if -f $logfile_tmp;
-    foreach my $line (@lines) {
+    LINE: foreach my $line (@lines) {
         if ($line =~ m/^\d+ open\("((?:[^"\\]++|\\.)*+)", ([^\)]+)/ ||
             $line =~ m/^\d+ openat\([^,]+, "((?:[^"\\]++|\\.)*+)", ([^\)]+)/) {
             next if $2 =~ m/O_RDONLY/;
@@ -624,10 +627,17 @@ sub parse_strace {
             if ($ENV{'MOZMILL_SCREENSHOTS'}) {
                 next if $1 =~ m/^$ENV{'MOZMILL_SCREENSHOTS'}/;
             }
+            foreach my $re (@ignore_re) {
+                next LINE if $1 =~ m/$re/;
+            }
             $modified_files{$1}++;
         }
         if ($line =~ m/^\d+ unlink\("((?:[^"\\]++|\\.)*+)"/) {
             next if $1 =~ m/^$tbbinfos->{tbbdir}/;
+            next if $ignore_files{$1};
+            foreach my $re (@ignore_re) {
+                next LINE if $1 =~ m/$re/;
+            }
             $removed_files{$1}++;
             delete $modified_files{$1} unless -f $1;
         }
@@ -715,6 +725,8 @@ sub marionette_run {
     $ENV{TESTSUITE_DATA_FILE} = winpath($options_file);
     my $result_file_html = "$tbbinfos->{'results-dir'}/$test->{name}.html";
     my $result_file_txt = "$tbbinfos->{'results-dir'}/$test->{name}.txt";
+    $test->{workspace} = "$tbbinfos->{'results-dir'}/$test->{name}_ws";
+    mkdir $test->{workspace};
     #--log-unittest  ./res.txt --log-html ./res.html
     my $bin = $OSNAME eq 'cygwin' ? 'Scripts' : 'bin';
     my $marionette_test = $test->{marionette_test} // $test->{name};
@@ -731,6 +743,7 @@ sub marionette_run {
         '--log-html', winpath($result_file_html),
         '--binary', ffbin_path($tbbinfos, $test),
         '--profile', winpath($tbbinfos->{ffprofiledir}),
+        '--workspace', winpath($test->{workspace}),
         winpath("$FindBin::Bin/marionette/tor_browser_tests/test_${marionette_test}.py"));
     $ENV{PYTHONPATH} = $pypath;
     my @txt_log = read_file($result_file_txt);
@@ -748,6 +761,7 @@ sub marionette_run {
     parse_strace($tbbinfos, $test);
     check_opened_connections($tbbinfos, $test);
     check_modified_files($tbbinfos, $test);
+    clean_strace($tbbinfos, $test);
 }
 
 sub set_tbbpaths {
