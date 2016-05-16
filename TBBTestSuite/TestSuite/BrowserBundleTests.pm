@@ -337,6 +337,20 @@ our @tests = (
         #},
     },
     {
+        name            => 'user-timing-worker',
+        type            => 'marionette',
+        marionette_test => 'page',
+        remote          => 0,
+        timeout         => 500,
+        descr           => 'Check that the User Timing API in Worker context is really disabled',
+        use_net         => 1,
+        # To check that the test fails when user timing is enabled,
+        # uncomment this:
+        #prefs           => {
+        #    'dom.enable_user_timing' => 'true',
+        #},
+    },
+    {
         name            => 'performance-observer',
         type            => 'marionette',
         descr           => 'Check that the Performance Observer API is really disabled',

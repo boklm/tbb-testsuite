@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+    <meta name="viewport" content="width=device-width">
+
+    <title>user-timing-worker</title>
+
+  </head>
+
+  <body>
+  </body>
+
+<script>
+var myWorkerMeasure = new Worker('data:text/javascript,onmessage = function(e) { var pass = false; try { performance.measure("measure1"); } catch (e) { pass = true; } postMessage(pass);}');
+var myWorkerMark = new Worker('data:text/javascript,onmessage = function(e) { var pass = false; try { performance.mark("startTask1"); } catch (e) { pass = true; } postMessage(pass);}');
+
+var measure_result = false;
+var mark_result = false;
+var added_result = false;
+
+myWorkerMeasure.onmessage = function(e) {
+    console.log('Message received from worker');
+    measure_result = e.data;
+    if (added_result)
+        return;
+    if (!e.data || (measure_result && mark_result)) {
+        added_result = true;
+        var result = document.createElement('div');
+        if (measure_result && mark_result) {
+            result.innerHTML = 'OK';
+        } else {
+            result.innerHTML = 'NOT OK';
+        }
+        result.setAttribute("id", "test_result");
+        document.getElementsByTagName("body")[0].appendChild(result);
+    }
+};
+
+myWorkerMark.onmessage = function(e) {
+    console.log('Message received from worker');
+    mark_result = e.data;
+    if (added_result)
+        return;
+    if (!e.data || (measure_result && mark_result)) {
+        added_result = true;
+        var result = document.createElement('div');
+        if (measure_result && mark_result) {
+            result.innerHTML = 'OK';
+        } else {
+            result.innerHTML = 'NOT OK';
+        }
+        result.setAttribute("id", "test_result");
+        document.getElementsByTagName("body")[0].appendChild(result);
+    }
+};
+
+myWorkerMeasure.postMessage([]);
+myWorkerMark.postMessage([]);
+myWorkerMeasure.postMessage([]);
+myWorkerMark.postMessage([]);
+
+</script>
+</html>
