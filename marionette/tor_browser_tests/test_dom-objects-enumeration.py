@@ -406,6 +406,7 @@ class Test(MarionetteTestCase):
                 "MediaQueryList",
                 "MediaQueryListListener",
                 "MediaRecorder",
+                "MediaSource",
                 "MediaStream",
                 "MediaStreamAudioDestinationNode",
                 "MediaStreamAudioSourceNode",
