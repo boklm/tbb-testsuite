@@ -238,7 +238,7 @@ class Test(MarionetteTestCase):
                 "FontFace",
                 "FontFaceList",
                 "FontFaceSet",
-                "FontFaceSetLoadEvent"
+                "FontFaceSetLoadEvent",
                 "FormData",
                 "forward",
                 "frameElement",
