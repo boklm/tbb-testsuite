@@ -759,7 +759,7 @@ sub marionette_run {
         '--log-html', winpath($result_file_html),
         '--binary', ffbin_path($tbbinfos, $test),
         '--profile', winpath($tbbinfos->{ffprofiledir}),
-        '--workspace', winpath($test->{workspace}),
+        $OSNAME eq 'cygwin' ? () : ('--workspace', $test->{workspace}),
         winpath("$FindBin::Bin/marionette/tor_browser_tests/test_${marionette_test}.py"));
     $ENV{PYTHONPATH} = $pypath;
     my @txt_log = read_file($result_file_txt);
