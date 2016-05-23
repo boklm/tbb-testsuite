@@ -309,6 +309,11 @@ our @tests = (
         descr           => 'Check the list of DOM Objects exposed in the global namespace',
     },
     {
+        name            => 'dom-objects-enumeration-worker',
+        type            => 'marionette',
+        descr           => 'Check the list of DOM Objects exposed in a Worker context',
+    },
+    {
         name            => 'navigation-timing',
         type            => 'marionette',
         descr           => 'Check that the Navigation Timing API is really disabled',
