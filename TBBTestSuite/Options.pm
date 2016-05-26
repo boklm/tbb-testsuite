@@ -7,7 +7,7 @@ use Config;
 use FindBin;
 use Getopt::Long;
 use File::Slurp;
-use TBBTestSuite::Common qw(exit_error has_bin);
+use TBBTestSuite::Common qw(exit_error has_bin winpath);
 use Data::Dump qw(pp);
 
 our (@ISA, @EXPORT_OK);
@@ -58,7 +58,7 @@ my %default_options = (
     testrequests_types => 'browserbundle',
     test_data_url => 'http://test-data.tbb.torproject.org',
     test_data_url_https => 'https://test-data.tbb.torproject.org',
-    test_data_dir => "$FindBin::Bin/test-data",
+    test_data_dir => winpath("$FindBin::Bin/test-data"),
     testsuite => undef,
     cleanup   => 1,
 );
