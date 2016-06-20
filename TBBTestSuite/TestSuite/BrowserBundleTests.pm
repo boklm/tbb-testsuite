@@ -439,6 +439,12 @@ our @tests = (
         },
         enable          => sub { $OSNAME eq 'linux' },
     },
+    {
+        name            => 'download_pdf',
+        type            => 'marionette',
+        descr           => 'Check if download of PDF is working (#19402)',
+        use_net         => 1,
+    },
 );
 
 sub toggle_https_everywhere {
