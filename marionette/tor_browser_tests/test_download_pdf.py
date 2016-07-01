@@ -21,6 +21,7 @@ class Test(MarionetteTestCase):
         m = self.marionette
 
         m.set_search_timeout(1000)
+        m.set_window_size(1024, 300)
 
         with m.using_context('content'):
 
