@@ -48,9 +48,16 @@ sub set_gpgwrapper {
         $keyring .= " --keyring $FindBin::Bin/keyring/$user.gpg";
     }
     my $wrapper = <<EOF;
-#!/bin/sh
+#!/bin/bash
 set -e
-exec gpg --no-default-keyring $keyring --trust-model always "\$@"
+if [ \$# -eq 4 ] && [ "\$1" = '--status-fd=1' ] && [ "\$2" = '--verify' ]
+then
+    gpgv $keyring "\$1" "\$3" "\$4" \\
+              | sed 's/^\\[GNUPG:\\] EXPKEYSIG /\\[GNUPG:\\] GOODSIG /'
+    exit \${PIPESTATUS[0]}
+else
+    exec gpg --no-default-keyring $keyring --trust-model always "\$@"
+fi
 EOF
     my $wrapper_file = "$options->{tmpdir}/gpgtbbgit";
     write_file($wrapper_file, $wrapper);
