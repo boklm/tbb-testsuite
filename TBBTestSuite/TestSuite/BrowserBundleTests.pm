@@ -197,13 +197,6 @@ our @tests = (
         run_once        => 1,
     },
     {
-        name            => 'tor_meek-google',
-        type            => 'tor_bootstrap',
-        descr           => 'Access tor using meek-google',
-        enable          => sub { $OSNAME eq 'linux' },
-        run_once        => 1,
-    },
-    {
         name            => 'tor_meek-amazon',
         type            => 'tor_bootstrap',
         descr           => 'Access tor using meek-amazon',
