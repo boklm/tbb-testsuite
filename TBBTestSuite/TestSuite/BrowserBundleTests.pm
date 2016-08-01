@@ -773,7 +773,7 @@ sub marionette_run {
         $OSNAME eq 'cygwin' ? () : ('--workspace', $test->{workspace}),
         winpath("$FindBin::Bin/marionette/tor_browser_tests/test_${marionette_test}.py"));
     $ENV{PYTHONPATH} = $pypath;
-    my @txt_log = read_file($result_file_txt);
+    my @txt_log = -f $result_file_txt ? read_file($result_file_txt) : ('NoFile');
     my $res_line = shift @txt_log;
     $test->{results}{success} = $res_line eq ".\n" || $res_line eq ".\r\n";
     $test->{results}{log} = join '', @txt_log;
