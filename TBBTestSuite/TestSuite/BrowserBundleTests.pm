@@ -438,6 +438,13 @@ our @tests = (
         descr           => 'Check if download of PDF is working (#19402)',
         use_net         => 1,
     },
+    {
+        name            => 'pinning_now',
+        type            => 'marionette',
+        descr           => 'Check if static public key pinning is working (#20149)',
+        marionette_test => 'pinning',
+        use_net         => 1,
+    },
 );
 
 sub toggle_https_everywhere {
