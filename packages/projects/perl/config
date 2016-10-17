@@ -1,0 +1,19 @@
+# vim: filetype=yaml sw=2
+version: 5.24.0
+filename: '[% project %]-[% c("version") %]-[% c("var/build_id") %].tar.gz'
+remote_docker: 1
+
+var:
+  deps:
+    - build-essential
+
+targets:
+  linux-i686:
+    var:
+      configure_opt: '-Acflags=-m32 -Aldflags=-m32'
+
+input_files:
+  - project: docker-image
+  - name: perl
+    URL: 'http://www.cpan.org/src/5.0/perl-[% c("version") %].tar.bz2'
+    sha256sum: 62328a53d157e8153b33e137594155f6f8b64418f7f9238210feb809585290e0

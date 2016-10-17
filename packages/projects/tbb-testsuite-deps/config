@@ -1,0 +1,98 @@
+# vim: filetype=yaml sw=2
+version: 0.1
+filename: '[% project %]-[% c("version") %]-[% c("var/build_id") %].tar.gz'
+remote_docker: 1
+
+var:
+  deps:
+    - build-essential
+    - libxml2-dev
+    - zlib1g-dev
+    - libltdl-dev
+    - chrpath
+    - libfftw3-dev
+    - liblcms2-dev
+    - liblqr-1-0-dev
+    - libbz2-dev
+    - libjpeg-dev
+    - libpng-dev
+
+  imagemagick_version: 7.0.3-4
+
+input_files:
+  - project: docker-image
+
+  - project: perl
+    name: perl
+
+  - URL: 'https://www.imagemagick.org/download/ImageMagick-[% c("var/imagemagick_version") %].tar.xz'
+    file_gpg_id: 1
+    sig_ext: asc
+    gpg_keyring: ImageMagick.gpg
+
+  - URL: https://cpan.metacpan.org/authors/id/G/GA/GAAS/Data-Dump-1.23.tar.gz
+    sha256sum: af53b05ef1387b4cab4427e6789179283e4f0da8cf036e8db516ddb344512b65
+
+  - URL: https://cpan.metacpan.org/authors/id/D/DR/DROLSKY/DateTime-1.39.tar.gz
+    sha256sum: 2d876b624b9c0a18acea9d30495649daf11fb0e01171ef20780072ee97c4a494
+
+  - URL: https://cpan.metacpan.org/authors/id/M/MS/MSHELOR/Digest-SHA-5.96.tar.gz
+    sha256sum: 2b8e0a9b6e359d5e14159661647cc0fbde06beb7f2a24bf003f5fad0a3a2786a
+
+  - URL: https://cpan.metacpan.org/authors/id/R/RJ/RJBS/Email-Sender-1.300030.tar.gz
+    sha256sum: a7ec45897b131cd9534877cf81ccc03b699e2cb6bad265366601973a99f8dda2
+
+  - URL: https://cpan.metacpan.org/authors/id/R/RJ/RJBS/Email-Simple-2.210.tar.gz
+    sha256sum: c8633fa462538967c036e3077617de9e5e8f6acc68d25546ba1d5bb1e12bd319
+
+  - URL: https://cpan.metacpan.org/authors/id/R/RI/RICHE/File-Path-2.12.tar.gz
+    sha256sum: bbf61a0d37c135c694e80f4ea344932bdc5474c213025ae307ea52cb6886d17e
+
+  - URL: https://cpan.metacpan.org/authors/id/U/UR/URI/File-Slurp-9999.19.tar.gz
+    sha256sum: ce29ebe995097ebd6e9bc03284714cdfa0c46dc94f6b14a56980747ea3253643
+
+  - URL: https://cpan.metacpan.org/authors/id/D/DA/DAGOLDEN/File-Temp-0.2304.tar.gz
+    sha256sum: 13415323e48f7c9f34efdedf3d35141a7c3435e2beb8c6b922229dc317d321ac
+
+  - URL: https://cpan.metacpan.org/authors/id/P/PM/PMISON/File-Type-0.22.tar.gz
+    sha256sum: d35cd95fef57fd4dfd8831f62c34e294d7c4b861fc909e02b76071739d52d341
+
+  - URL: https://cpan.metacpan.org/authors/id/J/JV/JV/Getopt-Long-2.49.1.tar.gz
+    sha256sum: 98fad4235509aa24608d9ef895b5c60fe2acd2bca70ebdf1acaf6824e17a882f
+
+  - URL: https://cpan.metacpan.org/authors/id/G/GB/GBARR/IO-1.25.tar.gz
+    sha256sum: 89790db8b9281235dc995c1a85d532042ff68a90e1504abd39d463f05623e7b5
+
+  - URL: https://cpan.metacpan.org/authors/id/D/DA/DAGOLDEN/IO-CaptureOutput-1.1104.tar.gz
+    sha256sum: fcc732fcb438f97a72b30e8c7796484bef2562e374553b207028e2fbf73f8330
+
+  - URL: https://cpan.metacpan.org/authors/id/T/TO/TODDR/IPC-Run-0.94.tar.gz
+    sha256sum: 2eb336c91a2b7ea61f98e5b2282d91020d39a484f16041e2365ffd30f8a5605b
+
+  - URL: https://cpan.metacpan.org/authors/id/M/MA/MAKAMAKA/JSON-2.90.tar.gz
+    sha256sum: 4ddbb3cb985a79f69a34e7c26cde1c81120d03487e87366f9a119f90f7bdfe88
+
+  - URL: https://cpan.metacpan.org/authors/id/E/ET/ETHER/libwww-perl-6.15.tar.gz
+    sha256sum: 6f349d45c21b1ec0501c4437dfcb70570940e6c3d5bff783bd91d4cddead8322
+
+  - URL: https://cpan.metacpan.org/authors/id/M/MS/MSCHILLI/LWP-Protocol-https-6.06.tar.gz
+    sha256sum: b86c83cc1dcf4a6f84e2fbe32f9c39591a36e6e418af00533505f3452496adef
+
+  - URL: https://cpan.metacpan.org/authors/id/R/RJ/RJBS/PathTools-3.62.tar.gz
+    sha256sum: 36350e12f58871437ba03391f80a506e447e3c6630cc37d0625bc25ff1c7b4d2
+
+  - URL: https://cpan.metacpan.org/authors/id/J/JC/JCRISTY/PerlMagick-6.89-1.tar.gz
+    sha256sum: c8f81869a4f007be63e67fddf724b23256f6209f16aa95e14d0eaef283772a59
+
+  - URL: https://cpan.metacpan.org/authors/id/A/AM/AMS/Storable-2.51.tar.gz
+    sha256sum: a566b792112bbba21131ec1d7a2bf78170c648484895283ae53c7f0c3dc2f0be
+
+  - URL: https://cpan.metacpan.org/authors/id/A/AB/ABW/Template-Toolkit-2.26.tar.gz
+    sha256sum: e7e1cf36026f1ef96d8233e18a3fb39e1eafe9109edc639ecf25b20651cd76be
+
+  - URL: https://cpan.metacpan.org/authors/id/S/SH/SHLOMIF/XML-LibXML-2.0128.tar.gz
+    sha256sum: 26e7ba451f3bade4d29ff00653a2ee01d13fe38b9a2ebcd0b0f3f82f9f688f2b
+
+  - URL: https://cpan.metacpan.org/authors/id/T/TO/TODDR/YAML-Syck-1.29.tar.gz
+    sha256sum: d3567b3653e610a2a0fd28286ddc7869ccdeba5e6663f9638c22bc17d6cfc939
+

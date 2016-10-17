@@ -1,0 +1,15 @@
+#!/bin/sh
+set -e
+distdir=/home/$(whoami)/dist/[% project %]
+mkdir -p $distdir
+tar xf [% project %]-[% c("version") %].tar.bz2
+cd [% project %]-[% c("version") %]
+./Configure -des -Dprefix=$distdir -Dusethreads -Duseithreads -Duserelocatableinc [% c("var/configure_opt") %]
+make
+make test
+make install
+cd "$distdir/.."
+[% c('tar', {
+        tar_src => [ project ],
+        tar_args => '-czf ' _ dest_dir _ '/' _ c('filename'),
+    }) %]

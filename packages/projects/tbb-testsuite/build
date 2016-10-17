@@ -1,0 +1,25 @@
+#!/bin/sh
+set -e
+rootdir=$(pwd)
+
+tar xf [% project %]-[% c("version") %].tar.gz
+cd [% project %]-[% c("version") %]
+mkdir bundle
+cd bundle
+tar xf $rootdir/[% c("input_files_by_name/tbb-testsuite-deps") %]
+
+cat > set-env << EOF
+basedir="$(readlink -f ${BASH_SOURCE%/*})"
+export PATH="$basedir/perl/bin:$basedir/ImageMagick/bin:$PATH"
+export LD_LIBRARY_PATH="$basedir/ImageMagick/lib"
+EOF
+
+echo [% c("git_hash") %] > bundle_commit.txt
+echo [% c("version") %] > bundle_version.txt
+
+cd ../..
+mv [% project %]-[% c("version") %] [% project %]
+[% c('tar', {
+        tar_src => [ project ],
+        tar_args => '-czf ' _ dest_dir _ '/' _ c('filename'),
+    }) %]

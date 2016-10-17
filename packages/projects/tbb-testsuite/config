@@ -1,0 +1,9 @@
+# vim: filetype=yaml sw=2
+version: 0.1.1
+git_url: https://git.torproject.org/boklm/tor-browser-bundle-testsuite.git
+git_hash: 59782207d2e5976d11226496f3dec57917cc5962
+filename: '[% project %]-[% c("version") %]-[% c("var/osname") %]-[% c("var/build_id") %].tar.gz'
+
+input_files:
+  - project: tbb-testsuite-deps
+    name: tbb-testsuite-deps

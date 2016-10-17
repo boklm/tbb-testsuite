@@ -1,0 +1,45 @@
+#!/bin/sh
+set -e
+rootdir=$(pwd)
+mkdir -p /var/tmp/dist
+tar -C/var/tmp/dist -xf $rootdir/[% c('input_files_by_name/perl') %]
+export PATH=/var/tmp/dist/perl/bin:$PATH
+
+mkdir -p /var/tmp/dist/ImageMagick
+tar xf ImageMagick-[% c("var/imagemagick_version") %].tar.xz
+cd ImageMagick-[% c("var/imagemagick_version") %]
+./configure --enable-shared \
+    --disable-static \
+    --with-modules \
+    --without-perl \
+    --with-threads \
+    --prefix=/
+make
+echo "Running make install"
+make install DESTDIR=/var/tmp/dist/ImageMagick
+cd ..
+
+modules='
+Data-Dump-1.23 File-Path-2.12 IO-1.25 LWP-Protocol-https-6.06
+XML-LibXML-2.0128 DateTime-1.39 File-Slurp-9999.19 IO-CaptureOutput-1.1104
+PathTools-3.62 YAML-Syck-1.29 Digest-SHA-5.96 File-Temp-0.2304 IPC-Run-0.94
+Email-Sender-1.300030 File-Type-0.22 JSON-2.90 Storable-2.51 Email-Simple-2.210
+Getopt-Long-2.49.1 libwww-perl-6.15 Template-Toolkit-2.26
+'
+
+for module in $modules
+do
+    tar xf $module.tar.gz
+    cd $module
+    perl Makefile.PL
+    make
+    # make check
+    make install
+    cd ..
+done
+
+cd /var/tmp/dist
+[% c('tar', {
+        tar_src => [ 'perl', 'ImageMagick' ],
+        tar_args => '-czf ' _ dest_dir _ '/' _ c('filename'),
+    }) %]
