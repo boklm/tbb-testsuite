@@ -1,0 +1,5 @@
+#!/bin/bash
+set -e
+bdir="$(readlink -f ${BASH_SOURCE%/*})"
+[ -f "$bdir/bundle/set-env" ] && source "$bdir/bundle/set-env"
+exec perl "$bdir/tbb-testsuite" "$@"
