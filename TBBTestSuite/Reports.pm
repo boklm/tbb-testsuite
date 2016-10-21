@@ -12,7 +12,7 @@ use Template;
 use File::Spec;
 use JSON;
 use YAML::Syck;
-use TBBTestSuite::Common qw(exit_error as_array);
+use TBBTestSuite::Common qw(exit_error as_array screenshot_thumbnail);
 use TBBTestSuite::Options qw($options);
 use TBBTestSuite::Tests;
 use TBBTestSuite::TestSuites;
@@ -25,20 +25,6 @@ BEGIN {
     require Exporter;
     @ISA       = qw(Exporter);
     @EXPORT_OK = qw(load_report report_dir report_path save_report);
-}
-
-my $screenshot_thumbnail;
-BEGIN {
-    # For some reason that I did not understand yet, Image::Magick does
-    # not work on Windows, so we're not creating thumbnails if we're
-    # on Windows. In that case, the thumbnails should be created by the
-    # server that receives the results.
-    if ($OSNAME ne 'cygwin' && $OSNAME ne 'darwin') {
-        require TBBTestSuite::Thumbnail;
-        $screenshot_thumbnail = \&TBBTestSuite::Thumbnail::screenshot_thumbnail;
-    } else {
-        $screenshot_thumbnail = sub { };
-    }
 }
 
 my %reports;
@@ -345,7 +331,7 @@ sub generate_missing_thumbnails {
         foreach my $test (@{$tbbinfos->{tests}}) {
             next unless $test->{screenshots};
             foreach my $screenshot (@{$test->{screenshots}}) {
-                $screenshot_thumbnail->($tbbinfos->{'results-dir'}, $screenshot);
+                screenshot_thumbnail($tbbinfos->{'results-dir'}, $screenshot);
             }
         }
     }

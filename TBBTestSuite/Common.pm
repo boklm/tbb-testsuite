@@ -16,7 +16,7 @@ BEGIN {
     @ISA       = qw(Exporter);
     @EXPORT_OK = qw(exit_error system_infos run_alone rm_pidfile winpath
                     has_bin get_var run_to_file get_nbcpu as_array
-                    clone_strip_coderef last_days);
+                    clone_strip_coderef last_days screenshot_thumbnail);
 }
 
 sub exit_error {
@@ -133,6 +133,15 @@ sub last_days {
         $n--;
     }
     return @res;
+}
+
+sub screenshot_thumbnail {
+    my ($dir, $name) = @_;
+    return if -f "$dir/t-$name";
+    if (system('convert', '-geometry', '600x600', "$dir/$name",
+            "$dir/t-$name")) {
+        print STDERR "Error creating thumbnail for $dir/$name\n";
+    }
 }
 
 1;

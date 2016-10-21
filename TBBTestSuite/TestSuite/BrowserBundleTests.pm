@@ -16,26 +16,12 @@ use File::Temp;
 use JSON;
 use Digest::SHA qw(sha256_hex);
 use LWP::UserAgent;
-use TBBTestSuite::Common qw(exit_error winpath clone_strip_coderef);
+use TBBTestSuite::Common qw(exit_error winpath clone_strip_coderef screenshot_thumbnail);
 use TBBTestSuite::Options qw($options);
 use TBBTestSuite::Tests::VirusTotal qw(virustotal_run);
 use TBBTestSuite::Tests::Command qw(command_run);
 use TBBTestSuite::Tests::TorBootstrap;
 use TBBTestSuite::XServer qw(start_X stop_X set_Xmode);
-
-my $screenshot_thumbnail;
-BEGIN {
-    # For some reason that I did not understand yet, Image::Magick does
-    # not work on Windows, so we're not creating thumbnails if we're
-    # on Windows. In that case, the thumbnails should be created by the
-    # server that receives the results.
-    if ($OSNAME ne 'cygwin' && $OSNAME ne 'darwin') {
-        require TBBTestSuite::Thumbnail;
-        $screenshot_thumbnail = \&TBBTestSuite::Thumbnail::screenshot_thumbnail;
-    } else {
-        $screenshot_thumbnail = sub { };
-    }
-}
 
 sub test_types {
     return {
@@ -780,7 +766,7 @@ sub marionette_run {
     my $i = 0;
     for my $screenshot_file (sort glob "$screenshots_tmp/*.png") {
         move($screenshot_file, "$tbbinfos->{'results-dir'}/$test->{name}-$i.png");
-        $screenshot_thumbnail->($tbbinfos->{'results-dir'}, "$test->{name}-$i.png");
+        screenshot_thumbnail($tbbinfos->{'results-dir'}, "$test->{name}-$i.png");
         push @{$test->{screenshots}}, "$test->{name}-$i.png";
         $i++;
     }
