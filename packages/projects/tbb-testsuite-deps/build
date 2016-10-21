@@ -24,7 +24,27 @@ Data-Dump-1.23 File-Path-2.12 IO-1.25 LWP-Protocol-https-6.06
 XML-LibXML-2.0128 DateTime-1.39 File-Slurp-9999.19 IO-CaptureOutput-1.1104
 PathTools-3.62 YAML-Syck-1.29 Digest-SHA-5.96 File-Temp-0.2304 IPC-Run-0.94
 Email-Sender-1.300030 File-Type-0.22 JSON-2.90 Storable-2.51 Email-Simple-2.210
-Getopt-Long-2.49.1 libwww-perl-6.15 Template-Toolkit-2.26
+Getopt-Long-2.49.1 libwww-perl-6.15 Template-Toolkit-2.26 namespace-autoclean-0.28
+ExtUtils-Depends-0.405 namespace-clean-0.27 B-Hooks-OP-Check-0.19
+bareword-filehandles-0.004 B-Hooks-EndOfScope-0.21 Class-Data-Inheritable-0.08
+Class-Method-Modifiers-2.12 Class-Singleton-1.5 CPAN-Meta-Check-0.013
+Data-OptList-0.110 DateTime-Locale-1.09 DateTime-TimeZone-2.06 Devel-Caller-2.06
+Devel-GlobalDestruction-0.13 Devel-LexAlias-0.05 Devel-StackTrace-2.01
+Dist-CheckConflicts-0.11 Email-Abstract-3.008 Email-Address-1.908
+Encode-Locale-1.05 Eval-Closure-0.14 Exception-Class-1.40 Module-Implementation-0.09
+HTTP-Date-6.02 HTTP-Message-6.11 Importer-0.024 indirect-0.37 IO-HTML-1.001
+IPC-Run3-0.048 LWP-MediaTypes-6.02 Module-Implementation-0.09
+Module-Pluggable-5.2 Moo-2.002004 MooX-Types-MooseLike-0.29 MRO-Compat-0.12
+multidimensional-0.012 Package-Stash-0.37 Package-Stash-XS-0.28 PadWalker-2.2
+Params-Util-1.07 Params-ValidationCompiler-0.13 Perl-Tidy-20160302
+Role-Tiny-2.000003 Scalar-List-Utils-1.46 Specio-0.30 strictures-2.000003
+Sub-Exporter-0.987 Sub-Exporter-Progressive-0.001012 Sub-Identify-0.12
+Sub-Install-0.928 Test2-Plugin-NoWarnings-0.03 Test2-Suite-0.000060
+Test-Deep-1.123 Test-Fatal-0.014 Test-Needs-0.002005 Test-Number-Delta-1.06
+Test-Requires-0.10 Test-Simple-1.302062 Test-Warnings-0.026
+Test-Without-Module-0.18 Throwable-0.200013 TimeDate-2.30 Try-Tiny-0.27
+URI-1.71 Variable-Magic-0.60 XML-SAX-Base-1.08 Module-Build-0.4220
+Module-Runtime-0.014
 '
 
 for module in $modules

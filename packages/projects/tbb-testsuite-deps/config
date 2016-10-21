@@ -96,3 +96,206 @@ input_files:
   - URL: https://cpan.metacpan.org/authors/id/T/TO/TODDR/YAML-Syck-1.29.tar.gz
     sha256sum: d3567b3653e610a2a0fd28286ddc7869ccdeba5e6663f9638c22bc17d6cfc939
 
+  - URL: https://cpan.metacpan.org/authors/id/E/ET/ETHER/namespace-autoclean-0.28.tar.gz
+    sha256sum: cd410a1681add521a28805da2e138d44f0d542407b50999252a147e553c26c39
+
+  - URL: https://cpan.metacpan.org/authors/id/R/RI/RIBASUSHI/namespace-clean-0.27.tar.gz
+    sha256sum: 8a10a83c3e183dc78f9e7b7aa4d09b47c11fb4e7d3a33b9a12912fd22e31af9d
+
+  - URL: https://cpan.metacpan.org/authors/id/E/ET/ETHER/B-Hooks-EndOfScope-0.21.tar.gz
+    sha256sum: 90f3580880f1d68b843c142cc86f58bead1f3e03634c63868ac9eba5eedae02c
+
+  - URL: https://cpan.metacpan.org/authors/id/I/IL/ILMARI/bareword-filehandles-0.004.tar.gz
+    sha256sum: e3a11671739a1b2ce35631e1ef2c5bd44f8026d18c4decfe920e511ca2f0a5e9
+
+  - URL: https://cpan.metacpan.org/authors/id/Z/ZE/ZEFRAM/B-Hooks-OP-Check-0.19.tar.gz
+    sha256sum: 2fff4a860cae4fa69b91164a1e2d396bfddd8466bdd04d718e695f7276bce15e
+
+  - URL: https://cpan.metacpan.org/authors/id/T/TM/TMTM/Class-Data-Inheritable-0.08.tar.gz
+    sha256sum: 9967feceea15227e442ec818723163eb6d73b8947e31f16ab806f6e2391af14a
+
+  - URL: https://cpan.metacpan.org/authors/id/E/ET/ETHER/Class-Method-Modifiers-2.12.tar.gz
+    sha256sum: e44c1073020bf55b8c97975ed77235fd7e2a6a56f29b5c702301721184e27ac8
+
+  - URL: https://cpan.metacpan.org/authors/id/S/SH/SHAY/Class-Singleton-1.5.tar.gz
+    sha256sum: 38220d04f02e3a803193c2575a1644cce0b95ad4b95c19eb932b94e2647ef678
+
+  - URL: https://cpan.metacpan.org/authors/id/L/LE/LEONT/CPAN-Meta-Check-0.013.tar.gz
+    sha256sum: 4fca09a28066e7e134d691dc25c496c838043617a93b7eec4df807df8e7f73d5
+
+  - URL: https://cpan.metacpan.org/authors/id/R/RJ/RJBS/Data-OptList-0.110.tar.gz
+    sha256sum: 366117cb2966473f2559f2f4575ff6ae69e84c69a0f30a0773e1b51a457ef5c3
+
+  - URL: https://cpan.metacpan.org/authors/id/D/DR/DROLSKY/DateTime-Locale-1.09.tar.gz
+    sha256sum: 4abe19a1c5caddc3b3a15dabd76b8193eee761acde44d898357c123a5ca7e9f1
+
+  - URL: https://cpan.metacpan.org/authors/id/D/DR/DROLSKY/DateTime-TimeZone-2.06.tar.gz
+    sha256sum: 9c51dd5ac957a43732b4a8d5cf7529e5a6b99ca86b447164cab003b190a8a8a6
+
+  - URL: https://cpan.metacpan.org/authors/id/R/RC/RCLAMP/Devel-Caller-2.06.tar.gz
+    sha256sum: 6a73ae6a292834255b90da9409205425305fcfe994b148dcb6d2d6ef628db7df
+
+  - URL: https://cpan.metacpan.org/authors/id/H/HA/HAARG/Devel-GlobalDestruction-0.13.tar.gz
+    sha256sum: b29824dc0d322e56da325f05185367eb443694716010b36693dd52ffbe8ec462
+
+  - URL: https://cpan.metacpan.org/authors/id/R/RC/RCLAMP/Devel-LexAlias-0.05.tar.gz
+    sha256sum: 5e0ad9d43e266033856e424e104a0009f8e63449e40cd5aba59ad94cb1bcee72
+
+  - URL: https://cpan.metacpan.org/authors/id/D/DR/DROLSKY/Devel-StackTrace-2.01.tar.gz
+    sha256sum: 055d35b5dbe62b88af7a15b347f7759cacb376dda345e0bd092a549384c30c13
+
+  - URL: https://cpan.metacpan.org/authors/id/D/DO/DOY/Dist-CheckConflicts-0.11.tar.gz
+    sha256sum: ea844b9686c94d666d9d444321d764490b2cde2f985c4165b4c2c77665caedc4
+
+  - URL: https://cpan.metacpan.org/authors/id/R/RJ/RJBS/Email-Abstract-3.008.tar.gz
+    sha256sum: fc7169acb6c43df7f005e7ef6ad08ee8ca6eb6796b5d1604593c997337cc8240
+
+  - URL: https://cpan.metacpan.org/authors/id/R/RJ/RJBS/Email-Address-1.908.tar.gz
+    sha256sum: e5f860bdfe6d768324bc9e402d563667e4171dd98f1a87d785e9087f7793d444
+
+  - URL: https://cpan.metacpan.org/authors/id/G/GA/GAAS/Encode-Locale-1.05.tar.gz
+    sha256sum: 176fa02771f542a4efb1dbc2a4c928e8f4391bf4078473bd6040d8f11adb0ec1
+
+  - URL: https://cpan.metacpan.org/authors/id/D/DO/DOY/Eval-Closure-0.14.tar.gz
+    sha256sum: ea0944f2f5ec98d895bef6d503e6e4a376fea6383a6bc64c7670d46ff2218cad
+
+  - URL: https://cpan.metacpan.org/authors/id/D/DR/DROLSKY/Exception-Class-1.40.tar.gz
+    sha256sum: d1171f2d03a485e87eb561f34688991c17b939d2689bcda47f3f51b372669a1f
+
+  - URL: https://cpan.metacpan.org/authors/id/X/XA/XAOC/ExtUtils-Depends-0.405.tar.gz
+    sha256sum: 8ad6401ad7559b03ceda1fe4b191c95f417bdec7c542a984761a4656715a8a2c
+
+  - URL: https://cpan.metacpan.org/authors/id/G/GA/GAAS/HTTP-Date-6.02.tar.gz
+    sha256sum: e8b9941da0f9f0c9c01068401a5e81341f0e3707d1c754f8e11f42a7e629e333
+
+  - URL: https://cpan.metacpan.org/authors/id/E/ET/ETHER/HTTP-Message-6.11.tar.gz
+    sha256sum: e7b368077ae6a188d99920411d8f52a8e5acfb39574d4f5c24f46fd22533d81b
+
+  - URL: https://cpan.metacpan.org/authors/id/E/EX/EXODIST/Importer-0.024.tar.gz
+    sha256sum: 1d19760ceb366b664985ace9a7ee1b54a438b1e060a5bca6eff0c6a35b07a557
+
+  - URL: https://cpan.metacpan.org/authors/id/V/VP/VPIT/indirect-0.37.tar.gz
+    sha256sum: ada92a3edb04ffd882fb6b5b4f2324dc9f385c19afc78c37ef27fcb52798fba4
+
+  - URL: https://cpan.metacpan.org/authors/id/C/CJ/CJM/IO-HTML-1.001.tar.gz
+    sha256sum: ea78d2d743794adc028bc9589538eb867174b4e165d7d8b5f63486e6b828e7e0
+
+  - URL: https://cpan.metacpan.org/authors/id/R/RJ/RJBS/IPC-Run3-0.048.tar.gz
+    sha256sum: 3d81c3cc1b5cff69cca9361e2c6e38df0352251ae7b41e2ff3febc850e463565
+
+  - URL: https://cpan.metacpan.org/authors/id/G/GA/GAAS/LWP-MediaTypes-6.02.tar.gz
+    sha256sum: 18790b0cc5f0a51468495c3847b16738f785a2d460403595001e0b932e5db676
+
+  - URL: https://cpan.metacpan.org/authors/id/D/DR/DROLSKY/Module-Implementation-0.09.tar.gz
+    sha256sum: c15f1a12f0c2130c9efff3c2e1afe5887b08ccd033bd132186d1e7d5087fd66d
+
+  - URL: https://cpan.metacpan.org/authors/id/S/SI/SIMONW/Module-Pluggable-5.2.tar.gz
+    sha256sum: b3f2ad45e4fd10b3fb90d912d78d8b795ab295480db56dc64e86b9fa75c5a6df
+
+  - URL: https://cpan.metacpan.org/authors/id/H/HA/HAARG/Moo-2.002004.tar.gz
+    sha256sum: 782d6246f9f5f5d9290c576e5819cd495596abe28f36d192a8c4abf94f5dd2c3
+
+  - URL: https://cpan.metacpan.org/authors/id/M/MA/MATEU/MooX-Types-MooseLike-0.29.tar.gz
+    sha256sum: 1d3780aa9bea430afbe65aa8c76e718f1045ce788aadda4116f59d3b7a7ad2b4
+
+  - URL: https://cpan.metacpan.org/authors/id/B/BO/BOBTFISH/MRO-Compat-0.12.tar.gz
+    sha256sum: bba5b93869aa537a3389949669d682f047d3014d53bc3a2d7209c6819e5015d6
+
+  - URL: https://cpan.metacpan.org/authors/id/I/IL/ILMARI/multidimensional-0.012.tar.gz
+    sha256sum: daa7754dbdf9a1676cf8872cbe8f04a3eb40173e08fa57fdb2196f364ca6f1e3
+
+  - URL: https://cpan.metacpan.org/authors/id/D/DO/DOY/Package-Stash-0.37.tar.gz
+    sha256sum: 06ab05388f9130cd377c0e1d3e3bafeed6ef6a1e22104571a9e1d7bfac787b2c
+
+  - URL: https://cpan.metacpan.org/authors/id/D/DO/DOY/Package-Stash-XS-0.28.tar.gz
+    sha256sum: 23d8c5c25768ef1dc0ce53b975796762df0d6e244445d06e48d794886c32d486
+
+  - URL: https://cpan.metacpan.org/authors/id/R/RO/ROBIN/PadWalker-2.2.tar.gz
+    sha256sum: fc1df2084522e29e892da393f3719d2c1be0da022fdd89cff4b814167aecfea3
+
+  - URL: https://cpan.metacpan.org/authors/id/A/AD/ADAMK/Params-Util-1.07.tar.gz
+    sha256sum: 30f1ec3f2cf9ff66ae96f973333f23c5f558915bb6266881eac7423f52d7c76c
+
+  - URL: https://cpan.metacpan.org/authors/id/D/DR/DROLSKY/Params-ValidationCompiler-0.13.tar.gz
+    sha256sum: c4326f6802ff0041b33b4546231ae64091623e8306f969c64a648d12ae8b7c03
+
+  - URL: https://cpan.metacpan.org/authors/id/S/SH/SHANCOCK/Perl-Tidy-20160302.tar.gz
+    sha256sum: 6dd04ed8c315bcfea8fe713de8f9de68955795b6864f3be6c177e802fd30dca7
+
+  - URL: https://cpan.metacpan.org/authors/id/H/HA/HAARG/Role-Tiny-2.000003.tar.gz
+    sha256sum: 6e6c967e1154f290a40c9c60a762cc3b2ec5438107a4fbadddbe55a55b393434
+
+  - URL: https://cpan.metacpan.org/authors/id/P/PE/PEVANS/Scalar-List-Utils-1.46.tar.gz
+    sha256sum: 30662b1261364adb317e9a5bd686273d3dd731e3fda1b8e894802aa52e0052e7
+
+  - URL: https://cpan.metacpan.org/authors/id/D/DR/DROLSKY/Specio-0.30.tar.gz
+    sha256sum: 0220dacaa7c4db28dde7444c85a0b04797e9a895f2b2e1f3e1d57a18d0b4d456
+
+  - URL: https://cpan.metacpan.org/authors/id/H/HA/HAARG/strictures-2.000003.tar.gz
+    sha256sum: 27f8ea096a521e9754d36ea32889c2cda28346d04e3e399e7ea118d182dbaf22
+
+  - URL: https://cpan.metacpan.org/authors/id/R/RJ/RJBS/Sub-Exporter-0.987.tar.gz
+    sha256sum: 543cb2e803ab913d44272c7da6a70bb62c19e467f3b12aaac4c9523259b083d6
+
+  - URL: https://cpan.metacpan.org/authors/id/F/FR/FREW/Sub-Exporter-Progressive-0.001012.tar.gz
+    sha256sum: b9e579b857d9bfd3b8391e4de6ee6529b4c6208c581c2a7cbf46a86618297cb8
+
+  - URL: https://cpan.metacpan.org/authors/id/R/RG/RGARCIA/Sub-Identify-0.12.tar.gz
+    sha256sum: 83bb785a66113b4a966db0a4186fd1dd07987acdacb4502b1e1558f817dde825
+
+  - URL: https://cpan.metacpan.org/authors/id/R/RJ/RJBS/Sub-Install-0.928.tar.gz
+    sha256sum: 61e567a7679588887b7b86d427bc476ea6d77fffe7e0d17d640f89007d98ef0f
+
+  - URL: https://cpan.metacpan.org/authors/id/D/DR/DROLSKY/Test2-Plugin-NoWarnings-0.03.tar.gz
+    sha256sum: 1c72b8dec2208d704748676fd915c25e32a530ba2b93327919a8fb3ba83208e4
+
+  - URL: https://cpan.metacpan.org/authors/id/E/EX/EXODIST/Test2-Suite-0.000060.tar.gz
+    sha256sum: 535cdfe9ce5ea59c97a57aba8b6b2a7890bac79e1af53190add7a9a5b6d336f4
+
+  - URL: https://cpan.metacpan.org/authors/id/R/RJ/RJBS/Test-Deep-1.123.tar.gz
+    sha256sum: 15784c85b972f7497888db1b26bfa2b028d9c0636ade6d8a4a97fbb832a53db0
+
+  - URL: https://cpan.metacpan.org/authors/id/R/RJ/RJBS/Test-Fatal-0.014.tar.gz
+    sha256sum: bcdcef5c7b2790a187ebca810b0a08221a63256062cfab3c3b98685d91d1cbb0
+
+  - URL: https://cpan.metacpan.org/authors/id/H/HA/HAARG/Test-Needs-0.002005.tar.gz
+    sha256sum: 5a4f33983586edacdbe00a3b429a9834190140190dab28d0f873c394eb7df399
+
+  - URL: https://cpan.metacpan.org/authors/id/D/DA/DAGOLDEN/Test-Number-Delta-1.06.tar.gz
+    sha256sum: 535430919e6fdf6ce55ff76e9892afccba3b7d4160db45f3ac43b0f92ffcd049
+
+  - URL: https://cpan.metacpan.org/authors/id/T/TO/TOKUHIROM/Test-Requires-0.10.tar.gz
+    sha256sum: 2768a391d50ab94b95cefe540b9232d7046c13ee86d01859e04c044903222eb5
+
+  - URL: https://cpan.metacpan.org/authors/id/E/EX/EXODIST/Test-Simple-1.302062.tar.gz
+    sha256sum: 6729060d4ab12e2db3a3c6d6376ee6a9fb77c0ba0308b66919365a1e8bf156ea
+
+  - URL: https://cpan.metacpan.org/authors/id/E/ET/ETHER/Test-Warnings-0.026.tar.gz
+    sha256sum: ae2b68b1b5616704598ce07f5118efe42dc4605834453b7b2be14e26f9cc9a08
+
+  - URL: https://cpan.metacpan.org/authors/id/C/CO/CORION/Test-Without-Module-0.18.tar.gz
+    sha256sum: e2c3360b171d7db518ac39a0e1dcb285c784ea393c11708914a0655d66138c7f
+
+  - URL: https://cpan.metacpan.org/authors/id/R/RJ/RJBS/Throwable-0.200013.tar.gz
+    sha256sum: 9987d0deb5bddd352a6330cefbe932f882e36dd8c8a4564bcfd372dc396b8fa0
+
+  - URL: https://cpan.metacpan.org/authors/id/G/GB/GBARR/TimeDate-2.30.tar.gz
+    sha256sum: 75bd254871cb5853a6aa0403ac0be270cdd75c9d1b6639f18ecba63c15298e86
+
+  - URL: https://cpan.metacpan.org/authors/id/E/ET/ETHER/Try-Tiny-0.27.tar.gz
+    sha256sum: 8abf0878c9cddc0c4ab9c4adfa8d81790a16d7cb53b0e429430b13b7567075fb
+
+  - URL: https://cpan.metacpan.org/authors/id/E/ET/ETHER/URI-1.71.tar.gz
+    sha256sum: 9c8eca0d7f39e74bbc14706293e653b699238eeb1a7690cc9c136fb8c2644115
+
+  - URL: https://cpan.metacpan.org/authors/id/V/VP/VPIT/Variable-Magic-0.60.tar.gz
+    sha256sum: 22a5e2bd38ac327f1ae4b4ce654e726f3bba9c1d813750b98165831ea00952cf
+
+  - URL: https://cpan.metacpan.org/authors/id/G/GR/GRANTM/XML-SAX-Base-1.08.tar.gz
+    sha256sum: 666270318b15f88b8427e585198abbc19bc2e6ccb36dc4c0a4f2d9807330219e
+
+  - URL: https://cpan.metacpan.org/authors/id/L/LE/LEONT/Module-Build-0.4220.tar.gz
+    sha256sum: fb1207c7e799366f7a8adda3f135bf8141c4d6068505650d4db2b2d3ce34b5a2
+
+  - URL: https://cpan.metacpan.org/authors/id/Z/ZE/ZEFRAM/Module-Runtime-0.014.tar.gz
+    sha256sum: 4c44fe0ea255a9fd00741ee545063f6692d2a28e7ef2fbaad1b24a92803362a4
