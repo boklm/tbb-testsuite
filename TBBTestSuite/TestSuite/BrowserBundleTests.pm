@@ -652,7 +652,7 @@ sub parse_strace {
             $removed_files{$1}++;
             delete $modified_files{$1} unless -f $1;
         }
-        if ($line =~ m/^\d+ connect\(\d+, {sa_family=AF_INET, sin_port=htons\((\d+)\), sin_addr=inet_addr\("((?:[^"\\]++|\\.)*+)"\)/) {
+        if ($line =~ m/^\d+ connect\(\d+, \{sa_family=AF_INET, sin_port=htons\((\d+)\), sin_addr=inet_addr\("((?:[^"\\]++|\\.)*+)"\)/) {
             $test->{results}{connections}{"$2:$1"}++;
         }
     }
