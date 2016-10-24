@@ -16,6 +16,7 @@ use File::Temp;
 use JSON;
 use Digest::SHA qw(sha256_hex);
 use LWP::UserAgent;
+use IO::CaptureOutput qw(capture_exec);
 use TBBTestSuite::Common qw(exit_error winpath clone_strip_coderef screenshot_thumbnail);
 use TBBTestSuite::Options qw($options);
 use TBBTestSuite::Tests::VirusTotal qw(virustotal_run);
@@ -98,6 +99,22 @@ our @tests = (
         command         => [ 'readelf', '-d' ],
         check_output    => sub { ! ( $_[0] =~ m/runpath/ ) },
         enable          => sub { $OSNAME eq 'linux' },
+    },
+    {
+        name            => 'otool_PIE',
+        type            => 'command',
+        descr           => 'Check for PIE support',
+        files           => \&tbb_osx_executable_files,
+        command         => [ 'otool', '-hv' ],
+        check_output    => sub {
+            my @lines = split("\n", $_[0]);
+            my $last_line = pop @lines;
+            my ($flags) = $last_line =~ m/^\s*[^\s]+\s+[^\s]+\s+[^\s]+\s+[^\s]+\s+[^\s]+\s+[^\s]+\s+[^\s]+\s+(.*)/;
+            my %flags = map { $_ => 1 } split(/\s+/, $flags);
+            return $flags{PIE};
+        },
+        enable          => sub { $OSNAME eq 'darwin' },
+        retry           => 1,
     },
     {
         name            => 'tor_httpproxy',
@@ -505,6 +522,27 @@ sub tbb_binfiles {
     };
     find($wanted, $tbbinfos->{tbbdir});
     return $tbbinfos->{binfiles} = [ keys %binfiles ];
+}
+
+sub tbb_osx_executable_files {
+    my ($tbbinfos, $test) = @_;
+    return $tbbinfos->{osx_executable_files} if $tbbinfos->{osx_executable_files};
+    my %exec_files;
+    my $wanted = sub {
+        return unless -f $File::Find::name;
+        $ENV{LC_ALL}= 'C';
+        my ($out, $err, $success) = capture_exec('otool', '-hv', $File::Find::name);
+        return unless $success;
+        my @out_lines = split("\n", $out);
+        return if $out_lines[0] =~ m/is not an object file/;
+        my $last_line = pop @out_lines;
+        my ($type) = $last_line =~ m/^\s*[^\s]+\s+[^\s]+\s+[^\s]+\s+[^\s]+\s+([^\s]+)\s+[^\s]+\s+[^\s]+\s+/;
+        my $name = $File::Find::name;
+        $name =~ s/^$tbbinfos->{tbbdir}\///;
+        $exec_files{$name} = 1 if $type eq 'EXECUTE';
+    };
+    find($wanted, $tbbinfos->{tbbdir});
+    return $tbbinfos->{osx_executable_files} = [ keys %exec_files ];
 }
 
 sub list_tests {
