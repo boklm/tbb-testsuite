@@ -1,0 +1,14 @@
+#!/bin/bash
+set -e
+bdir="$(readlink -f ${BASH_SOURCE%/*})"
+
+"$bdir/tools/pull"
+
+if ! "$bdir/tools/is_new_bundle_needed"
+then
+    echo 'A new bundle containing new dependencies is required.' 1>&2
+    echo 'Please download a new bundle at the following URL:' 1>&2
+    last_bundle=$(cat "$bdir/data/last_bundle.txt")
+    echo "https://people.torproject.org/~boklm/tbb-testssuite/$last_bundle/"
+    exit 1
+fi

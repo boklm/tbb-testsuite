@@ -1,0 +1,19 @@
+#!/bin/bash
+#
+# Check if a new bundle needs to be downloaded
+# Returns 0 if no update to the bundle is required
+
+set -e
+bdir="$(readlink -f ${BASH_SOURCE%/*})"
+cd "$bdir/.."
+if ! [ -f ./bundle/bundle_version.txt ]
+then
+    echo 'Ignoring bundle updates: the file ./bundle/bundle_version.txt is missing.' 1>&2
+    exit 0
+fi
+bundle_version=$(cat ./bundle/bundle_version.txt)
+if [ a"$bundle_version" = 'a0.1.1' ]
+then
+    exit 0
+fi
+exit 1
