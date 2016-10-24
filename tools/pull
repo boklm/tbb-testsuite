@@ -1,6 +1,22 @@
 #!/bin/sh
 set -e
 basedir=$(cd $(dirname $0); pwd)
+cd "$basedir/.."
+if ! [ -d .git ]
+then
+    if ! [ -f bundle/bundle_commit.txt ]
+    then
+        echo 'file bundle/bundle_commit.txt is missing' 1>&2
+        exit 1
+    fi
+    bundle_commit=$(cat bundle/bundle_commit.txt)
+    git init
+    git remote add origin https://git.torproject.org/boklm/tor-browser-bundle-testsuite.git
+    git fetch origin
+    git branch master $bundle_commit
+    git branch --set-upstream-to=origin/master master
+    git reset master
+fi
 git config --replace-all --local gpg.program "$basedir/gpggit"
 git pull --verify-signatures "$@"
 git submodule init
