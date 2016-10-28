@@ -4,7 +4,10 @@
 # Returns 0 if no update to the bundle is required
 
 set -e
-bdir="$(readlink -f ${BASH_SOURCE%/*})"
+function abs_dir() {
+  (cd "$1" && echo "$(pwd)")
+}
+bdir="$(abs_dir ${BASH_SOURCE%/*})"
 cd "$bdir/.."
 if ! [ -f ./bundle/bundle_version.txt ]
 then

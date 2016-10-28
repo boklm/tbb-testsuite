@@ -1,6 +1,9 @@
 #!/bin/bash
 set -e
-bdir="$(readlink -f ${BASH_SOURCE%/*})"
+function abs_dir() {
+  (cd "$1" && echo "$(pwd)")
+}
+bdir="$(abs_dir ${BASH_SOURCE%/*})"
 
 "$bdir/tools/pull"
 

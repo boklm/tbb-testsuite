@@ -1,5 +1,8 @@
 #!/bin/bash
 set -e
-bdir="$(readlink -f ${BASH_SOURCE%/*})"
+function abs_dir() {
+  (cd "$1" && echo "$(pwd)")
+}
+bdir="$(abs_dir ${BASH_SOURCE%/*})"
 [ -f "$bdir/bundle/set-env" ] && source "$bdir/bundle/set-env"
 exec perl "$bdir/tbb-testsuite" "$@"

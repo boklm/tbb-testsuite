@@ -9,7 +9,10 @@ cd bundle
 tar xf $rootdir/[% c("input_files_by_name/tbb-testsuite-deps") %]
 
 cat > set-env << 'EOF'
-basedir="$(readlink -f ${BASH_SOURCE%/*})"
+function abs_dir() {
+  (cd "$1" && echo "$(pwd)")
+}
+basedir="$(abs_dir ${BASH_SOURCE%/*})"
 export PATH="$basedir/perl/bin:$basedir/ImageMagick/bin:$PATH"
 export LD_LIBRARY_PATH="$basedir/ImageMagick/lib"
 EOF
