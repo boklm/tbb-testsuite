@@ -11,9 +11,12 @@ targets:
   linux-i686:
     var:
       configure_opt: '-Acflags=-m32 -Aldflags=-m32'
+  native-osx-x86_64:
+    remote_docker: 0
 
 input_files:
   - project: docker-image
+    enable: '[% c("remote_docker") %]'
   - name: perl
     URL: 'http://www.cpan.org/src/5.0/perl-[% c("version") %].tar.bz2'
     sha256sum: 62328a53d157e8153b33e137594155f6f8b64418f7f9238210feb809585290e0

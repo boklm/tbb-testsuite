@@ -1,6 +1,6 @@
 #!/bin/sh
 set -e
-distdir=/home/$(whoami)/dist/[% project %]
+distdir=/var/tmp/dist/[% project %]
 mkdir -p $distdir
 tar xf [% project %]-[% c("version") %].tar.bz2
 cd [% project %]-[% c("version") %]
@@ -13,3 +13,4 @@ cd "$distdir/.."
         tar_src => [ project ],
         tar_args => '-czf ' _ dest_dir _ '/' _ c('filename'),
     }) %]
+rm -Rf "$distdir"

@@ -19,8 +19,13 @@ var:
 
   imagemagick_version: 7.0.3-4
 
+targets:
+  native-osx-x86_64:
+    remote_docker: 0
+
 input_files:
   - project: docker-image
+    enable: '[% c("remote_docker") %]'
 
   - project: perl
     name: perl

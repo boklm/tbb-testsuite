@@ -4,6 +4,8 @@ rootdir=$(pwd)
 mkdir -p /var/tmp/dist
 tar -C/var/tmp/dist -xf $rootdir/[% c('input_files_by_name/perl') %]
 export PATH=/var/tmp/dist/perl/bin:$PATH
+unset PERL5LIB PERL_LOCAL_LIB_ROOT PERL_MB_OPT PERL_MM_OPT
+export PERL_MM_USE_DEFAULT=1
 
 mkdir -p /var/tmp/dist/ImageMagick
 tar xf ImageMagick-[% c("var/imagemagick_version") %].tar.xz
