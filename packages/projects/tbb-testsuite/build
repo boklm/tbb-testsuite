@@ -12,10 +12,23 @@ tar xf $rootdir/[% c("input_files_by_name/ImageMagick") %]
 [% END %]
 
 [% IF c("var/cygwin") %]
+mv $rootdir/[% c("input_files_by_name/python_msi") %] .
 mkdir tmp
 unzip -d ./tmp $rootdir/[% c("input_files_by_name/cygwin-setup") %]
 mv tmp/cygwin-setup/* .
 rmdir tmp/cygwin-setup tmp
+
+cat > "python-setup.bat" << EOF
+SET ROOTDIR=%~dp0
+CD %ROOTDIR%
+IF NOT EXIST %ROOTDIR%\\python\\* msiexec /a python-[% c("var/python_version") %].msi /qb TARGETDIR=%ROOTDIR%\\python
+EOF
+
+cat > "bundle-setup.bat" << EOF
+CALL python-setup.bat
+CALL cygwin-setup.bat
+EOF
+
 [% END %]
 
 cat > set-env << 'EOF'

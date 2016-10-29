@@ -13,6 +13,7 @@ targets:
     var:
       build_imagemagick: 0
       filename_ext: zip
+      python_version: 2.7.12
 
 input_files:
   - project: tbb-testsuite-deps
@@ -22,4 +23,10 @@ input_files:
     enable: '[% c("var/build_imagemagick") %]'
   - project: cygwin-setup
     name: cygwin-setup
+    enable: '[% c("var/cygwin") %]'
+  - URL: 'https://www.python.org/ftp/python/[% c("var/python_version") %]/python-[% c("var/python_version") %].msi'
+    name: python_msi
+    file_gpg_id: 1
+    sig_ext: asc
+    gpg_keyring: python.gpg
     enable: '[% c("var/cygwin") %]'

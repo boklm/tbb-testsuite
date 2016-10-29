@@ -1,6 +1,6 @@
 @ECHO OFF
 SET TESTSUITEDIR=%~dp0
 CD %TESTSUITEDIR%\bundle
-CALL cygwin-setup.bat
+CALL bundle-setup.bat
 CD ..
 bundle\cygwin\bin\bash --login -i -c 'cd $(cygpath -u "$TESTSUITEDIR"); exec ./update-tbb-testsuite'
