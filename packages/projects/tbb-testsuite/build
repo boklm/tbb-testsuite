@@ -7,6 +7,7 @@ cd [% project %]-[% c("version") %]
 mkdir bundle
 cd bundle
 tar xf $rootdir/[% c("input_files_by_name/tbb-testsuite-deps") %]
+tar xf $rootdir/[% c("input_files_by_name/ImageMagick") %]
 
 cat > set-env << 'EOF'
 function abs_dir() {

@@ -7,20 +7,6 @@ export PATH=/var/tmp/dist/perl/bin:$PATH
 unset PERL5LIB PERL_LOCAL_LIB_ROOT PERL_MB_OPT PERL_MM_OPT
 export PERL_MM_USE_DEFAULT=1
 
-mkdir -p /var/tmp/dist/ImageMagick
-tar xf ImageMagick-[% c("var/imagemagick_version") %].tar.xz
-cd ImageMagick-[% c("var/imagemagick_version") %]
-./configure --enable-shared \
-    --disable-static \
-    --with-modules \
-    --without-perl \
-    --with-threads \
-    --prefix=/
-make
-echo "Running make install"
-make install DESTDIR=/var/tmp/dist/ImageMagick
-cd ..
-
 modules='
 Data-Dump-1.23 File-Path-2.12 IO-1.25 LWP-Protocol-https-6.06
 XML-LibXML-2.0128 DateTime-1.39 File-Slurp-9999.19 IO-CaptureOutput-1.1104
@@ -62,6 +48,6 @@ done
 
 cd /var/tmp/dist
 [% c('tar', {
-        tar_src => [ 'perl', 'ImageMagick' ],
+        tar_src => [ 'perl' ],
         tar_args => '-czf ' _ dest_dir _ '/' _ c('filename'),
     }) %]

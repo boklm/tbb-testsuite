@@ -17,8 +17,6 @@ var:
     - libjpeg-dev
     - libpng-dev
 
-  imagemagick_version: 7.0.3-4
-
 targets:
   native-osx-x86_64:
     remote_docker: 0
@@ -29,11 +27,6 @@ input_files:
 
   - project: perl
     name: perl
-
-  - URL: 'https://www.imagemagick.org/download/ImageMagick-[% c("var/imagemagick_version") %].tar.xz'
-    file_gpg_id: 1
-    sig_ext: asc
-    gpg_keyring: ImageMagick.gpg
 
   - URL: https://cpan.metacpan.org/authors/id/G/GA/GAAS/Data-Dump-1.23.tar.gz
     sha256sum: af53b05ef1387b4cab4427e6789179283e4f0da8cf036e8db516ddb344512b65

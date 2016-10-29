@@ -1,0 +1,19 @@
+#!/bin/sh
+set -e
+rootdir=$(pwd)
+mkdir -p /var/tmp/dist/ImageMagick
+tar xf ImageMagick-[% c("version") %].tar.xz
+cd ImageMagick-[% c("version") %]
+./configure --enable-shared \
+    --disable-static \
+    --with-modules \
+    --without-perl \
+    --with-threads \
+    --prefix=/
+make
+make install DESTDIR=/var/tmp/dist/ImageMagick
+cd /var/tmp/dist
+[% c('tar', {
+        tar_src => [ 'ImageMagick' ],
+        tar_args => '-czf ' _ dest_dir _ '/' _ c('filename'),
+    }) %]

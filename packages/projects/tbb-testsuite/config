@@ -7,3 +7,5 @@ filename: '[% project %]-[% c("version") %]-[% c("var/osname") %]-[% c("var/buil
 input_files:
   - project: tbb-testsuite-deps
     name: tbb-testsuite-deps
+  - project: ImageMagick
+    name: ImageMagick

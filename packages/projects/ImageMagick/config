@@ -1,0 +1,30 @@
+# vim: filetype=yaml sw=2
+
+version: 7.0.3-4
+filename: '[% project %]-[% c("version") %]-[% c("var/build_id") %].tar.gz'
+remote_docker: 1
+
+var:
+  deps:
+    - build-essential
+    - libxml2-dev
+    - zlib1g-dev
+    - libltdl-dev
+    - liblcms2-dev
+    - libbz2-dev
+    - libjpeg-dev
+    - libpng-dev
+
+targets:
+  native-osx-x86_64:
+    remote_docker: 0
+
+input_files:
+  - project: docker-image
+    enable: '[% c("remote_docker") %]'
+
+  - URL: 'https://www.imagemagick.org/download/ImageMagick-[% c("version") %].tar.xz'
+    file_gpg_id: 1
+    sig_ext: asc
+    gpg_keyring: ImageMagick.gpg
+
