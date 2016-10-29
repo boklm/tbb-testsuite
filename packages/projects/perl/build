@@ -4,7 +4,7 @@ distdir=/var/tmp/dist/[% project %]
 mkdir -p $distdir
 tar xf [% project %]-[% c("version") %].tar.bz2
 cd [% project %]-[% c("version") %]
-./Configure -des -Dprefix=$distdir -Dusethreads -Duseithreads -Duserelocatableinc [% c("var/configure_opt") %]
+./Configure -des -Dprefix=$distdir -Dusethreads -Duseithreads -Duserelocatableinc -Duseshrplib=false [% c("var/configure_opt") %]
 make
 make test
 make install

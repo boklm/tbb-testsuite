@@ -1,0 +1,18 @@
+# vim: filetype=yaml sw=2
+version: '[% c("var/setup_version") %]_[% c("var/packages_version") %]'
+filename: '[% project %]-[% c("version") %]-[% c("var/build_id") %].zip'
+remote_docker: 0
+
+var:
+  setup_version: 1
+  packages_version: 1
+
+input_files:
+  - URL: 'https://people.torproject.org/~boklm/mirror/setup-x86-[% c("var/setup_version") %].exe'
+    file_gpg_id: 1
+    sig_ext: sig
+    gpg_keyring: cygwin.gpg
+    sha256sum: 5540542d7fa1d1f13453e7a250c1c6de44a6a794e81ffde0dfea6b5689dbc052
+
+  - URL: 'https://people.torproject.org/~boklm/mirror/cygwin-packages-[% c("var/packages_version") %].tar.bz2'
+    sha256sum: a724f21dc303eefac035c8a60a901fed009c9794c2af29962fbdeb6b03c2784c

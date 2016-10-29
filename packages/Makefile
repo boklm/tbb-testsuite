@@ -13,6 +13,9 @@ tbb-testsuite-linux-i686: submodule-update
 tbb-testsuite-native-osx-x86_64: submodule-update
 	$(rbm) build tbb-testsuite --target native-osx-x86_64
 
+tbb-testsuite-native-cygwin-i686: submodule-update
+	$(rbm) build tbb-testsuite --target native-cygwin-i686
+
 submodule-update:
 	git submodule update --init
 

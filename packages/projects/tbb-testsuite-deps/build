@@ -2,10 +2,20 @@
 set -e
 rootdir=$(pwd)
 mkdir -p /var/tmp/dist
+rm -Rf /var/tmp/dist/perl
+[% IF c("var/build_perl") %]
 tar -C/var/tmp/dist -xf $rootdir/[% c('input_files_by_name/perl') %]
 export PATH=/var/tmp/dist/perl/bin:$PATH
+[% END %]
 unset PERL5LIB PERL_LOCAL_LIB_ROOT PERL_MB_OPT PERL_MM_OPT
 export PERL_MM_USE_DEFAULT=1
+
+[% IF ! c("var/build_perl") %]
+export PERL5LIB="/var/tmp/dist/perl/lib/perl5"
+export PERL_LOCAL_LIB_ROOT="/var/tmp/dist/perl"
+export PERL_MB_OPT="--install_base \"/var/tmp/dist/perl\""
+export PERL_MM_OPT="INSTALL_BASE=/var/tmp/dist/perl"
+[% END %]
 
 modules='
 Data-Dump-1.23 File-Path-2.12 IO-1.25 LWP-Protocol-https-6.06
@@ -37,6 +47,7 @@ Module-Runtime-0.014
 
 for module in $modules
 do
+    test -f $module.tar.gz || continue
     tar xf $module.tar.gz
     cd $module
     perl Makefile.PL

@@ -13,6 +13,8 @@ targets:
       configure_opt: '-Acflags=-m32 -Aldflags=-m32'
   native-osx-x86_64:
     remote_docker: 0
+  native-cygwin-i686:
+    remote_docker: 0
 
 input_files:
   - project: docker-image

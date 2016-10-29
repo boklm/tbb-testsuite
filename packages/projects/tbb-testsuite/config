@@ -2,10 +2,24 @@
 version: 0.1.1
 git_url: https://git.torproject.org/boklm/tor-browser-bundle-testsuite.git
 git_hash: 59782207d2e5976d11226496f3dec57917cc5962
-filename: '[% project %]-[% c("version") %]-[% c("var/osname") %]-[% c("var/build_id") %].tar.gz'
+filename: '[% project %]-[% c("version") %]-[% c("var/osname") %]-[% c("var/build_id") %].[% c("var/filename_ext") %]'
+
+var:
+  build_imagemagick: 1
+  filename_ext: tar.gz
+
+targets:
+  native-cygwin-i686:
+    var:
+      build_imagemagick: 0
+      filename_ext: zip
 
 input_files:
   - project: tbb-testsuite-deps
     name: tbb-testsuite-deps
   - project: ImageMagick
     name: ImageMagick
+    enable: '[% c("var/build_imagemagick") %]'
+  - project: cygwin-setup
+    name: cygwin-setup
+    enable: '[% c("var/cygwin") %]'

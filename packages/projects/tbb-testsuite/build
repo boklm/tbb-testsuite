@@ -7,15 +7,28 @@ cd [% project %]-[% c("version") %]
 mkdir bundle
 cd bundle
 tar xf $rootdir/[% c("input_files_by_name/tbb-testsuite-deps") %]
+[% IF c("var/build_imagemagick") %]
 tar xf $rootdir/[% c("input_files_by_name/ImageMagick") %]
+[% END %]
+
+[% IF c("var/cygwin") %]
+mkdir tmp
+unzip -d ./tmp $rootdir/[% c("input_files_by_name/cygwin-setup") %]
+mv tmp/cygwin-setup/* .
+rmdir tmp/cygwin-setup tmp
+[% END %]
 
 cat > set-env << 'EOF'
 function abs_dir() {
   (cd "$1" && echo "$(pwd)")
 }
 basedir="$(abs_dir ${BASH_SOURCE%/*})"
+[% IF ! c("var/cygwin") %]
 export PATH="$basedir/perl/bin:$basedir/ImageMagick/bin:$PATH"
 export LD_LIBRARY_PATH="$basedir/ImageMagick/lib"
+[% ELSE %]
+export PERL5LIB="$basedir/perl/lib/perl5"
+[% END %]
 EOF
 
 echo [% c("git_hash") %] > bundle_commit.txt
@@ -23,7 +36,11 @@ echo [% c("version") %] > bundle_version.txt
 
 cd ../..
 mv [% project %]-[% c("version") %] [% project %]
+[% IF c("var/cygwin") %]
+zip -X -r "[% dest_dir _ '/' _ c('filename') %]" [% project %]
+[% ELSE %]
 [% c('tar', {
         tar_src => [ project ],
         tar_args => '-czf ' _ dest_dir _ '/' _ c('filename'),
     }) %]
+[% END %]
