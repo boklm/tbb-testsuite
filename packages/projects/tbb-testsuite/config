@@ -1,7 +1,7 @@
 # vim: filetype=yaml sw=2
 version: 0.1.1
 git_url: https://git.torproject.org/boklm/tor-browser-bundle-testsuite.git
-git_hash: 59782207d2e5976d11226496f3dec57917cc5962
+git_hash: a2f0f359a3e254ca72091ef9c87259ce9c8cb07d
 filename: '[% project %]-[% c("version") %]-[% c("var/osname") %]-[% c("var/build_id") %].[% c("var/filename_ext") %]'
 
 var:
