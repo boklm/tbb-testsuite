@@ -29,6 +29,22 @@ CALL python-setup.bat
 CALL cygwin-setup.bat
 EOF
 
+tar xf $rootdir/setuptools-[% c("var/setuptools_version") %].tar.gz
+tar xf $rootdir/pip-[% c("var/pip_version") %].tar.gz
+
+cat > install_virtualenv.sh << 'EOF'
+#!/bin/sh
+function abs_dir() {
+  (cd "$1" && echo "$(pwd)")
+}
+bdir="$(abs_dir ${BASH_SOURCE%/*})"
+cd "$bdir/setuptools-[% c("var/setuptools_version") %]"
+../python/python.exe setup.py install
+cd "$bdir/pip-[% c("var/pip_version") %]"
+../python/python.exe setup.py install
+cd ..
+./python/Scripts/pip.exe install virtualenv
+EOF
 [% END %]
 
 cat > set-env << 'EOF'

@@ -14,6 +14,8 @@ targets:
       build_imagemagick: 0
       filename_ext: zip
       python_version: 2.7.12
+      setuptools_version: 28.7.0
+      pip_version: 8.1.2
 
 input_files:
   - project: tbb-testsuite-deps
@@ -29,4 +31,12 @@ input_files:
     file_gpg_id: 1
     sig_ext: asc
     gpg_keyring: python.gpg
+    enable: '[% c("var/cygwin") %]'
+  - URL: 'https://pypi.python.org/packages/94/b5/f1ad3a987acdf58eda28e720b671af6aef43dfe2b8e54682dece964799e7/setuptools-28.7.0.tar.gz'
+    name: setuptools
+    sha256sum: 6bbeb754a1e9c8f1f38cd45f68105cb41bbd565e6575310b979c891f24a7ed45
+    enable: '[% c("var/cygwin") %]'
+  - URL: 'https://pypi.python.org/packages/e7/a8/7556133689add8d1a54c0b14aeff0acb03c64707ce100ecd53934da1aa13/pip-8.1.2.tar.gz'
+    name: pip
+    sha256sum: 4d24b03ffa67638a3fa931c09fd9e0273ffa904e95ebebe7d4b1a54c93d7b732
     enable: '[% c("var/cygwin") %]'
