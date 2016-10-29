@@ -3,9 +3,16 @@ use strict;
 use FindBin;
 use IO::CaptureOutput qw(qxx);
 use Cwd;
+use English;
 
-my $virtenv_marionette = "$FindBin::Bin/virtualenv-marionette";
-my $pip = "$virtenv_marionette/bin/pip";
+sub winpath {
+    return $_[0] unless $OSNAME eq 'cygwin';
+    my $res = `cygpath -aw $_[0]`;
+    chomp $res;
+    return $res;
+}
+
+my $virtenv_marionette_dir = winpath("$FindBin::Bin/virtualenv-marionette");
 
 sub run {
     system(@_) == 0 || die "Error running " . join(' ', @_);
@@ -19,11 +26,12 @@ sub run_from_dir {
     return $res;
 }
 
-sub pip_install {
-    my ($pkg) = @_;
-    my ($output) = qxx($pip, 'show', '--disable-pip-version-check', $pkg);
-    run($pip, 'install', $pkg) unless $output;
+my $virtualenv_cmd = 'virtualenv';
+my $bin = 'bin';
+if ($OSNAME eq 'cygwin') {
+    $bin = 'Scripts';
+    $virtualenv_cmd = "$FindBin::Bin/bundle/python/Scripts/virtualenv.exe";
 }
 
-run('virtualenv', $virtenv_marionette) unless -d $virtenv_marionette;
-run_from_dir('marionette', "$virtenv_marionette/bin/python", 'setup.py', 'develop');
+run($virtualenv_cmd, $virtenv_marionette_dir) unless -d $virtenv_marionette_dir;
+run_from_dir('marionette', "$virtenv_marionette_dir/$bin/python", 'setup.py', 'develop');
