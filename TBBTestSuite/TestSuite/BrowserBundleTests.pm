@@ -244,8 +244,9 @@ our @tests = (
         type            => 'marionette',
         descr           => 'Check that https everywhere is not doing anything when disabled',
         use_net         => 1,
-        pre             => sub { toggle_https_everywhere($_[0], 0) },
-        post            => sub { toggle_https_everywhere($_[0], 1) },
+        prefs           => {
+            'extensions.https_everywhere.globalEnabled' => 'false',
+        },
     },
     {
         name            => 'settings',
@@ -451,26 +452,6 @@ our @tests = (
         use_net         => 1,
     },
 );
-
-sub toggle_https_everywhere {
-    my ($tbbinfos, $t) = @_;
-    my $prefs = $tbbinfos->{ffprofiledir} . '/extensions/'
-        . 'https-everywhere@eff.org/defaults/preferences/preferences.js';
-    my $prefs_eff = $tbbinfos->{ffprofiledir} . '/extensions/'
-        . 'https-everywhere-eff@eff.org/defaults/preferences/preferences.js';
-    $prefs = $prefs_eff unless -f $prefs;
-    my @f = read_file($prefs);
-    foreach (@f) {
-        if ($t) {
-            s/pref\("extensions\.https_everywhere\.globalEnabled",false\);
-             /pref("extensions.https_everywhere.globalEnabled",true);/x;
-        } else {
-            s/pref\("extensions\.https_everywhere\.globalEnabled",true\);
-             /pref("extensions.https_everywhere.globalEnabled",false);/x;
-        }
-    }
-    write_file($prefs, @f);
-}
 
 sub set_test_prefs {
     my ($tbbinfos, $t) = @_;
