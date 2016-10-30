@@ -258,6 +258,8 @@ our @tests = (
         descr           => 'acid3 tests',
         use_net         => 1,
         retry           => 4,
+        # the acid3 test is disabled for now
+        enable          => sub { 0; },
     },
     {
         name            => 'slider_settings_1',
