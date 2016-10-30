@@ -595,6 +595,7 @@ sub extract_tbb {
             move("$tmpdir/Browser", "$tmpdir/torbrowser/Browser");
         }
         move ("$tmpdir/Start Tor Browser.exe", "$tmpdir/torbrowser/");
+        system('chmod', '-R', '+rx', $tmpdir) if $OSNAME eq 'cygwin';
     } elsif ($tbbinfos->{os} eq 'MacOSX') {
         my $mountpoint = File::Temp::newdir('XXXXXX', DIR => $options->{tmpdir});
         system('hdiutil', 'mount', '-mountpoint', $mountpoint, $tbbfile);
