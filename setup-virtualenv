@@ -31,6 +31,8 @@ my $bin = 'bin';
 if ($OSNAME eq 'cygwin') {
     $bin = 'Scripts';
     $virtualenv_cmd = "$FindBin::Bin/bundle/python/Scripts/virtualenv.exe";
+    run("$FindBin::Bin/bundle/install_virtualenv.sh")
+                                        unless -f $virtualenv_cmd;
 }
 
 run($virtualenv_cmd, $virtenv_marionette_dir) unless -d $virtenv_marionette_dir;
