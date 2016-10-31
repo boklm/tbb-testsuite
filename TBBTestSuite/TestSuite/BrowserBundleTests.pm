@@ -86,7 +86,6 @@ our @tests = (
     },
     {
         name            => 'readelf_RELRO',
-        fail_type       => 'warning',
         type            => 'command',
         descr           => 'Check if binaries are RELocation Read-Only',
         files           => \&tbb_binfiles,
@@ -94,16 +93,40 @@ our @tests = (
         check_output    => sub { ( $_[0] =~ m/GNU_RELRO/ )
                                  && ( $_[0] =~ m/BIND_NOW/ ) },
         enable          => sub { $OSNAME eq 'linux' },
+        skip_files   => [ qw(
+            TorBrowser/Tor/PluggableTransports/meek-client
+            TorBrowser/Tor/PluggableTransports/meek-client-torbrowser
+            TorBrowser/Tor/PluggableTransports/meek-client-torbrowser
+            TorBrowser/Tor/PluggableTransports/obfs4proxy
+            ) ],
     },
     {
         name            => 'readelf_stack_canary',
-        fail_type       => 'warning',
         type            => 'command',
         descr           => 'Check for stack canary support',
         files           => \&tbb_binfiles,
         command         => [ 'readelf', '-s' ],
         check_output    => sub { $_[0] =~ m/__stack_chk_fail/ },
         enable          => sub { $OSNAME eq 'linux' },
+        # ticket 13056
+        skip_files   => [ qw(
+            libmozalloc.so
+            libnssckbi.so
+            libplc4.so
+            libplds4.so
+            TorBrowser/Tor/libstdc++.so.6
+            TorBrowser/Tor/PluggableTransports/Crypto/Cipher/_ARC4.so
+            TorBrowser/Tor/PluggableTransports/Crypto/Cipher/_XOR.so
+            TorBrowser/Tor/PluggableTransports/Crypto/Util/_counter.so
+            TorBrowser/Tor/PluggableTransports/fte/cDFA.so
+            TorBrowser/Tor/PluggableTransports/meek-client-torbrowser
+            TorBrowser/Tor/PluggableTransports/twisted/python/_initgroups.so
+            TorBrowser/Tor/PluggableTransports/twisted/runner/portmap.so
+            TorBrowser/Tor/PluggableTransports/twisted/test/raiser.so
+            TorBrowser/Tor/PluggableTransports/zope/interface/_zope_interface_coptimizations.so
+            TorBrowser/Tor/PluggableTransports/meek-client
+            TorBrowser/Tor/PluggableTransports/obfs4proxy
+            ) ],
     },
     {
         name            => 'readelf_NX',
@@ -122,10 +145,14 @@ our @tests = (
         command         => [ 'readelf', '-h' ],
         check_output    => sub { $_[0] =~ m/Type:\s+DYN/ },
         enable          => sub { $OSNAME eq 'linux' },
+        skip_files   => [ qw(
+            TorBrowser/Tor/PluggableTransports/meek-client
+            TorBrowser/Tor/PluggableTransports/meek-client-torbrowser
+            TorBrowser/Tor/PluggableTransports/obfs4proxy
+            ) ],
     },
     {
         name            => 'readelf_no_rpath',
-        fail_type       => 'warning',
         type            => 'command',
         descr           => 'Check for no rpath',
         files           => \&tbb_binfiles,
