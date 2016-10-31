@@ -13,6 +13,7 @@ sub winpath {
 }
 
 my $virtenv_marionette_dir = winpath("$FindBin::Bin/virtualenv-marionette");
+my $virtenv_pefile_dir = winpath("$FindBin::Bin/virtualenv-pefile");
 
 sub run {
     system(@_) == 0 || die "Error running " . join(' ', @_);
@@ -38,4 +39,11 @@ if ($OSNAME eq 'cygwin') {
 unless (-d $virtenv_marionette_dir) {
     run($virtualenv_cmd, $virtenv_marionette_dir);
     run_from_dir('marionette', "$virtenv_marionette_dir/$bin/python", 'setup.py', 'develop');
+}
+
+if ($OSNAME eq 'cygwin') {
+    unless (-d $virtenv_pefile_dir) {
+        run($virtualenv_cmd, $virtenv_pefile_dir);
+        run("$virtenv_pefile_dir/$bin/pip", 'install', 'pefile');
+    }
 }
