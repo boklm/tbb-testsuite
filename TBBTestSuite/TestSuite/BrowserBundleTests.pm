@@ -158,7 +158,7 @@ our @tests = (
         name            => 'tor_obfs4',
         type            => 'tor_bootstrap',
         descr           => 'Access tor using obfs4',
-        enable          => sub { $OSNAME eq 'linux' && $_[0]->{version} !~ m/^4.0/ },
+        enable          => sub { $OSNAME eq 'linux' },
         run_once        => 1,
     },
     {
@@ -166,7 +166,7 @@ our @tests = (
         type            => 'tor_bootstrap',
         descr           => 'Access tor using obfs4 and an http proxy',
         httpproxy       => 1,
-        enable          => sub { $OSNAME eq 'linux' && $_[0]->{version} !~ m/^4.0/ },
+        enable          => sub { $OSNAME eq 'linux' },
         run_once        => 1,
     },
     {
@@ -270,7 +270,6 @@ our @tests = (
         slider_mode     => 1,
         pre             => \&set_slider_mode,
         post            => \&reset_slider_mode,
-        enable          => sub { $_[0]->{version} !~ m/^4.0/ },
     },
     {
         name            => 'slider_settings_2',
@@ -280,7 +279,6 @@ our @tests = (
         slider_mode     => 2,
         pre             => \&set_slider_mode,
         post            => \&reset_slider_mode,
-        enable          => sub { $_[0]->{version} !~ m/^4.0/ },
     },
     {
         name            => 'slider_settings_3',
@@ -290,7 +288,6 @@ our @tests = (
         slider_mode     => 3,
         pre             => \&set_slider_mode,
         post            => \&reset_slider_mode,
-        enable          => sub { $_[0]->{version} !~ m/^4.0/ },
     },
     {
         name            => 'slider_settings_4',
@@ -300,7 +297,6 @@ our @tests = (
         slider_mode     => 4,
         pre             => \&set_slider_mode,
         post            => \&reset_slider_mode,
-        enable          => sub { $_[0]->{version} !~ m/^4.0/ },
     },
     {
         name            => 'dom-objects-enumeration',
@@ -378,7 +374,6 @@ our @tests = (
         prefs           => {
             'extensions.torbutton.security_slider' => 2,
         },
-        enable          => sub { $_[0]->{version} !~ m/^4.0/ },
     },
     {
         name            => 'fp_screen_dimensions',
