@@ -61,6 +61,7 @@ my %default_options = (
     test_data_dir => winpath("$FindBin::Bin/test-data"),
     testsuite => undef,
     cleanup   => 1,
+    PTtests   => 1,
 );
 
 
@@ -72,7 +73,7 @@ sub get_options {
                      virustotal! email-to=s@ email-from=s email-subject=s
                      reports-url=s http-proxy-port=i
                      xdummy! disable-tests=s testrequests_types=s testsuite=s
-                     cleanup!);
+                     cleanup! PTtests!);
     my (%cli, %config);
     Getopt::Long::GetOptionsFromArray(\@_, \%cli, @options) || exit 1;
     $cli{args} = \@_ if @_;

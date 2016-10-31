@@ -136,6 +136,9 @@ Available options
         Disable cleanup of tmp directory after running the testsuite.
         This can be useful for debugging.
 
+--no-PTtests::
+        Disable Pluggable Transport tests.
+
 Configuration Files
 -------------------
 
