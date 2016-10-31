@@ -6,4 +6,4 @@ function abs_dir() {
 bdir="$(abs_dir ${BASH_SOURCE%/*})"
 [ -f "$bdir/bundle/set-env" ] && source "$bdir/bundle/set-env"
 perl "$bdir/setup-virtualenv"
-exec perl "$bdir/tbb-testsuite" "$@"
+exec perl "$bdir/tbb-testsuite" --no-xdummy --no-PTtests "$@"
