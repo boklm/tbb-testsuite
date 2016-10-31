@@ -42,7 +42,7 @@ Test-Deep-1.123 Test-Fatal-0.014 Test-Needs-0.002005 Test-Number-Delta-1.06
 Test-Requires-0.10 Test-Simple-1.302062 Test-Warnings-0.026
 Test-Without-Module-0.18 Throwable-0.200013 TimeDate-2.30 Try-Tiny-0.27
 URI-1.71 Variable-Magic-0.60 XML-SAX-Base-1.08 Module-Build-0.4220
-Module-Runtime-0.014
+Module-Runtime-0.014 HTML-Parser-3.72
 '
 
 for module in $modules

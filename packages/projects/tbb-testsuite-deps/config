@@ -347,3 +347,7 @@ input_files:
   - URL: https://cpan.metacpan.org/authors/id/Z/ZE/ZEFRAM/Module-Runtime-0.014.tar.gz
     sha256sum: 4c44fe0ea255a9fd00741ee545063f6692d2a28e7ef2fbaad1b24a92803362a4
     enable: '[% ! c("var/cygwin") %]'
+
+  - URL: https://cpan.metacpan.org/authors/id/G/GA/GAAS/HTML-Parser-3.72.tar.gz
+    sha256sum: ec28c7e1d9e67c45eca197077f7cdc41ead1bb4c538c7f02a3296a4bb92f608b
+    enable: '[% ! c("var/cygwin") %]'
