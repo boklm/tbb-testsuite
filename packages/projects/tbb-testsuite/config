@@ -3,6 +3,7 @@ version: 0.0.1
 git_url: https://git.torproject.org/boklm/tor-browser-bundle-testsuite.git
 git_hash: 'v[% c("version") %]'
 tag_gpg_id: 1
+gpg_keyring: tbb-testsuite.gpg
 filename: '[% project %]-[% c("version") %]-[% c("var/osname") %]-[% c("var/build_id") %].[% c("var/filename_ext") %]'
 
 var:
