@@ -1,6 +1,6 @@
 # vim: filetype=yaml sw=2
 
-version: 7.0.3-4
+version: 7.0.3-5
 filename: '[% project %]-[% c("version") %]-[% c("var/build_id") %].tar.gz'
 remote_docker: 1
 
