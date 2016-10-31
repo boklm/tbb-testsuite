@@ -7,12 +7,13 @@ remote_docker: 1
 var:
   deps:
     - build-essential
+    - pkg-config
     - libxml2-dev
     - zlib1g-dev
     - libltdl-dev
     - liblcms2-dev
     - libbz2-dev
-    - libjpeg-dev
+    - libjpeg62-dev
     - libpng-dev
 
 targets:

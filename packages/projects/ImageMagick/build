@@ -9,6 +9,8 @@ cd ImageMagick-[% c("version") %]
     --with-modules \
     --without-perl \
     --without-bzlib \
+    --disable-installed \
+    --enable-zero-configuration \
     --with-threads \
     --prefix=/
 make
