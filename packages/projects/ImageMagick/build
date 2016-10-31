@@ -8,6 +8,7 @@ cd ImageMagick-[% c("version") %]
     --disable-static \
     --with-modules \
     --without-perl \
+    --without-bzlib \
     --with-threads \
     --prefix=/
 make
