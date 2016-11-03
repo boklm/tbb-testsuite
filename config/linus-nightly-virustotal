@@ -35,5 +35,5 @@ return ( args => [] ) unless $ok;
     starttor => 0,
     'email-from' => 'TBB Nightly Tests <boklm@torproject.org>',
     'email-to'   => [ 'boklm@mars-attacks.org', ],
-    'reports-url' => 'http://test-reports.tbb.torproject.org/reports/',
+    'reports-url' => 'http://tbb-test-reports.mars-attacks.org/reports/',
 );

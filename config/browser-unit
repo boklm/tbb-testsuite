@@ -23,7 +23,7 @@ my @commits = get_commits_by_branch($torbrowser_branch, $esr_branch);
 
 my %res = (
     args => [],
-    'reports-url' => 'http://test-reports.tbb.torproject.org/reports/',
+    'reports-url' => 'http://tbb-test-reports.mars-attacks.org/reports/',
     tags => [ "$torbrowser_branch-build2" ],
     'disable-tests' => [
         'mochitest-chrome:toolkit/content/tests/chrome',

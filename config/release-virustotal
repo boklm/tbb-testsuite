@@ -16,7 +16,7 @@ foreach my $build (@latest_builds) {
         os         => 'Windows',
         arch       => 'x86',
         starttor   => 0,
-        'reports-url' => 'http://test-reports.tbb.torproject.org/reports/',
+        'reports-url' => 'http://tbb-test-reports.mars-attacks.org/reports/',
         'email-from'  => 'TBB Tests <boklm@torproject.org>',
         'email-to'    => [ 'tor-qa@lists.torproject.org', 'boklm@mars-attacks.org', ],
     );
