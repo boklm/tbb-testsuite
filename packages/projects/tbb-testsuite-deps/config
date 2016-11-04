@@ -351,3 +351,16 @@ input_files:
   - URL: https://cpan.metacpan.org/authors/id/G/GA/GAAS/HTML-Parser-3.72.tar.gz
     sha256sum: ec28c7e1d9e67c45eca197077f7cdc41ead1bb4c538c7f02a3296a4bb92f608b
     enable: '[% ! c("var/cygwin") %]'
+
+  - URL: https://cpan.metacpan.org/authors/id/A/AB/ABH/Mozilla-CA-20160104.tar.gz
+    sha256sum: 27a7069a243162b65ada4194ff9d21b6ebc304af723eb5d3972fb74c11b03f2a
+    enable: '[% c("var/osx") %]'
+
+  - URL: https://cpan.metacpan.org/authors/id/E/ET/ETHER/Net-HTTP-6.09.tar.gz
+    sha256sum: 52762b939d84806908ba544581c5708375f7938c3c0e496c128ca3fbc425e58d
+
+  - URL: https://cpan.metacpan.org/authors/id/S/SU/SULLR/IO-Socket-SSL-2.038.tar.gz
+    sha256sum: 3d0fe05227946478e58ce2db77603e5f12c1fdf38f8b721393f6d8edbb8bd185
+
+  - URL: https://cpan.metacpan.org/authors/id/M/MI/MIKEM/Net-SSLeay-1.78.tar.gz
+    sha256sum: e7f56427602f897446013b84b9ff51b8e8ab4fce0bbd086c4e28c198a942ed53
