@@ -55,6 +55,7 @@ basedir="$(abs_dir ${BASH_SOURCE%/*})"
 [% IF ! c("var/cygwin") %]
 export PATH="$basedir/perl/bin:$basedir/ImageMagick/bin:$PATH"
 export [% IF c("var/osx") %]DY[% END %]LD_LIBRARY_PATH="$basedir/ImageMagick/lib"
+unset PERL5LIB
 [% ELSE %]
 export PERL5LIB="$basedir/perl/lib/perl5"
 [% END %]
