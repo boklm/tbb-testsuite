@@ -23,7 +23,6 @@ class Test(MarionetteTestCase):
                 "javascript.options.asmjs" : False,
                 "noscript.forbidMedia" : True,
                 "media.webaudio.enabled" : False,
-                "network.jar.block-remote-files" : True,
                 "mathml.disabled" : True
                 }
 
