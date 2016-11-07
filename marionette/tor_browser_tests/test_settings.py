@@ -180,25 +180,15 @@ class Test(MarionetteTestCase):
                 "media.video_stats.enabled": False,
                 }
 
-        # Settings for the Tor Browser 5.0 branch
-        self.SETTINGS_50 = {
-                "startup.homepage_override_url": "",
-                "browser.startup.homepage_override.buildID": "20100101",
-                "browser.startup.homepage_override.mstone": "ignore",
-                "dom.workers.sharedWorkers.enabled": False, # See https://bugs.torproject.org/15562
-                "general.useragent.override": "Mozilla/5.0 (Windows NT 6.1; rv:38.0) Gecko/20100101 Firefox/38.0",
-                }
-
-        # Settings for the Tor Browser 5.5
-        self.SETTINGS_55 = {
+        # Settings for the Tor Browser 6.0
+        self.SETTINGS_60 = {
                 "startup.homepage_override_url": "https://blog.torproject.org/category/tags/tor-browser",
                 "browser.startup.homepage_override.buildID": "20000101000000",
-                "dom.workers.sharedWorkers.enabled": True, # See #15564
-                "general.useragent.override": "Mozilla/5.0 (Windows NT 6.1; rv:38.0) Gecko/20100101 Firefox/38.0",
+                "general.useragent.override": "Mozilla/5.0 (Windows NT 6.1; rv:45.0) Gecko/20100101 Firefox/45.0",
                 }
 
-        # Settings for the Tor Browser 6.0 and nightly branch
-        self.SETTINGS_60 = {
+        # Settings for the Tor Browser 6.5 and nightly branch
+        self.SETTINGS_65 = {
                 "startup.homepage_override_url": "https://blog.torproject.org/category/tags/tor-browser",
                 "browser.startup.homepage_override.buildID": "20000101000000",
                 "general.useragent.override": "Mozilla/5.0 (Windows NT 6.1; rv:45.0) Gecko/20100101 Firefox/45.0",
@@ -210,15 +200,12 @@ class Test(MarionetteTestCase):
             self.marionette.navigate('about:robots')
 
             settings = self.SETTINGS.copy()
-            if self.ts.t['tbbinfos']['version'].startswith('5.0'):
-                settings.update(self.SETTINGS_50)
-
-            if self.ts.t['tbbinfos']['version'].startswith('5.5'):
-                settings.update(self.SETTINGS_55)
-
-            if self.ts.t['tbbinfos']['version'].startswith('6.0') or \
-                    self.ts.t['tbbinfos']['version'] == 'tbb-nightly':
+            if self.ts.t['tbbinfos']['version'].startswith('6.0'):
                 settings.update(self.SETTINGS_60)
+
+            if self.ts.t['tbbinfos']['version'].startswith('6.5') or \
+                    self.ts.t['tbbinfos']['version'] == 'tbb-nightly':
+                settings.update(self.SETTINGS_65)
 
             errors = ''
             for name, val in settings.iteritems():
