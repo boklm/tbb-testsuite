@@ -27,7 +27,7 @@ class Test(MarionetteTestCase):
         with self.marionette.using_context('chrome'):
             searchbar = self.marionette.find_element('id', 'searchbar')
             txtbox = searchbar.find_element('anon attribute', {'anonid': 'searchbar-textbox'})
-            self.assertRegexpMatches(txtbox.get_attribute('label'), 'Disconnect',
-                    'Disconnect is not the default search engine!')
+            self.assertRegexpMatches(txtbox.get_attribute('label'), 'DuckDuckGo',
+                    'DuckDuckGo is not the default search engine!')
 
             #XXX: Test whether the second and third engine are the ones we want as well.
