@@ -20,7 +20,6 @@ class Test(MarionetteTestCase):
         self.torbutton_sec_ml_bool_prefs = {
                 "javascript.options.ion.content" : False,
                 "javascript.options.typeinference" : False,
-                "javascript.options.asmjs" : False,
                 "noscript.forbidMedia" : True,
                 "media.webaudio.enabled" : False,
                 "mathml.disabled" : True
