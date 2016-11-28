@@ -30,6 +30,10 @@ class Test(MarionetteTestCase):
                 "svg.in-content.enabled" :                  [ 0,  False, True,  True,  True],
                 };
 
+        # Settings for Tor Browser 6.0.* versions
+        self.kSecuritySettings_60 = {
+                };
+
 
     def test_slider_settings(self):
         with self.marionette.using_context('content'):
@@ -44,6 +48,10 @@ class Test(MarionetteTestCase):
 
             for name, val in self.kSecuritySettings.iteritems():
                 expected_prefs[name] = val[slider_mode]
+
+            if self.ts.t['tbbinfos']['version'].startswith('6.0'):
+                for name, val in self.kSecuritySettings_60.iteritems():
+                    expected_prefs[name] = val[slider_mode]
 
             errors = ''
             for name, val in expected_prefs.iteritems():
