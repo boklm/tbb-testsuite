@@ -184,6 +184,11 @@ our @tests = (
         },
         enable          => sub { $OSNAME eq 'darwin' },
         retry           => 1,
+        skip_files   => [ qw(
+            Contents/MacOS/Tor/PluggableTransports/meek-client
+            Contents/MacOS/Tor/PluggableTransports/meek-client-torbrowser
+            Contents/MacOS/Tor/PluggableTransports/obfs4proxy
+            ) ],
     },
     {
         name            => 'tor_httpproxy',
