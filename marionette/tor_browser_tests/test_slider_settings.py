@@ -14,28 +14,20 @@ class Test(MarionetteTestCase):
         ts = testsuite.TestSuite()
         self.ts = ts
 
-        # The torbutton_sec_* variables have been copy pasted from
-        # torbutton/src/chrome/content/torbutton.js
 
-        self.torbutton_sec_ml_bool_prefs = {
-                "javascript.options.ion.content" : False,
-                "javascript.options.typeinference" : False,
-                "noscript.forbidMedia" : True,
-                "media.webaudio.enabled" : False,
-                "mathml.disabled" : True
-                }
-
-        self.torbutton_sec_mh_bool_prefs = {
-                "javascript.options.baselinejit.content" : False,
-                "gfx.font_rendering.opentype_svg.enabled" : False,
-                "noscript.global" : False,
-                "noscript.globalHttpsWhitelist" : True
-                }
-
-        self.torbutton_sec_h_bool_prefs = {
-                "noscript.forbidFonts" : True,
-                "noscript.global" : False,
-                "svg.in-content.enabled" : False
+        self.kSecuritySettings = {
+                #                                                 1-high 2-m    3-m    4-low
+                "javascript.options.ion.content" :          [ 0,  False, False, False, True ],
+                "javascript.options.typeinference" :        [ 0,  False, False, False, True ],
+                "noscript.forbidMedia" :                    [ 0,  True,  True,  True,  False],
+                "media.webaudio.enabled" :                  [ 0,  False, False, False, True ],
+                "mathml.disabled" :                         [ 0,  True,  True,  True,  False],
+                "javascript.options.baselinejit.content" :  [ 0,  False, False, True,  True ],
+                "gfx.font_rendering.opentype_svg.enabled" : [ 0,  False, False, True,  True ],
+                "noscript.global" :                         [ 0,  False, False, True,  True ],
+                "noscript.globalHttpsWhitelist" :           [ 0,  False, True,  False, False],
+                "noscript.forbidFonts" :                    [ 0,  True,  False, False, False],
+                "svg.in-content.enabled" :                  [ 0,  False, True,  True,  True],
                 };
 
 
@@ -50,44 +42,8 @@ class Test(MarionetteTestCase):
 
             expected_prefs = {}
 
-            if slider_mode == 1:
-                for name, val in self.torbutton_sec_ml_bool_prefs.iteritems():
-                        expected_prefs[name] = val
-                for name, val in self.torbutton_sec_mh_bool_prefs.iteritems():
-                        expected_prefs[name] = val
-                        # noscript.globalHttpsWhitelist is special: We don't want it in this
-                        # mode.
-                        if name == "noscript.globalHttpsWhitelist":
-                                expected_prefs[name] = not val
-                for name, val in self.torbutton_sec_h_bool_prefs.iteritems():
-                    expected_prefs[name] = val
-
-            elif slider_mode == 2:
-                for name, val in self.torbutton_sec_ml_bool_prefs.iteritems():
-                    expected_prefs[name] = val
-                # Order matters here as both the high mode and the medium-high mode
-                # share some preferences/values. So, let's revert the high mode
-                # preferences first and set the medium-high mode ones afterwards.
-                for name, val in self.torbutton_sec_h_bool_prefs.iteritems():
-                    expected_prefs[name] = not val
-                for name, val in self.torbutton_sec_mh_bool_prefs.iteritems():
-                    expected_prefs[name] = val
-
-            elif slider_mode == 3:
-                for name, val in self.torbutton_sec_ml_bool_prefs.iteritems():
-                    expected_prefs[name] = val
-                for name, val in self.torbutton_sec_mh_bool_prefs.iteritems():
-                    expected_prefs[name] = not val
-                for name, val in self.torbutton_sec_h_bool_prefs.iteritems():
-                    expected_prefs[name] = not val
-
-            elif slider_mode == 4:
-                for name, val in self.torbutton_sec_ml_bool_prefs.iteritems():
-                    expected_prefs[name] = not val
-                for name, val in self.torbutton_sec_mh_bool_prefs.iteritems():
-                    expected_prefs[name] = not val
-                for name, val in self.torbutton_sec_h_bool_prefs.iteritems():
-                    expected_prefs[name] = not val
+            for name, val in self.kSecuritySettings.iteritems():
+                expected_prefs[name] = val[slider_mode]
 
             errors = ''
             for name, val in expected_prefs.iteritems():
