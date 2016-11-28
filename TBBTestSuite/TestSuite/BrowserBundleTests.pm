@@ -355,6 +355,7 @@ our @tests = (
         type            => 'marionette',
         descr           => 'Check that settings are set according to security slider mode',
         slider_mode     => 3,
+        enable          => sub { $_[0]->{version} =~ m/^6.0/ },
         pre             => \&set_slider_mode,
         post            => \&reset_slider_mode,
     },
