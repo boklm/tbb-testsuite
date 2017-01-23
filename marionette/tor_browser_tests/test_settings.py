@@ -83,8 +83,6 @@ class Test(MarionetteTestCase):
                 "webgl.disable-extensions": True,
                 "dom.battery.enabled": False, # fingerprinting due to differing OS implementations
                 "dom.network.enabled":False, # fingerprinting due to differing OS implementations
-                "browser.display.max_font_attempts":10,
-                "browser.display.max_font_count":10,
                 "gfx.downloadable_fonts.fallback_delay": -1,
                 "general.appname.override": "Netscape",
                 "general.appversion.override": "5.0 (Windows)",
