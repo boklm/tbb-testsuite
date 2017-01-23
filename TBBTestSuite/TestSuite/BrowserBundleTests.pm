@@ -149,6 +149,7 @@ our @tests = (
             TorBrowser/Tor/PluggableTransports/meek-client
             TorBrowser/Tor/PluggableTransports/meek-client-torbrowser
             TorBrowser/Tor/PluggableTransports/obfs4proxy
+            TorBrowser/Tor/PluggableTransports/snowflake-client
             ) ],
     },
     {
