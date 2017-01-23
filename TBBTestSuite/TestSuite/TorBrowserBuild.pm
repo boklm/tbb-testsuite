@@ -136,10 +136,10 @@ sub pre_tests {
     my ($tbbinfos) = @_;
     my $gr = TBBTestSuite::GitRepo->new({
             name => 'tor-browser-build',
-            git_url => 'https://git.torproject.org/user/boklm/tor-browser-build.git',
+            git_url => 'https://git.torproject.org/builders/tor-browser-build.git',
         });
     $gr->clone_fetch;
-    $gr->cmd('git', 'checkout', 'dev');
+    $gr->cmd('git', 'checkout', 'master');
     chdir $gr->clone_dir();
     system('make', 'submodule-update');
     system('make', 'fetch');
