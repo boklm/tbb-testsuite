@@ -1,0 +1,6 @@
+#!/bin/sh
+cd $(dirname $0)/..
+./tools/pull
+export RBM_NO_DEBUG=1
+export RBM_BUILDNAME=tbb-nightly
+./tbb-testsuite --config=tor-browser_build-boklm "$@"
