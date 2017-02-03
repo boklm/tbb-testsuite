@@ -189,7 +189,7 @@ class Test(MarionetteTestCase):
         self.SETTINGS_65 = {
                 "startup.homepage_override_url": "https://blog.torproject.org/category/tags/tor-browser",
                 "general.useragent.override": "Mozilla/5.0 (Windows NT 6.1; rv:45.0) Gecko/20100101 Firefox/45.0",
-                "network.jar.block-remote-files": False,
+                "network.jar.block-remote-files": True,
                 }
 
     def test_settings(self):
