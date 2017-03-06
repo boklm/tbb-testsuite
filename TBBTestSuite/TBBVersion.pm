@@ -6,6 +6,7 @@ use FindBin;
 use TBBTestSuite::Common qw(exit_error);
 use Cwd qw(getcwd);
 use File::Slurp;
+use File::Temp;
 use IO::CaptureOutput qw(capture_exec);
 use LWP::Simple;
 use Digest::SHA qw(sha256_hex);
@@ -98,6 +99,7 @@ sub branch_list {
 
 sub latest_builds {
     $options = shift;
+    my $build_done = shift // sub { 0; };
     my @res;
     git_clone_pull;
     set_gpgwrapper;
@@ -105,20 +107,37 @@ sub latest_builds {
     foreach my $branch (branch_list) {
         my ($version, $build) = latest_tagged_version($branch, $two_weeks_ago);
         next unless $version;
-        foreach my $user (@tbb_builders) {
-            my $buildname;
+        USER: foreach my $user (@tbb_builders) {
+            my $buildname = "$version-$build";
             my $url = "https://people.torproject.org/~$user/builds/$version-$build/sha256sums-unsigned-build.txt";
-            my $sha = get($url);
-            next unless $sha;
-            next unless head("$url.asc");
-            $buildname = "$version-$build";
-            push @res, {
+            my $build_infos = {
                 buildname => $buildname,
                 version => $version,
                 build => $build,
                 url => $url,
                 user => $user,
             };
+            next if $build_done->($build_infos);
+            my $sha = get($url);
+            next unless $sha;
+            my $sha_sig = get("$url.asc");
+            next unless $sha_sig;
+            my $sha_file = File::Temp->new;
+            write_file($sha_file, $sha);
+            my $sha_sig_file = File::Temp->new;
+            write_file($sha_sig_file, $sha_sig);
+            my (undef, undef, $success) = capture_exec('gpg', '--no-default-keyring',
+                '--keyring', "$FindBin::Bin/keyring/$user.gpg", '--keyring',
+                "$FindBin::Bin/keyring/torbrowser.gpg", '--verify',
+                '--', $sha_sig_file, $sha_file);
+            next unless $success;
+            foreach my $file (split "\n", $sha) {
+                (undef, $file) = split '  ', $file;
+                chomp $file;
+                my $file_url = "https://people.torproject.org/~$user/builds/$version-$build/$file";
+                next USER unless head($file_url);
+            }
+            push @res, $build_infos;
         }
     }
     return @res;
