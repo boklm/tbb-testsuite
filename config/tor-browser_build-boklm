@@ -14,7 +14,7 @@ if (-d "$options->{'reports-dir'}/r/$name") {
 
 my $testsuite = TBBTestSuite::TestSuite::TorBrowserBuild->new({
         publish_dir => "$FindBin::Bin/tor-browser-builds/$date",
-        publish_url => "http://jvwai5ky6euqp3yj.onion/tor-browser-builds/$date",
+        publish_url => "http://f4amtbsowhix7rrf.onion/tor-browser-builds/$date",
     });
 
 my %res = (
