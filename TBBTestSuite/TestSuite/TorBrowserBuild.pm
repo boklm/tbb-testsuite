@@ -115,20 +115,6 @@ sub set_tests {
             ],
             publish_dir => 'alpha-osx-x86_64',
         },
-
-        # Hardened
-        {
-            name  => 'hardened-linux-x86_64',
-            descr => 'build tor-browser hardened linux-x86_64',
-            type  => 'rbm_build',
-            project => 'release',
-            targets => [
-                'hardened',
-                'torbrowser-linux-x86_64',
-                'noversiondir',
-            ],
-            publish_dir => 'hardened-linux-x86_64',
-        },
     ];
 }
 
