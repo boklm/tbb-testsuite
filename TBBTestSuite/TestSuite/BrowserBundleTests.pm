@@ -260,21 +260,6 @@ our @tests = (
         run_once        => 1,
     },
     {
-        name            => 'tor_scramblesuit',
-        type            => 'tor_bootstrap',
-        descr           => 'Access tor using scramblesuit',
-        enable          => sub { $OSNAME eq 'linux' && $options->{PTtests} },
-        run_once        => 1,
-    },
-    {
-        name            => 'tor_scramblesuit_httpproxy',
-        type            => 'tor_bootstrap',
-        descr           => 'Access tor using scramblesuit and an http proxy',
-        httpproxy       => 1,
-        enable          => sub { $OSNAME eq 'linux' && $options->{PTtests} },
-        run_once        => 1,
-    },
-    {
         name            => 'tor_meek-amazon',
         type            => 'tor_bootstrap',
         descr           => 'Access tor using meek-amazon',
