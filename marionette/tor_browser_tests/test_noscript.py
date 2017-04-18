@@ -3,7 +3,7 @@
 from marionette_driver import By
 from marionette_driver.errors import MarionetteException, NoSuchElementException
 
-from marionette import MarionetteTestCase
+from marionette_harness import MarionetteTestCase
 
 import testsuite
 

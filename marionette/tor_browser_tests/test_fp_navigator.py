@@ -1,7 +1,7 @@
 from marionette_driver import By
 from marionette_driver.errors import MarionetteException
 
-from marionette import MarionetteTestCase
+from marionette_harness import MarionetteTestCase
 
 # expected values for navigation properties
 nav_props = {"appCodeName": "Mozilla",

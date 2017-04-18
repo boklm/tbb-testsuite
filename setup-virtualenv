@@ -1,6 +1,7 @@
 #!/usr/bin/perl -w
 use strict;
 use FindBin;
+use File::Copy;
 use IO::CaptureOutput qw(qxx);
 use Cwd;
 use English;
@@ -12,7 +13,7 @@ sub winpath {
     return $res;
 }
 
-my $virtenv_marionette_dir = winpath("$FindBin::Bin/virtualenv-marionette");
+my $virtenv_marionette_dir = winpath("$FindBin::Bin/virtualenv-marionette-4.0.0");
 my $virtenv_pefile_dir = winpath("$FindBin::Bin/virtualenv-pefile");
 
 sub run {
@@ -29,8 +30,10 @@ sub run_from_dir {
 
 my $virtualenv_cmd = 'virtualenv';
 my $bin = 'bin';
+my $lib = 'lib';
 if ($OSNAME eq 'cygwin') {
     $bin = 'Scripts';
+    $lib = 'Lib';
     $virtualenv_cmd = "$FindBin::Bin/bundle/python/Scripts/virtualenv.exe";
     run("$FindBin::Bin/bundle/install_virtualenv.sh")
                                         unless -f $virtualenv_cmd;
@@ -39,6 +42,10 @@ if ($OSNAME eq 'cygwin') {
 unless (-d $virtenv_marionette_dir) {
     run($virtualenv_cmd, $virtenv_marionette_dir);
     run_from_dir('marionette', "$virtenv_marionette_dir/$bin/python", 'setup.py', 'develop');
+    # Workaround for https://bugzilla.mozilla.org/show_bug.cgi?id=1345274
+    my $marionette_runner_dir = "$virtenv_marionette_dir/$lib/python2.7/site-packages/marionette_harness-4.0.0-py2.7.egg/marionette_harness/runner/";
+    copy "$FindBin::Bin/data/marionette_certs/test.cert", $marionette_runner_dir;
+    copy "$FindBin::Bin/data/marionette_certs/test.key", $marionette_runner_dir;
 }
 
 if ($OSNAME eq 'cygwin') {
