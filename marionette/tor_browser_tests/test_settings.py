@@ -106,7 +106,6 @@ class Test(MarionetteTestCase):
                 "network.http.spdy.enabled": False, # Stores state and may have keepalive issues (both fixable)
                 "network.http.spdy.enabled.v2": False, # Seems redundant, but just in case
                 "network.http.spdy.enabled.v3": False, # Seems redundant, but just in case
-                "privacy.thirdparty.isolate": 2, # Always enforce third party isolation
                 "privacy.firstparty.isolate": True,
                 
                 # Proxy and proxy security
