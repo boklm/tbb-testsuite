@@ -17,12 +17,12 @@ class Test(MarionetteTestCase):
 
         self.kSecuritySettings = {
                 #                                                 1-high 2-m    3-m    4-low
-                "javascript.options.ion.content" :          [ 0,  False, False, False, True ],
-                "javascript.options.typeinference" :        [ 0,  False, False, False, True ],
+                "javascript.options.ion" :                  [ 0,  False, False, False, True ],
+                "javascript.options.baselinejit" :          [ 0,  False, False, False, True ],
+                "javascript.options.native_regexp" :        [ 0,  False, False, False, True ],
                 "noscript.forbidMedia" :                    [ 0,  True,  True,  True,  False],
                 "media.webaudio.enabled" :                  [ 0,  False, False, False, True ],
                 "mathml.disabled" :                         [ 0,  True,  True,  True,  False],
-                "javascript.options.baselinejit.content" :  [ 0,  False, False, True,  True ],
                 "gfx.font_rendering.opentype_svg.enabled" : [ 0,  False, False, True,  True ],
                 "noscript.global" :                         [ 0,  False, False, True,  True ],
                 "noscript.globalHttpsWhitelist" :           [ 0,  False, True,  False, False],
