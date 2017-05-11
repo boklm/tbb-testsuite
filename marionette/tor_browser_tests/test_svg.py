@@ -31,15 +31,15 @@ class Test(MarionetteTestCase):
             # img src url
             m.navigate("%s/img_src_url.html" % self.svg_dir)
             svg_elt = m.find_element('id', 'svgImgElem')
-            self.assertEqual(svg_elt.get_attribute('width'),
-                    '450' if svg_enabled else '24',
+            self.assertEqual(svg_elt.get_property('width'),
+                    450 if svg_enabled else 24,
                     msg="img src url")
 
             # img data url
             m.navigate("%s/img_data_url.html" % self.svg_dir)
             svg_elt = m.find_element('id', 'svgImgElem')
-            self.assertEqual(svg_elt.get_attribute('width'),
-                    '300' if svg_enabled else '24',
+            self.assertEqual(svg_elt.get_property('width'),
+                    300 if svg_enabled else 24,
                     msg="img data url")
 
             # object data url
@@ -95,6 +95,6 @@ class Test(MarionetteTestCase):
                 elt_width = None
             print "width: %s" % elt_width
             self.assertEqual(elt_width,
-                    1 if svg_enabled else None,
+                    300 if svg_enabled else None,
                     msg='inline svg')
 
