@@ -4,6 +4,7 @@ use strict;
 use parent 'TBBTestSuite::TestSuite::RBMBuild';
 
 use TBBTestSuite::GitRepo;
+use File::Copy;
 
 sub description {
     'Tor Browser Build';
@@ -128,6 +129,8 @@ sub pre_tests {
     $gr->clone_fetch;
     $gr->cmd('git', 'checkout', 'master');
     chdir $gr->clone_dir();
+    copy($tbbinfos->{rbm_local_conf}, $gr->clone_dir() . '/rbm.local.conf')
+            if $tbbinfos->{rbm_local_conf};
     system('make', 'submodule-update');
     system('make', 'fetch');
 }
