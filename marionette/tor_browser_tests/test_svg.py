@@ -68,6 +68,20 @@ class Test(MarionetteTestCase):
                     'visible' if svg_enabled else 'invisible',
                     msg='object remote url')
 
+            # inline svg
+            m.navigate('%s/inline_svg.html' % self.svg_dir)
+            try:
+                elt_width = m.execute_script('''
+                                var elt = document.getElementById("inlineSVG");
+                                return elt.width.baseVal.value;
+                                ''')
+            except JavascriptException:
+                elt_width = None
+            print "width: %s" % elt_width
+            self.assertEqual(elt_width,
+                    300 if svg_enabled else None,
+                    msg='inline svg')
+
             # iframe remote url
             current_window = m.current_chrome_window_handle
             m.navigate('%s/iframe_remote_url.html' % self.svg_dir)
@@ -83,18 +97,4 @@ class Test(MarionetteTestCase):
                 m.switch_to_window(current_window)
             self.assertEqual(closed_window, 0 if svg_enabled else 1,
                     msg="iframe remote url prompt")
-
-            # inline svg
-            m.navigate('%s/inline_svg.html' % self.svg_dir)
-            try:
-                elt_width = m.execute_script('''
-                                var elt = document.getElementById("inlineSVG");
-                                return elt.width.baseVal.value;
-                                ''')
-            except JavascriptException:
-                elt_width = None
-            print "width: %s" % elt_width
-            self.assertEqual(elt_width,
-                    300 if svg_enabled else None,
-                    msg='inline svg')
 
