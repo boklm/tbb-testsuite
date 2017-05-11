@@ -16,6 +16,7 @@ my $testsuite = TBBTestSuite::TestSuite::TorBrowserBuild->new({
         publish_dir => "$FindBin::Bin/tor-browser-builds/$date",
         publish_url => "http://f4amtbsowhix7rrf.onion/tor-browser-builds/$date",
         rbm_local_conf => "$FindBin::Bin/rbm-config/tor-browser-nightly.rbm.local.conf",
+        make_clean => 1,
     });
 
 my %res = (

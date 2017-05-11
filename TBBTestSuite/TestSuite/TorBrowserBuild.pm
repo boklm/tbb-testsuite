@@ -133,6 +133,7 @@ sub pre_tests {
             if $tbbinfos->{rbm_local_conf};
     system('make', 'submodule-update');
     system('make', 'fetch');
+    system('make', 'clean') if $tbbinfos->{make_clean};
 }
 
 1;
