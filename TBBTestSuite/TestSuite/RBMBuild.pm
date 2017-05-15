@@ -46,6 +46,7 @@ sub rbm_build {
     }
     if ($testsuite->{publish_dir}) {
         push @cmd, '--output-dir', "$testsuite->{publish_dir}/$test->{publish_dir}";
+        $ENV{RBM_LOGS_DIR} = "$tbbinfos->{publish_dir}/$test->{publish_dir}/logs";
     }
     run_to_file("$testsuite->{'results-dir'}/$test->{name}.build.txt", @cmd)
         or return;

@@ -121,7 +121,6 @@ sub set_tests {
 
 sub pre_tests {
     my ($tbbinfos) = @_;
-    $ENV{RBM_LOGS_DIR} = "$tbbinfos->{publish_dir}/logs";
     my $gr = TBBTestSuite::GitRepo->new({
             name => 'tor-browser-build',
             git_url => 'https://git.torproject.org/builders/tor-browser-build.git',
