@@ -1,3 +1,6 @@
 [submodule "packages/rbm"]
 	path = packages/rbm
 	url = https://github.com/boklm/rbm
+[submodule "tools/prune-old-builds"]
+	path = tools/prune-old-builds
+	url = https://github.com/boklm/prune-old-builds
