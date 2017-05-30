@@ -125,9 +125,11 @@ sub start_tor {
         $torrc_file = $tbbinfos->{torrcdefaults};
         my @torrc = read_file($torrc_file);
         foreach (@torrc) {
-            s/^ControlPort .*/ControlPort $options->{'tor-control-port'}/;
-            s/^SocksPort .*/SocksPort $options->{'tor-socks-port'}/;
+            s/^ControlPort .*//;
+            s/^SocksPort .*//;
         }
+        push @torrc, "ControlPort $options->{'tor-control-port'}\n";
+        push @torrc, "SocksPort $options->{'tor-socks-port'}\n";
         push @torrc, "HashedControlPassword $hashed_password\n";
         write_file($torrc_file, @torrc);
     } else {
