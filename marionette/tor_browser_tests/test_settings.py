@@ -71,7 +71,7 @@ class Test(MarionetteTestCase):
                 "datareporting.healthreport.service.enabled": False, # Yes, all three of these must be set
                 "datareporting.healthreport.uploadEnabled": False,
                 "datareporting.policy.dataSubmissionEnabled": False,
-                "security.mixed_content.block_active_content": False, # Disable until https://bugzilla.mozilla.org/show_bug.cgi?id=878890 is patched
+                "security.mixed_content.block_active_content": True, # Activated with bug #21323
                 "browser.syncPromoViewsLeftMap": "{\"addons\":0, \"passwords\":0, \"bookmarks\":0}", # Don't promote sync
                 "services.sync.engine.prefs": False, # Never sync prefs, addons, or tabs with other browsers
                 "services.sync.engine.addons": False,
