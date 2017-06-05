@@ -4,6 +4,7 @@ function abs_dir() {
   (cd "$1" && echo "$(pwd)")
 }
 bdir="$(abs_dir ${BASH_SOURCE%/*})"
+unset PERL5LIB PERL_LOCAL_LIB_ROOT PERL_MB_OPT PERL_MM_OPT
 [ -f "$bdir/bundle/set-env" ] && source "$bdir/bundle/set-env"
 perl "$bdir/setup-virtualenv"
 exec perl "$bdir/tbb-testsuite" --no-xdummy --no-PTtests "$@"
