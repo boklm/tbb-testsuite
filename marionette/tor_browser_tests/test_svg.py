@@ -1,5 +1,5 @@
 from marionette_driver import By
-from marionette_driver.errors import MarionetteException, JavascriptException
+from marionette_driver.errors import MarionetteException, JavascriptException, NoSuchElementException
 
 from marionette_harness import MarionetteTestCase
 
@@ -83,18 +83,13 @@ class Test(MarionetteTestCase):
                     msg='inline svg')
 
             # iframe remote url
-            current_window = m.current_chrome_window_handle
             m.navigate('%s/iframe_remote_url.html' % self.svg_dir)
-            # close all windows except the current one. When svg is disabled
-            # the closed window should be a download prompt.
-            closed_window = 0
-            with m.using_context('chrome'):
-                for window in m.chrome_window_handles:
-                    if window != current_window:
-                        m.switch_to_window(window)
-                        m.close()
-                        closed_window += 1
-                m.switch_to_window(current_window)
-            self.assertEqual(closed_window, 0 if svg_enabled else 1,
+            m.switch_to_frame(m.find_element('id', 'svgIframeElem'))
+            found_elt = True
+            try:
+                svg_elt = m.find_element('tag name', 'svg')
+            except NoSuchElementException:
+                found_elt = False
+            self.assertEqual(found_elt, True if svg_enabled else False,
                     msg="iframe remote url prompt")
 
