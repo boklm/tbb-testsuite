@@ -43,7 +43,10 @@ unless (-d $virtenv_marionette_dir) {
     run($virtualenv_cmd, $virtenv_marionette_dir);
     run_from_dir('marionette', "$virtenv_marionette_dir/$bin/python", 'setup.py', 'develop');
     # Workaround for https://bugzilla.mozilla.org/show_bug.cgi?id=1345274
-    my $marionette_runner_dir = "$virtenv_marionette_dir/$lib/python2.7/site-packages/marionette_harness-4.0.0-py2.7.egg/marionette_harness/runner/";
+    my $sitepackage = 'site-packages/marionette_harness-4.0.0-py2.7.egg/marionette_harness/runner/';
+    my $marionette_runner_dir = "$virtenv_marionette_dir/$lib/python2.7/$sitepackage";
+    $marionette_runner_dir = "$virtenv_marionette_dir/$lib/$sitepackage"
+                unless -d $marionette_runner_dir;
     copy "$FindBin::Bin/data/marionette_certs/test.cert", $marionette_runner_dir;
     copy "$FindBin::Bin/data/marionette_certs/test.key", $marionette_runner_dir;
 }
