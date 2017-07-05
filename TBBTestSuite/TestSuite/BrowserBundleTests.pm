@@ -497,6 +497,13 @@ our @tests = (
         marionette_test => 'pinning',
         use_net         => 1,
     },
+    {
+        name            => 'fpcentral',
+        type            => 'marionette',
+        descr           => 'Check the browser fingerprint using fpcentral',
+        fpcentral_url   => 'http://163.172.8.55:5000/fp?automated_test',
+        use_net         => 1,
+    },
 );
 
 sub set_test_prefs {
