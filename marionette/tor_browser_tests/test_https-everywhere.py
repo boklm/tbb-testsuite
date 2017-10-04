@@ -15,8 +15,8 @@ class Test(MarionetteTestCase):
         self.ts = ts
 
         self.PREF_ENABLE_HE = "extensions.https_everywhere.globalEnabled"
-        self.HTTP_URL = "http://www.freedomboxfoundation.org/thanks/"
-        self.HTTPS_URL = "https://www.freedomboxfoundation.org/thanks/"
+        self.HTTP_URL = "http://httpbin.org/"
+        self.HTTPS_URL = "https://httpbin.org/"
 
 
     def test_https_everywhere(self):
