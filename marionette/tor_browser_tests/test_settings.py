@@ -41,7 +41,7 @@ class Test(MarionetteTestCase):
                 "browser.privatebrowsing.autostart": True,
                 "browser.cache.disk.enable": False,
                 "browser.cache.offline.enable": False,
-                "dom.indexedDB.enabled": False,
+                "dom.indexedDB.enabled": True,
                 "permissions.memory_only": True,
                 "network.cookie.lifetimePolicy": 2,
                 "browser.download.manager.retention": 1,
