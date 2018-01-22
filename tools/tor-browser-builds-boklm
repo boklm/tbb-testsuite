@@ -4,4 +4,4 @@ cd $(dirname $0)/..
 export RBM_NO_DEBUG=1
 export RBM_SIGN_BUILD=1
 ./tbb-testsuite --config=tor-browser_build-boklm "$@"
-./tools/prune-old-builds/prune-old-builds --prefix '' --days 3 ./tor-browser-builds
+./tools/prune-old-builds/prune-old-builds --prefix '' --days 2 ./tor-browser-builds
