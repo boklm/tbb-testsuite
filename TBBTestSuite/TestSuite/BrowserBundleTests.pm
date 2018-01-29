@@ -501,7 +501,7 @@ our @tests = (
         name            => 'fpcentral',
         type            => 'marionette',
         descr           => 'Check the browser fingerprint using fpcentral',
-        fpcentral_url   => 'http://163.172.8.55:5000/fp?automated_test',
+        fpcentral_url   => 'https://fpcentral.tbb.torproject.org/fp?automated_test',
         use_net         => 1,
     },
 );
