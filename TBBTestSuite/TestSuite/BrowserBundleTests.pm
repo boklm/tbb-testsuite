@@ -691,7 +691,7 @@ sub clean_strace {
 sub parse_strace {
     my ($tbbinfos, $test) = @_;
     my %ignore_files = map { $_ => 1 } qw(/dev/null /dev/tty);
-    my @ignore_re = ( qr/^\/dev\/dri/ );
+    my @ignore_re = ( qr/^\/dev\/(dri)|(shm)/ );
     push @ignore_re, qr/^$test->{workspace}/ if $test->{workspace};
     my %files;
     my $logfile = "$tbbinfos->{'results-dir'}/$test->{name}.strace";
