@@ -55,6 +55,18 @@ sub set_tests {
             publish_dir => 'nightly-windows-i686',
         },
         {
+            name  => 'nightly-windows-x86_64',
+            descr => 'build tor-browser nightly windows-x86_64',
+            type  => 'rbm_build',
+            project => 'release',
+            targets => [
+                'noversiondir',
+                'nightly',
+                'torbrowser-windows-x86_64',
+            ],
+            publish_dir => 'nightly-windows-x86_64',
+        },
+        {
             name  => 'nightly-osx-x86_64',
             descr => 'build tor-browser nightly osx-x86_64',
             type  => 'rbm_build',
@@ -103,6 +115,18 @@ sub set_tests {
                 'torbrowser-windows-i686',
             ],
             publish_dir => 'alpha-windows-i686',
+        },
+        {
+            name  => 'alpha-windows-x86_64',
+            descr => 'build tor-browser alpha windows-x86_64',
+            type  => 'rbm_build',
+            project => 'release',
+            targets => [
+                'noversiondir',
+                'alpha',
+                'torbrowser-windows-x86_64',
+            ],
+            publish_dir => 'alpha-windows-x86_64',
         },
         {
             name  => 'alpha-osx-x86_64',
