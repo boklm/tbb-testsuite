@@ -1,0 +1,6 @@
+Results
+[% FOREACH test IN tbbfiles.$tbbfile.tests -%]
+[% IF test.results -%]
+  [% test.name %]: [% test.results.success ? 'ok' : 'failed (' _ test.fail_type _ ')' %]
+[% END -%]
+[% END %]
