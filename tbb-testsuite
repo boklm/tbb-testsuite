@@ -67,6 +67,7 @@ sub run_tests {
     TBBTestSuite::Reports::make_report($report);
     TBBTestSuite::Reports::make_reports_index($report);
     TBBTestSuite::Reports::Send::send_report if $options->{'upload-to'};
+    TBBTestSuite::Reports::email_report($report) if $options->{'email-report'};
 }
 
 sub load_report_from_file {
