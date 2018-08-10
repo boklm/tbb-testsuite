@@ -3,11 +3,11 @@ from setuptools import setup, find_packages
 PACKAGE_VERSION = '0.3'
 
 deps = [
-        'marionette_harness == 4.0.0',
-        'marionette_driver == 2.2.0',
+        'marionette_harness == 4.3.0',
+        'marionette_driver == 2.5.0',
         'mozfile == 1.2',
-        'mozinfo == 0.9',
-        'mozlog == 3.4',
+        'mozinfo == 0.8',
+        'mozlog == 3.0',
 ]
 
 setup(name='tor-browser-tests',

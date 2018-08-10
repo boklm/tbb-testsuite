@@ -13,7 +13,7 @@ sub winpath {
     return $res;
 }
 
-my $virtenv_marionette_dir = winpath("$FindBin::Bin/virtualenv-marionette-4.0.0");
+my $virtenv_marionette_dir = winpath("$FindBin::Bin/virtualenv-marionette-4.3.0");
 my $virtenv_pefile_dir = winpath("$FindBin::Bin/virtualenv-pefile");
 
 sub run {
@@ -41,9 +41,12 @@ if ($OSNAME eq 'cygwin') {
 
 unless (-d $virtenv_marionette_dir) {
     run($virtualenv_cmd, $virtenv_marionette_dir);
+    # upgrade pip and setuptools
+    run("$virtenv_marionette_dir/$bin/pip", 'install', '--upgrade', 'pip');
+    run("$virtenv_marionette_dir/$bin/pip", 'install', '--upgrade', 'setuptools');
     run_from_dir('marionette', "$virtenv_marionette_dir/$bin/python", 'setup.py', 'develop');
     # Workaround for https://bugzilla.mozilla.org/show_bug.cgi?id=1345274
-    my $sitepackage = 'site-packages/marionette_harness-4.0.0-py2.7.egg/marionette_harness/runner/';
+    my $sitepackage = 'site-packages/marionette_harness-4.3.0-py2.7.egg/marionette_harness/runner/';
     my $marionette_runner_dir = "$virtenv_marionette_dir/$lib/python2.7/$sitepackage";
     $marionette_runner_dir = "$virtenv_marionette_dir/$lib/$sitepackage"
                 unless -d $marionette_runner_dir;
