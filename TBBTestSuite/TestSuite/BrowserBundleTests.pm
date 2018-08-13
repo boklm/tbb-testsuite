@@ -509,11 +509,11 @@ our @tests = (
 sub set_test_prefs {
     my ($tbbinfos, $t) = @_;
     return unless $t->{prefs};
-    my $prefs = "$tbbinfos->{ffprofiledir}/preferences/extension-overrides.js";
+    my $prefs = "$tbbinfos->{ffprofiledir}/user.js";
     copy $prefs, "$prefs.backup";
     my $new_prefs = '';
     foreach my $prefname (sort keys %{$t->{prefs}}) {
-        $new_prefs .= "pref(\"$prefname\", $t->{prefs}{$prefname});\n";
+        $new_prefs .= "user_pref(\"$prefname\", $t->{prefs}{$prefname});\n";
     }
     write_file($prefs, {append => 1}, $new_prefs);
 }
@@ -521,22 +521,22 @@ sub set_test_prefs {
 sub reset_test_prefs {
     my ($tbbinfos, $t) = @_;
     return unless $t->{prefs};
-    my $prefs = "$tbbinfos->{ffprofiledir}/preferences/extension-overrides.js";
+    my $prefs = "$tbbinfos->{ffprofiledir}/user.js";
     move "$prefs.backup", $prefs;
 }
 
 sub set_slider_mode {
     my ($tbbinfos, $t) = @_;
-    my $prefs = "$tbbinfos->{ffprofiledir}/preferences/extension-overrides.js";
+    my $prefs = "$tbbinfos->{ffprofiledir}/user.js";
     copy $prefs, "$prefs.slider_backup";
     write_file($prefs, {append => 1},
-      'pref("extensions.torbutton.security_custom", false);' . "\n" .
-      "pref(\"extensions.torbutton.security_slider\", $t->{slider_mode});\n");
+      'user_pref("extensions.torbutton.security_custom", false);' . "\n" .
+      "user_pref(\"extensions.torbutton.security_slider\", $t->{slider_mode});\n");
 }
 
 sub reset_slider_mode {
     my ($tbbinfos, $t) = @_;
-    my $prefs = "$tbbinfos->{ffprofiledir}/preferences/extension-overrides.js";
+    my $prefs = "$tbbinfos->{ffprofiledir}/user.js";
     move "$prefs.slider_backup", $prefs;
 }
 
@@ -765,7 +765,7 @@ then
    rm $logfile.tmp
 fi
 echo \$@ >> /tmp/ff_run.log
-strace -f -o $logfile.tmp -- \'$ff_wrapper\' "\$@"
+strace -e trace=file,network -f -o $logfile.tmp -- \'$ff_wrapper\' "\$@"
 exit_code=\$?
 cat $logfile.tmp >> $logfile
 rm $logfile.tmp
@@ -895,9 +895,9 @@ sub pre_tests {
     $tbbinfos->{sha256sum} //= sha256_hex(read_file($tbbinfos->{tbbfile}));
     extract_tbb($tbbinfos);
     set_tbbpaths($tbbinfos);
-    my $prefs_file = "$tbbinfos->{ffprofiledir}/preferences/extension-overrides.js";
+    my $prefs_file = "$tbbinfos->{ffprofiledir}/user.js";
     open(my $prefs_fh, '>>', $prefs_file);
-    print $prefs_fh 'pref("extensions.torbutton.prompted_language", true);', "\n";
+    print $prefs_fh 'user_pref("extensions.torbutton.prompted_language", true);', "\n";
     close $prefs_fh;
     chdir $tbbinfos->{tbbdir} || exit_error "Can't enter directory $tbbinfos->{tbbdir}";
     copy "$FindBin::Bin/data/cert_override.txt",
