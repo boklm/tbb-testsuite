@@ -20,14 +20,10 @@ class Test(MarionetteTestCase):
                 "javascript.options.ion" :                  [ 0,  False, False, False, True ],
                 "javascript.options.baselinejit" :          [ 0,  False, False, False, True ],
                 "javascript.options.native_regexp" :        [ 0,  False, False, False, True ],
-                "noscript.forbidMedia" :                    [ 0,  True,  True,  True,  False],
                 "media.webaudio.enabled" :                  [ 0,  False, False, False, True ],
                 "mathml.disabled" :                         [ 0,  True,  True,  True,  False],
                 "gfx.font_rendering.opentype_svg.enabled" : [ 0,  False, False, True,  True ],
-                "noscript.global" :                         [ 0,  False, False, True,  True ],
-                "noscript.globalHttpsWhitelist" :           [ 0,  False, True,  False, False],
-                "noscript.forbidFonts" :                    [ 0,  True,  False, False, False],
-                "svg.in-content.enabled" :                  [ 0,  False, True,  True,  True],
+                "svg.disabled" :                            [ 0,  True,  False, False, False],
                 };
 
         # Settings for Tor Browser 6.0.* versions
