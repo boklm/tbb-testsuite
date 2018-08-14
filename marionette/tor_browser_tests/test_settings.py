@@ -180,14 +180,14 @@ class Test(MarionetteTestCase):
                 "network.jar.block-remote-files": True,
                 }
 
-        # Settings for the Tor Browser 6.5
-        self.SETTINGS_65 = {
-                "general.useragent.override": "Mozilla/5.0 (Windows NT 6.1; rv:45.0) Gecko/20100101 Firefox/45.0",
-                }
-
-        # Settings for the Tor Browser 7.0 and nightly branch
+        # Settings for the Tor Browser 7.0
         self.SETTINGS_70 = {
                 "general.useragent.override": "Mozilla/5.0 (Windows NT 6.1; rv:52.0) Gecko/20100101 Firefox/52.0",
+                }
+
+        # Settings for the Tor Browser 8.0 and Nightly
+        self.SETTINGS_80 = {
+                "general.useragent.override": "Mozilla/5.0 (Windows NT 6.1; rv:60.0) Gecko/20100101 Firefox/60.0",
                 }
 
     def test_settings(self):
@@ -196,12 +196,12 @@ class Test(MarionetteTestCase):
             self.marionette.navigate('about:robots')
 
             settings = self.SETTINGS.copy()
-            if self.ts.t['tbbinfos']['version'].startswith('6.5'):
-                settings.update(self.SETTINGS_65)
-
-            if self.ts.t['tbbinfos']['version'].startswith('7.0') or \
-                    self.ts.t['tbbinfos']['version'] == 'tbb-nightly':
+            if self.ts.t['tbbinfos']['version'].startswith('7.0'):
                 settings.update(self.SETTINGS_70)
+
+            if self.ts.t['tbbinfos']['version'].startswith('8.0') or \
+                    self.ts.t['tbbinfos']['version'] == 'tbb-nightly':
+                settings.update(self.SETTINGS_80)
 
             errors = ''
             for name, val in settings.iteritems():
