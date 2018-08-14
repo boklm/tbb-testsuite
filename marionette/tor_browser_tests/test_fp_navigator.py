@@ -3,20 +3,18 @@ from marionette_driver.errors import MarionetteException
 
 from marionette_harness import MarionetteTestCase
 
+import testsuite
+
 # expected values for navigation properties
 nav_props = {"appCodeName": "Mozilla",
 "appName": "Netscape",
-"appVersion": "5.0 (Windows)",
 "language": "en-US",
 "mimeTypes": "[object MimeTypeArray]",
-"platform": "Win32",
-"oscpu": "Windows NT 6.1",
 "vendor": "",
 "vendorSub": "",
 "product": "Gecko",
 "productSub": "20100101",
 "plugins": "[object PluginArray]",
-"userAgent": "Mozilla/5.0 (Windows NT 6.1; rv:52.0) Gecko/20100101 Firefox/52.0",
 "cookieEnabled": "true",
 "onLine": "true",
 "buildID": "20100101",
@@ -49,6 +47,26 @@ nav_props = {"appCodeName": "Mozilla",
 
 class Test(MarionetteTestCase):
     def test_navigator(self):
+        osname = testsuite.TestSuite().t['tbbinfos']['os']
+        if osname == 'Linux':
+            ua_os = 'X11; Linux x86_64'
+            app_version = "5.0 (X11)"
+            platform = "Linux x86_64"
+            oscpu = "Linux x86_64"
+        if osname == 'Windows':
+            ua_os = 'Windows NT 6.1; Win64; x64'
+            app_version = "5.0 (Windows)"
+            platform = "Win64"
+            oscpu = "Windows NT 6.1; Win64; x64"
+        if osname == 'MacOSX':
+            ua_os = 'Macintosh; Intel Mac OS X 10.13'
+            app_version = "5.0 (Macintosh)"
+            platform = "MacIntel"
+            oscpu = "Intel Mac OS X 10.13"
+        nav_props["userAgent"] = "Mozilla/5.0 (" + ua_os + "; rv:60.0) Gecko/20100101 Firefox/60.0"
+        nav_props["appVersion"] = app_version
+        nav_props["platform"] = platform
+        nav_props["oscpu"] = oscpu
         with self.marionette.using_context('content'):
             self.marionette.navigate('about:robots')
             js = self.marionette.execute_script
