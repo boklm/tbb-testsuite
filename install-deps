@@ -59,7 +59,7 @@ then
             libyaml-syck-perl libdatetime-perl \
             libemail-sender-perl libemail-simple-perl libfile-type-perl \
             libipc-run-perl libxml-libxml-perl
-   apt-get install -y nmap
+   apt-get install -y nmap curl
 fi
 
 if [ -f /etc/redhat-release ] && which yum > /dev/null 2>&1
@@ -71,6 +71,7 @@ then
     else
         yum_install nmap
     fi
+    yum_install curl
     for perlmodule in $perlmodules
     do
         yum_install "perl($perlmodule)"
