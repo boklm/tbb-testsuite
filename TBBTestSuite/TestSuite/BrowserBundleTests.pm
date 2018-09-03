@@ -260,13 +260,6 @@ our @tests = (
         run_once        => 1,
     },
     {
-        name            => 'tor_meek-amazon',
-        type            => 'tor_bootstrap',
-        descr           => 'Access tor using meek-amazon',
-        enable          => sub { $OSNAME eq 'linux' && $options->{PTtests} },
-        run_once        => 1,
-    },
-    {
         name            => 'tor_meek-azure',
         type            => 'tor_bootstrap',
         descr           => 'Access tor using meek-azure',
