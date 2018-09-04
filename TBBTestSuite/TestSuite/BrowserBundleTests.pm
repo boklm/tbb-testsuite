@@ -890,7 +890,7 @@ sub pre_tests {
     set_tbbpaths($tbbinfos);
     my $prefs_file = "$tbbinfos->{ffprofiledir}/user.js";
     open(my $prefs_fh, '>>', $prefs_file);
-    print $prefs_fh 'user_pref("extensions.torbutton.prompted_language", true);', "\n";
+    print $prefs_fh 'user_pref("privacy.spoof_english", 1);', "\n";
     close $prefs_fh;
     chdir $tbbinfos->{tbbdir} || exit_error "Can't enter directory $tbbinfos->{tbbdir}";
     copy "$FindBin::Bin/data/cert_override.txt",
