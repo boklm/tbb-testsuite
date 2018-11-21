@@ -78,6 +78,18 @@ sub set_tests {
             ],
             publish_dir => 'nightly-osx-x86_64',
         },
+        {
+            name  => 'nightly-android-armv7',
+            descr => 'build tor-browser nightly android-armv7',
+            type  => 'rbm_build',
+            project => 'release',
+            targets => [
+                'noversiondir',
+                'nightly',
+                'torbrowser-android-armv7',
+            ],
+            publish_dir => 'nightly-android-armv7',
+        },
 
         # Alpha
         {
@@ -139,6 +151,18 @@ sub set_tests {
                 'torbrowser-osx-x86_64',
             ],
             publish_dir => 'alpha-osx-x86_64',
+        },
+        {
+            name  => 'alpha-android-armv7',
+            descr => 'build tor-browser alpha android-armv7',
+            type  => 'rbm_build',
+            project => 'release',
+            targets => [
+                'noversiondir',
+                'alpha',
+                'torbrowser-android-armv7',
+            ],
+            publish_dir => 'alpha-android-armv7',
         },
     ];
 }
