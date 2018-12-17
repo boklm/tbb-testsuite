@@ -21,13 +21,6 @@ class Test(MarionetteTestCase):
 
 
     def test_noscript(self):
-        self.assertEqual(self.marionette.get_pref('noscript.global'), False,
-            msg="pref noscript.global is not false")
-        self.assertEqual(self.marionette.get_pref('noscript.globalHttpsWhitelist'), True,
-            msg="pref noscript.globalHttpsWhitelist is not true")
-        self.assertEqual(self.marionette.get_pref('noscript.cascadePermissions'), True,
-            msg="pref noscript.cascadePermissions is not true")
-
         self.marionette.set_search_timeout(1000)
 
         with self.marionette.using_context('content'):
