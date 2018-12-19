@@ -126,18 +126,9 @@ class Test(MarionetteTestCase):
                 "plugins.click_to_play": True,
                 
                 # Network and performance
-                "network.http.pipelining": True,
-                "network.http.pipelining.aggressive": True,
-                "network.http.pipelining.maxrequests": 12,
-                "network.http.pipelining.ssl": True,
-                "network.http.proxy.pipelining": True,
                 "security.ssl.enable_false_start": True,
                 "network.http.connection-retry-timeout": 0,
                 "network.http.max-persistent-connections-per-proxy": 256,
-                "network.http.pipelining.reschedule-timeout": 15000,
-                "network.http.pipelining.read-timeout": 60000,
-                # Hacked pref: Now means "Attempt to pipeline at least this many requests together"
-                "network.http.pipelining.max-optimistic-requests": 3,
                 # "security.disable_session_identifiers": True,  TODO: check the default
                 
                 # Extension support
