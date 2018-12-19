@@ -18,6 +18,16 @@ then
     git reset master
 fi
 git config --replace-all --local gpg.program "$basedir/gpggit"
-git pull --verify-signatures "$@"
+if ! git symbolic-ref -q HEAD > /dev/null
+then
+    # checkout origin/master if we are not on a branch
+    remote="${1:-origin}"
+    branch="${2:-master}"
+    git fetch "$remote"
+    git verify-commit "$remote/$branch"
+    git checkout "$remote/$branch"
+else
+    git pull --verify-signatures "$@"
+fi
 git submodule init
 git submodule update
