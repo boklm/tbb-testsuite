@@ -101,7 +101,6 @@ class Test(MarionetteTestCase):
                 
                 # Third party stuff
                 "network.cookie.cookieBehavior": 1,
-                "security.enable_tls_session_tickets": False,
                 "network.http.spdy.enabled": False, # Stores state and may have keepalive issues (both fixable)
                 "network.http.spdy.enabled.v2": False, # Seems redundant, but just in case
                 "network.http.spdy.enabled.v3": False, # Seems redundant, but just in case
@@ -129,7 +128,6 @@ class Test(MarionetteTestCase):
                 "security.ssl.enable_false_start": True,
                 "network.http.connection-retry-timeout": 0,
                 "network.http.max-persistent-connections-per-proxy": 256,
-                # "security.disable_session_identifiers": True,  TODO: check the default
                 
                 # Extension support
                 # "extensions.autoDisableScopes": 0, TODO: check default
