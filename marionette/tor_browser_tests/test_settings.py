@@ -79,7 +79,6 @@ class Test(MarionetteTestCase):
                 "extensions.getAddons.cache.enabled": False, # https://blog.mozilla.org/addons/how-to-opt-out-of-add-on-metadata-updates/
 
                 # Fingerprinting
-                "webgl.min_capability_mode": True,
                 "webgl.disable-extensions": True,
                 "dom.network.enabled":False, # fingerprinting due to differing OS implementations
                 "gfx.downloadable_fonts.fallback_delay": -1,
