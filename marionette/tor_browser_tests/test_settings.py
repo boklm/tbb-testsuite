@@ -151,10 +151,6 @@ class Test(MarionetteTestCase):
                 # in FF24. This is a dangerous combination (spotted by iSec)
                 "media.audio_data.enabled": False,
                 
-                # Enable TLS 1.1 and 1.2:
-                # https://trac.torproject.org/projects/tor/ticket/11253
-                "security.tls.version.max": 3,
-                
                 "dom.enable_resource_timing": False,
 
                 # checking torbrowser.version match the version from the filename
