@@ -80,7 +80,6 @@ class Test(MarionetteTestCase):
 
                 # Fingerprinting
                 "webgl.disable-extensions": True,
-                "dom.network.enabled":False, # fingerprinting due to differing OS implementations
                 "gfx.downloadable_fonts.fallback_delay": -1,
                 "general.appname.override": "Netscape",
                 "general.appversion.override": "5.0 (Windows)",
