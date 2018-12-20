@@ -137,11 +137,6 @@ class Test(MarionetteTestCase):
                 "xpinstall.whitelist.add": "",
                 "xpinstall.whitelist.add.36": "",
                 
-                # Hacks/workarounds: Direct2D seems to crash w/ lots of video cards w/ MinGW?
-                # Nvida cards also experience crashes without the second pref set to disabled
-                "gfx.direct2d.disabled": True,
-                "layers.acceleration.disabled": True,
-                
                 # Audio_data is deprecated in future releases, but still present
                 # in FF24. This is a dangerous combination (spotted by iSec)
                 "media.audio_data.enabled": False,
