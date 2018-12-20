@@ -101,9 +101,6 @@ class Test(MarionetteTestCase):
                 
                 # Third party stuff
                 "network.cookie.cookieBehavior": 1,
-                "network.http.spdy.enabled": False, # Stores state and may have keepalive issues (both fixable)
-                "network.http.spdy.enabled.v2": False, # Seems redundant, but just in case
-                "network.http.spdy.enabled.v3": False, # Seems redundant, but just in case
                 "privacy.firstparty.isolate": True,
                 
                 # Proxy and proxy security
