@@ -286,20 +286,30 @@ our @tests = (
         descr           => 'Check that http://check.torproject.org/ think we are using tor',
     },
     {
-        name            => 'https-everywhere',
-        type            => 'marionette',
-        use_net         => 1,
-        descr           => 'Check that https everywhere is enabled and working',
-    },
-    {
         name            => 'https-everywhere-disabled',
         marionette_test => 'https-everywhere',
         type            => 'marionette',
         descr           => 'Check that https everywhere is not doing anything when disabled',
         use_net         => 1,
-        prefs           => {
-            'extensions.https_everywhere.globalEnabled' => 'false',
+        pre             => sub {
+            my ($tbbinfos, $t) = @_;
+            my $hdir = "$tbbinfos->{tmpdir}/https-everywhere";
+            mkdir "$hdir";
+            move($tbbinfos->{ffprofiledir} . '/extensions/https-everywhere-eff@eff.org.xpi',
+                $hdir . '/https-everywhere-eff@eff.org.xpi');
         },
+        post            => sub {
+            my ($tbbinfos, $t) = @_;
+            my $hdir = "$tbbinfos->{tmpdir}/https-everywhere";
+            move($hdir . '/https-everywhere-eff@eff.org.xpi',
+                $tbbinfos->{ffprofiledir} . '/extensions/https-everywhere-eff@eff.org.xpi');
+        },
+    },
+    {
+        name            => 'https-everywhere',
+        type            => 'marionette',
+        use_net         => 1,
+        descr           => 'Check that https everywhere is working',
     },
     {
         name            => 'settings',

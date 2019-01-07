@@ -14,15 +14,11 @@ class Test(MarionetteTestCase):
         ts = testsuite.TestSuite()
         self.ts = ts
 
-        self.PREF_ENABLE_HE = "extensions.https_everywhere.globalEnabled"
         self.HTTP_URL = "http://httpbin.org/"
         self.HTTPS_URL = "https://httpbin.org/"
 
 
     def test_https_everywhere(self):
-        self.assertEqual(self.marionette.get_pref(self.PREF_ENABLE_HE), \
-                self.ts.t['test']['name'] == 'https-everywhere')
-
         with self.marionette.using_context('content'):
             self.marionette.navigate(self.HTTP_URL)
 
