@@ -4,6 +4,12 @@ Bundle infos
 
 Results
 
+[% IF tbbfiles.$tbbfile.pre_tests_error -%]
+  pre_tests error:
+[% FILTER indent('   ') -%]
+[% tbbfiles.$tbbfile.pre_tests_error %]
+[% END %]
+[% END -%]
 [%
 FOREACH test IN tbbfiles.$tbbfile.tests;
 NEXT IF test.type != 'virustotal';

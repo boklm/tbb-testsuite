@@ -226,6 +226,7 @@ sub test_start {
     my %testsuite_infos = TBBTestSuite::TestSuites::testsuite_infos();
     my $testsuite = $testsuite_infos{$tbbinfos->{type}};
     $tbbinfos->pre_tests();
+    $tbbinfos->{tests} = [] if $tbbinfos->{pre_tests_error};
     $tbbinfos->{start_time} = time;
     run_tests($tbbinfos);
     $tbbinfos->{finish_time} = time;
@@ -233,7 +234,8 @@ sub test_start {
     $tbbinfos->post_tests();
     chdir $oldcwd;
     check_known_issues($tbbinfos);
-    $tbbinfos->{success} = is_success($tbbinfos->{tests});
+    $tbbinfos->{success} = $tbbinfos->{pre_tests_error} ? 0
+                                : is_success($tbbinfos->{tests});
     $report->{tbbfiles}{$tbbinfos->{filename}} = $tbbinfos;
 }
 

@@ -136,6 +136,12 @@
         [% END %]
 
         <h1>Results</h1>
+        [% IF tbbfiles.$tbbfile.pre_tests_error %]
+          <h2>pre_tests error</h2>
+          <pre>
+[% tbbfiles.$tbbfile.pre_tests_error %]
+          </pre>
+        [% END %]
         [% FOREACH test IN tbbfiles.$tbbfile.tests %]
         [% IF ! test.results; NEXT; END %]
         <a href="javascript:togglecontent('test_[% test.name %]');">

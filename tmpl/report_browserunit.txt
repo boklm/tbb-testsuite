@@ -1,3 +1,9 @@
+[% IF tbbfiles.$tbbfile.pre_tests_error -%]
+  pre_tests error:
+[% FILTER indent('   ') -%]
+[% tbbfiles.$tbbfile.pre_tests_error %]
+[% END %]
+[% END -%]
 [% FOREACH test IN tbbfiles.$tbbfile.tests -%]
 [% IF test.results -%]
 [% test.name %]: [% test.results.success ? 'ok' : 'failed (' _ test.fail_type _ ')' %]
