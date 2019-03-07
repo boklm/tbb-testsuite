@@ -90,6 +90,18 @@ sub set_tests {
             ],
             publish_dir => 'nightly-android-armv7',
         },
+        {
+            name  => 'nightly-android-x86',
+            descr => 'build tor-browser nightly android-x86',
+            type  => 'rbm_build',
+            project => 'release',
+            targets => [
+                'noversiondir',
+                'nightly',
+                'torbrowser-android-x86',
+            ],
+            publish_dir => 'nightly-android-x86',
+        },
     ];
 }
 
