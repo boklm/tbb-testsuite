@@ -5,6 +5,7 @@ use parent 'TBBTestSuite::TestSuite::RBMBuild';
 
 use TBBTestSuite::GitRepo;
 use File::Copy;
+use IO::CaptureOutput qw(capture_exec);
 
 sub description {
     'Tor Browser Build';
@@ -116,9 +117,14 @@ sub pre_tests {
     chdir $gr->clone_dir();
     copy($tbbinfos->{rbm_local_conf}, $gr->clone_dir() . '/rbm.local.conf')
             if $tbbinfos->{rbm_local_conf};
-    system('make', 'submodule-update');
-    system('make', 'fetch');
-    system('make', 'clean') if $tbbinfos->{make_clean};
+    my @clean = ('clean') if $tbbinfos->{make_clean};
+    foreach my $cmd (('submodule-update', 'fetch', @clean)) {
+        my ($out, $err, $success) = capture_exec('make', $cmd);
+        if (!$success) {
+            $tbbinfos->{pre_tests_error} = "Error running make $cmd:\n$out\n$err";
+            return;
+        }
+    }
 }
 
 1;
