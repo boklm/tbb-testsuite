@@ -377,6 +377,7 @@ our @tests = (
         # uncomment this:
         #prefs           => {
         #    'dom.enable_resource_timing' => 'true',
+        #    'privacy.resistFingerprinting' => 'false',
         #},
     },
     {

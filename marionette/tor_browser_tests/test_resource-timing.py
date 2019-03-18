@@ -29,42 +29,39 @@ class Test(MarionetteTestCase):
             # getEntriesByType()
             err_msg = 'resource entries found (getEntriesByType())'
             self.assertTrue(self.marionette.execute_script("""
-                var pass = false;
                 try {
-                        let resources = document.defaultView.performance.
+                        var resources = document.defaultView.performance.
                                 getEntriesByType("resource")[0];
                 } catch (e) {
-                        pass = true;
+                        return false;
                 }
-                return pass;
+                return resources == undefined;
                 """),
                 msg=err_msg)
 
             # getEntriesByName()
             err_msg = "resource entries found (getEntriesByName())"
             self.assertTrue(self.marionette.execute_script("""
-                var pass = false;
                 try {
-                        let resources = document.defaultView.performance.
+                        var resources = document.defaultView.performance.
                                 getEntriesByName(arguments[0])[0];
-                        } catch (e) {
-                        pass = true;
+                } catch (e) {
+                        return false;
                 }
-                return pass;
+                return resources == undefined;
                 """, script_args=[self.RESOURCE_URL]),
                 msg=err_msg)
 
             # getEntries()
             err_msg = "resource entries found (getEntries())"
             self.assertTrue(self.marionette.execute_script("""
-                var pass = false;
                 try {
-                        let resources = document.defaultView.performance.
+                        var resources = document.defaultView.performance.
                                 getEntries()[0];
                 } catch (e) {
-                        pass = true;
+                        return false;
                 }
-                return pass;
+                return resources == undefined;
                 """),
                 msg=err_msg)
 
