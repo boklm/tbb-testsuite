@@ -62,11 +62,12 @@ my %default_options = (
     testsuite => undef,
     cleanup   => 1,
     PTtests   => 1,
+    'default-retry' => 2,
 );
 
 
 sub get_options {
-    my @options = qw(starttor! tor-control-port=i
+    my @options = qw(starttor! tor-control-port=i default-retry=i
                      tor-socks-port=i reports-dir=s gpgcheck! keyring=s
                      xvfb! name=s download-dir=s config=s
                      action=s enable-tests=s upload-to=s os=s arch=s

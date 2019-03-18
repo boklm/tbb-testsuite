@@ -139,6 +139,10 @@ Available options
 --no-PTtests::
         Disable Pluggable Transport tests.
 
+--default-retry::
+        By default, failing tests are retried two times. You can use this option
+        to change this number.
+
 Configuration Files
 -------------------
 

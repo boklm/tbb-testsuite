@@ -67,7 +67,7 @@ sub run_tests {
         }
         $test->{pre}->($tbbinfos, $test) if $test->{pre};
         $test->{tried} = 0;
-        while ($test->{tried} < ($test->{retry} // 2)) {
+        while ($test->{tried} < ($test->{retry} // $options->{'default-retry'})) {
             $test_types->{$test->{type}}->($tbbinfos, $test)
                 if $test_types->{$test->{type}};
             $test->{tried} += 1;
