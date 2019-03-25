@@ -404,6 +404,7 @@ our @tests = (
         # uncomment this:
         #prefs           => {
         #    'dom.enable_user_timing' => 'true',
+        #    'privacy.resistFingerprinting' => 'false',
         #},
     },
     {

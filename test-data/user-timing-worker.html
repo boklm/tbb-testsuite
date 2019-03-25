@@ -13,8 +13,16 @@
   </body>
 
 <script>
-var myWorkerMeasure = new Worker('data:text/javascript,onmessage = function(e) { var pass = false; try { performance.measure("measure1"); } catch (e) { pass = true; } postMessage(pass);}');
-var myWorkerMark = new Worker('data:text/javascript,onmessage = function(e) { var pass = false; try { performance.mark("startTask1"); } catch (e) { pass = true; } postMessage(pass);}');
+var myWorkerMeasure = new Worker(`data:text/javascript,onmessage = function(e) {
+    performance.mark("mark1");
+    performance.mark("mark2");
+    performance.measure("measure1", "mark1", "mark2");
+    postMessage(performance.getEntriesByType("measure").length == 0);
+}`);
+var myWorkerMark = new Worker(`data:text/javascript,onmessage = function(e) {
+    performance.mark("startTask1");
+    postMessage(performance.getEntriesByName("startTask1", "mark").length == 0);
+}`);
 
 var measure_result = false;
 var mark_result = false;
