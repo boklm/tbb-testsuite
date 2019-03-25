@@ -22,31 +22,22 @@ class Test(MarionetteTestCase):
         with self.marionette.using_context('content'):
             self.marionette.navigate(self.TEST_URL)
 
-            # If user timing is disabled we should not be able to use the
-            # measure and mark methods.
-
             # measure()
             err_msg = 'user timing is working (performance.measure())'
             self.assertTrue(self.marionette.execute_script("""
-                var pass = false;
-                try {
-                        document.defaultView.performance.measure("measure1");
-                } catch (e) {
-                        pass = true;
-                }
-                return pass;
+                document.defaultView.performance.mark("startTask1");
+                document.defaultView.performance.mark("endTask1");
+                document.defaultView.performance.measure("measure1", "startTask1", "endTask1");
+                let e = document.defaultView.performance.getEntriesByType("measure");
+                return e.length == 0;
                 """),
                 msg=err_msg)
 
             # mark()
             err_msg = 'user timing is working (performance.mark())'
             self.assertTrue(self.marionette.execute_script("""
-                var pass = false;
-                try {
-                        document.defaultView.performance.mark("startTask1");
-                } catch (e) {
-                        pass = true;
-                }
-                return pass;
+                document.defaultView.performance.mark("startTask2");
+                let e = document.defaultView.performance.getEntriesByName("startTask2", "mark");
+                return e.length == 0;
                 """),
                 msg=err_msg)
