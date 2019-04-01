@@ -26,8 +26,7 @@ class Test(MarionetteTestCase):
                 "domainLookupEnd": 0,
                 "connectStart": 0,
                 "connectEnd": 0,
-                # Not available in Firefox yet.
-                "secureConnectionStart": None,
+                "secureConnectionStart": 0,
                 "requestStart": 0,
                 "responseStart": 0,
                 "responseEnd": 0,
