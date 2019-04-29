@@ -484,6 +484,8 @@ our @tests = (
         type            => 'marionette',
         descr           => 'Check if download of PDF is working (#19402)',
         use_net         => 1,
+        # Bug 30333: temporarily disable test
+        enable          => undef,
     },
     {
         name            => 'pinning_now',
