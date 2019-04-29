@@ -245,21 +245,6 @@ our @tests = (
         run_once        => 1,
     },
     {
-        name            => 'tor_fte',
-        type            => 'tor_bootstrap',
-        descr           => 'Access tor using fteproxy',
-        enable          => sub { $OSNAME eq 'linux' && $options->{PTtests} },
-        run_once        => 1,
-    },
-    {
-        name            => 'tor_fte_httpproxy',
-        type            => 'tor_bootstrap',
-        descr           => 'Access tor using fteproxy and an http proxy',
-        httpproxy       => 1,
-        enable          => sub { $OSNAME eq 'linux' && $options->{PTtests} },
-        run_once        => 1,
-    },
-    {
         name            => 'tor_meek-azure',
         type            => 'tor_bootstrap',
         descr           => 'Access tor using meek-azure',
