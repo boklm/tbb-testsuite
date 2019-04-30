@@ -13,7 +13,6 @@ class Test(MarionetteTestCase):
         self.ts = ts
 
         self.URLs = [
-                'chrome://torbutton/content/preferences.xul',
                 'chrome://torlauncher/content/network-settings-wizard.xul',
                 ];
 
