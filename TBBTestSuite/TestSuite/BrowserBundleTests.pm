@@ -450,6 +450,8 @@ our @tests = (
         marionette_test => 'page',
         remote          => 1,
         timeout         => 50000,
+        # Bug 30339: temporarily disable test
+        enable          => sub { undef },
     },
     {
         name            => 'svg-disable',
