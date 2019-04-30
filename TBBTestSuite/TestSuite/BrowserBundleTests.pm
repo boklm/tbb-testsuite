@@ -462,7 +462,7 @@ our @tests = (
             'svg.in-content.enabled' => 'false',
         },
         # Bug 28798: temporarily disable test
-        enable          => undef,
+        enable          => sub { undef },
         #enable          => sub { $OSNAME eq 'linux' },
     },
     {
@@ -476,7 +476,7 @@ our @tests = (
             'svg.in-content.enabled' => 'true',
         },
         # Bug 28798: temporarily disable test
-        enable          => undef,
+        enable          => sub { undef },
         #enable          => sub { $OSNAME eq 'linux' },
     },
     {
@@ -485,7 +485,7 @@ our @tests = (
         descr           => 'Check if download of PDF is working (#19402)',
         use_net         => 1,
         # Bug 30333: temporarily disable test
-        enable          => undef,
+        enable          => sub { undef },
     },
     {
         name            => 'pinning_now',
