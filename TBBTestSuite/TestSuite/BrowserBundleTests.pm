@@ -441,6 +441,8 @@ our @tests = (
         name            => 'fp_navigator',
         type            => 'marionette',
         descr           => 'Check that navigator properties are as expected',
+        # Bug 28665: temporarily disable test
+        enable          => sub { undef },
     },
     {
         name            => 'play_videos',
