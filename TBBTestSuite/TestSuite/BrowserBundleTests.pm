@@ -98,6 +98,7 @@ our @tests = (
             TorBrowser/Tor/PluggableTransports/meek-client-torbrowser
             TorBrowser/Tor/PluggableTransports/meek-client-torbrowser
             TorBrowser/Tor/PluggableTransports/obfs4proxy
+            TorBrowser/Tor/PluggableTransports/zope/interface/_zope_interface_coptimizations.so
             ) ],
     },
     {
