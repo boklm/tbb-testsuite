@@ -423,6 +423,8 @@ our @tests = (
         prefs           => {
             'extensions.torbutton.security_slider' => 2,
         },
+        # Bug 28876: temporarily disable test
+        enable          => sub { undef },
     },
     {
         name            => 'fp_screen_dimensions',
