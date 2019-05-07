@@ -513,6 +513,8 @@ our @tests = (
         descr           => 'Check the browser fingerprint using fpcentral',
         fpcentral_url   => 'https://fpcentral.tbb.torproject.org/fp?automated_test',
         use_net         => 1,
+        # Bug 30432: temporarily disable test
+        enable          => sub { undef },
     },
 );
 
