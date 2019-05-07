@@ -296,6 +296,8 @@ our @tests = (
         type            => 'marionette',
         use_net         => 1,
         descr           => 'Check that https everywhere is working',
+        # Bug 30431: temporarily disable test
+        enable          => sub { undef },
     },
     {
         name            => 'settings',
