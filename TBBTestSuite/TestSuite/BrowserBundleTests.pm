@@ -405,6 +405,8 @@ our @tests = (
         #prefs           => {
         #    'dom.enable_performance_observer' => 'true',
         #},
+        # Bug 27137: temporarily disable test
+        enable          => sub { undef },
     },
     {
         name            => 'searchengines',
