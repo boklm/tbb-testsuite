@@ -57,7 +57,6 @@ class Test(MarionetteTestCase):
                 "browser.formfill.enable": False,
                 "signon.autofillForms": False,
                 "browser.sessionstore.privacy_level": 2,
-                "media.cache_size": 0,
 
                 # Misc privacy: Remote
                 "browser.send_pings": False,
