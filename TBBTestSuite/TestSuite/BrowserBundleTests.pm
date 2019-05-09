@@ -111,11 +111,14 @@ our @tests = (
         enable          => sub { $OSNAME eq 'linux' },
         # ticket 13056
         skip_files   => [ qw(
+            abicheck
+            gtk2/libmozgtk.so
             libmozalloc.so
+            libmozgtk.so
             libnssckbi.so
             libplc4.so
             libplds4.so
-            TorBrowser/Tor/libstdc++.so.6
+            TorBrowser/Tor/libstdc++/libstdc++.so.6
             TorBrowser/Tor/PluggableTransports/Crypto/Cipher/_ARC4.so
             TorBrowser/Tor/PluggableTransports/Crypto/Cipher/_XOR.so
             TorBrowser/Tor/PluggableTransports/Crypto/Util/_counter.so
