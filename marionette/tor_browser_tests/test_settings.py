@@ -144,9 +144,6 @@ class Test(MarionetteTestCase):
                 # Disable randomised Firefox HTTP cache decay user test groups (Bug: 13575)
                 "security.webauth.webauthn": False, # Bug 26614: Disable Web Authentication API for now
                 "browser.cache.frecency_experiment": -1,
-                # Until https://bugzilla.mozilla.org/show_bug.cgi?id=1446472 is solved fall
-                # back to old canvas behavior.
-                "privacy.resistFingerprinting.autoDeclineNoUserInputCanvasPrompts": False,
                 
                 # Third party stuff
                 "network.cookie.cookieBehavior": 1,
