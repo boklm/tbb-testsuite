@@ -103,6 +103,18 @@ sub set_tests {
             ],
             publish_dir => 'nightly-android-x86',
         },
+        {
+            name  => 'nightly-android-aarch64',
+            descr => 'build tor-browser nightly android-aarch64',
+            type  => 'rbm_build',
+            project => 'release',
+            targets => [
+                'noversiondir',
+                'nightly',
+                'torbrowser-android-aarch64',
+            ],
+            publish_dir => 'nightly-android-aarch64',
+        },
     ];
 }
 
