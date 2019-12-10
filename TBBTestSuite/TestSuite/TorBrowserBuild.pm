@@ -149,6 +149,9 @@ sub pre_tests {
             return;
         }
     }
+    if ($tbbinfos->{tbb_version}) {
+        $ENV{TORBROWSER_NIGHTLY_VERSION} = $tbbinfos->{tbb_version};
+    }
 }
 
 1;
