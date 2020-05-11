@@ -5,6 +5,8 @@ use File::Copy;
 use IO::CaptureOutput qw(qxx);
 use Cwd;
 use English;
+use lib $FindBin::Bin;
+use TBBTestSuite::Common qw(has_bin);
 
 sub winpath {
     return $_[0] unless $OSNAME eq 'cygwin';
@@ -13,7 +15,7 @@ sub winpath {
     return $res;
 }
 
-my $virtenv_marionette_dir = winpath("$FindBin::Bin/virtualenv-marionette-4.3.0");
+my $virtenv_marionette_dir = winpath("$FindBin::Bin/virtualenv-marionette-5.0.0");
 my $virtenv_pefile_dir = winpath("$FindBin::Bin/virtualenv-pefile");
 
 sub run {
@@ -28,7 +30,7 @@ sub run_from_dir {
     return $res;
 }
 
-my $virtualenv_cmd = 'virtualenv';
+my $virtualenv_cmd = has_bin('virtualenv2') ? 'virtualenv2' : 'virtualenv';
 my $bin = 'bin';
 my $lib = 'lib';
 if ($OSNAME eq 'cygwin') {
@@ -45,13 +47,6 @@ unless (-d $virtenv_marionette_dir) {
     run("$virtenv_marionette_dir/$bin/pip", 'install', '--upgrade', 'pip');
     run("$virtenv_marionette_dir/$bin/pip", 'install', '--upgrade', 'setuptools');
     run_from_dir('marionette', "$virtenv_marionette_dir/$bin/python", 'setup.py', 'develop');
-    # Workaround for https://bugzilla.mozilla.org/show_bug.cgi?id=1345274
-    my $sitepackage = 'site-packages/marionette_harness-4.3.0-py2.7.egg/marionette_harness/runner/';
-    my $marionette_runner_dir = "$virtenv_marionette_dir/$lib/python2.7/$sitepackage";
-    $marionette_runner_dir = "$virtenv_marionette_dir/$lib/$sitepackage"
-                unless -d $marionette_runner_dir;
-    copy "$FindBin::Bin/data/marionette_certs/test.cert", $marionette_runner_dir;
-    copy "$FindBin::Bin/data/marionette_certs/test.key", $marionette_runner_dir;
 }
 
 if ($OSNAME eq 'cygwin') {

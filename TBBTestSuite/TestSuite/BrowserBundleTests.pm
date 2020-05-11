@@ -826,7 +826,7 @@ sub marionette_run {
     $test->{screenshots} = [];
     my $screenshots_tmp = File::Temp::newdir('XXXXXX', DIR => $options->{tmpdir});
     $ENV{'MARIONETTE_SCREENSHOTS'} = winpath($screenshots_tmp);
-    system(xvfb_run($test), "$FindBin::Bin/virtualenv-marionette-4.3.0/$bin/tor-browser-tests",
+    system(xvfb_run($test), "$FindBin::Bin/virtualenv-marionette-5.0.0/$bin/tor-browser-tests",
         '--log-unittest', winpath($result_file_txt),
         '--log-html', winpath($result_file_html),
         '--binary', ffbin_path($tbbinfos, $test),
