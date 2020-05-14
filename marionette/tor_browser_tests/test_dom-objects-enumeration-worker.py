@@ -1,18 +1,12 @@
-from marionette_driver import By
-from marionette_driver.errors import MarionetteException
-
 from marionette_harness import MarionetteTestCase
-
-import testsuite
-
 
 class Test(MarionetteTestCase):
 
     def setUp(self):
         MarionetteTestCase.setUp(self)
 
-        ts = testsuite.TestSuite()
-        self.ts = ts
+        self.marionette.set_pref("network.proxy.allow_hijacking_localhost", False)
+        self.test_page_file_url = self.marionette.absolute_url("dom-objects-enumeration.html?testType=worker")
 
         self.expectedObjects = [
                 "AbortController",
@@ -21,10 +15,15 @@ class Test(MarionetteTestCase):
                 "Array",
                 "ArrayBuffer",
                 "atob",
+                "Atomics",
+                "BigInt",
+                "BigInt64Array",
+                "BigUint64Array",
                 "Blob",
                 "Boolean",
                 "BroadcastChannel",
                 "btoa",
+                "ByteLengthQueuingStrategy",
                 "Cache",
                 "caches",
                 "CacheStorage",
@@ -34,7 +33,9 @@ class Test(MarionetteTestCase):
                 "CloseEvent",
                 "console",
                 "constructor",
+                "CountQueuingStrategy",
                 "createImageBitmap",
+                "crossOriginIsolated",
                 "crypto",
                 "Crypto",
                 "CustomEvent",
@@ -47,9 +48,14 @@ class Test(MarionetteTestCase):
                 "__defineSetter__",
                 "Directory",
                 "dispatchEvent",
-                "DOMCursor",
-                "DOMError",
                 "DOMException",
+                "DOMMatrix",
+                "DOMMatrixReadOnly",
+                "DOMPoint",
+                "DOMPointReadOnly",
+                "DOMQuad",
+                "DOMRect",
+                "DOMRectReadOnly",
                 "DOMRequest",
                 "DOMStringList",
                 "dump",
@@ -72,7 +78,7 @@ class Test(MarionetteTestCase):
                 "Float64Array",
                 "FormData",
                 "Function",
-                "getAllPropertyNames",
+                "globalThis",
                 "hasOwnProperty",
                 "Headers",
                 "IDBCursor",
@@ -101,13 +107,14 @@ class Test(MarionetteTestCase):
                 "isNaN",
                 "isPrototypeOf",
                 "isSecureContext",
-                "Iterator",
                 "JSON",
                 "location",
                 "__lookupGetter__",
                 "__lookupSetter__",
                 "Map",
                 "Math",
+                "MediaCapabilities",
+                "MediaCapabilitiesInfo",
                 "MessageChannel",
                 "MessageEvent",
                 "MessagePort",
@@ -117,12 +124,14 @@ class Test(MarionetteTestCase):
                 "Notification",
                 "Number",
                 "Object",
-                "onclose",
                 "onerror",
+                "onlanguagechange",
                 "onmessage",
                 "onmessageerror",
                 "onoffline",
                 "ononline",
+                "onrejectionhandled",
+                "onunhandledrejection",
                 "origin",
                 "parseFloat",
                 "parseInt",
@@ -134,13 +143,17 @@ class Test(MarionetteTestCase):
                 "PerformanceObserver",
                 "PerformanceObserverEntryList",
                 "PerformanceResourceTiming",
+                "PerformanceServerTiming",
                 "postMessage",
                 "ProgressEvent",
                 "Promise",
+                "PromiseRejectionEvent",
                 "propertyIsEnumerable",
                 "__proto__",
                 "Proxy",
+                "queueMicrotask",
                 "RangeError",
+                "ReadableStream",
                 "ReferenceError",
                 "Reflect",
                 "RegExp",
@@ -151,7 +164,6 @@ class Test(MarionetteTestCase):
                 "Set",
                 "setInterval",
                 "setTimeout",
-                "StopIteration",
                 "StorageManager",
                 "String",
                 "SubtleCrypto",
@@ -160,7 +172,6 @@ class Test(MarionetteTestCase):
                 "TextDecoder",
                 "TextEncoder",
                 "toLocaleString",
-                "toSource",
                 "toString",
                 "TypeError",
                 "Uint16Array",
@@ -169,13 +180,10 @@ class Test(MarionetteTestCase):
                 "Uint8ClampedArray",
                 "undefined",
                 "unescape",
-                "uneval",
-                "unwatch",
                 "URIError",
                 "URL",
                 "URLSearchParams",
                 "valueOf",
-                "watch",
                 "WeakMap",
                 "WeakSet",
                 "WebAssembly",
@@ -191,18 +199,26 @@ class Test(MarionetteTestCase):
 
     def test_dom_objects_enumeration_workers(self):
         with self.marionette.using_context('content'):
-            URL = "file://%s/workers/dom-objects-enumeration.html" % self.ts.t['options']['test_data_dir']
-            self.marionette.navigate(URL)
-            self.marionette.set_search_timeout(50000)
+            self.marionette.navigate(self.test_page_file_url)
+            self.marionette.timeout.implicit = 5
             elt = self.marionette.find_element('id', 'enumeration')
-
+            r = elt.text.split("\n")
             err = False
             unknown_objects = ''
-            for l in elt.text.split("\n"):
+            for l in r:
                 if l in self.expectedObjects:
                     continue
                 err = True
                 unknown_objects += l + "\n"
 
             err_msg = "Unknown objects:\n%s" % unknown_objects
+            self.assertFalse(err, msg=err_msg)
+
+            for l in self.expectedObjects:
+                if l in r:
+                    continue
+                err = True
+                unknown_objects += l + "\n"
+
+            err_msg = "Expected objects not found:\n%s" % unknown_objects
             self.assertFalse(err, msg=err_msg)

@@ -829,6 +829,7 @@ sub marionette_run {
     system(xvfb_run($test), "$FindBin::Bin/virtualenv-marionette-5.0.0/$bin/tor-browser-tests",
         '--log-unittest', winpath($result_file_txt),
         '--log-html', winpath($result_file_html),
+        '--server-root', winpath("$FindBin::Bin/test-data"),
         '--binary', ffbin_path($tbbinfos, $test),
         '--profile', winpath($tbbinfos->{ffprofiledir}),
         $OSNAME eq 'cygwin' ? () : ('--workspace', $test->{workspace}),
