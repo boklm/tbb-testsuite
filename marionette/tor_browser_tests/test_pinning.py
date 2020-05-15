@@ -1,10 +1,7 @@
-from marionette_driver import By, Actions
-from marionette_driver.errors import MarionetteException, JavascriptException
-
 from marionette_harness import MarionetteTestCase
 
 import testsuite
-
+import json
 
 class Test(MarionetteTestCase):
 
@@ -31,8 +28,8 @@ class Test(MarionetteTestCase):
             self.assertTrue(res, msg="Page could be loaded")
 
             if res:
-                errorCode = m.find_element('id', 'errorCode')
-                self.assertEqual(errorCode.get_attribute('title'),
+                errorCode = m.find_element('id', 'errorShortDescText2')
+                self.assertEqual(json.loads(errorCode.get_attribute('data-l10n-args'))["error"],
                         'MOZILLA_PKIX_ERROR_KEY_PINNING_FAILURE',
                         msg='Wrong error code')
 
