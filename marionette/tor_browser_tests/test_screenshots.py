@@ -13,7 +13,7 @@ class Test(MarionetteTestCase):
         self.ts = ts
 
         self.URLs = [
-                'chrome://torlauncher/content/network-settings-wizard.xul',
+                'chrome://torlauncher/content/network-settings-wizard.xhtml',
                 ];
 
     def test_check_tpo(self):
