@@ -1,6 +1,3 @@
-from marionette_driver import By
-from marionette_driver.errors import MarionetteException
-
 from marionette_harness import MarionetteTestCase
 
 import testsuite
@@ -28,7 +25,7 @@ class Test(MarionetteTestCase):
     def test_page(self):
         with self.marionette.using_context('content'):
             self.marionette.navigate(self.test_page_url)
-            self.marionette.set_search_timeout(self.timeout)
+            self.marionette.timeout.implicit = self.timeout/1000
             elt = self.marionette.find_element('id', 'test_result');
             self.assertEqual(elt.text, 'OK')
 
