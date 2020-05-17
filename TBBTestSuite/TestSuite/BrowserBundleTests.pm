@@ -99,6 +99,8 @@ our @tests = (
             TorBrowser/Tor/PluggableTransports/meek-client-torbrowser
             TorBrowser/Tor/PluggableTransports/obfs4proxy
             TorBrowser/Tor/PluggableTransports/zope/interface/_zope_interface_coptimizations.so
+            TorBrowser/Tor/PluggableTransports/snowflake-client
+            TorBrowser/ncprop279/ncprop279
             ) ],
     },
     {
@@ -106,7 +108,7 @@ our @tests = (
         type            => 'command',
         descr           => 'Check for stack canary support',
         files           => \&tbb_binfiles,
-        command         => [ 'readelf', '-s' ],
+        command         => [ 'readelf', '-s', '--wide' ],
         check_output    => sub { $_[0] =~ m/__stack_chk_fail/ },
         enable          => sub { $OSNAME eq 'linux' },
         # ticket 13056
@@ -115,7 +117,6 @@ our @tests = (
             gtk2/libmozgtk.so
             libmozalloc.so
             libmozgtk.so
-            libnssckbi.so
             libplc4.so
             libplds4.so
             TorBrowser/Tor/libstdc++/libstdc++.so.6
@@ -130,6 +131,11 @@ our @tests = (
             TorBrowser/Tor/PluggableTransports/zope/interface/_zope_interface_coptimizations.so
             TorBrowser/Tor/PluggableTransports/meek-client
             TorBrowser/Tor/PluggableTransports/obfs4proxy
+            TorBrowser/Tor/PluggableTransports/snowflake-client
+            TorBrowser/ncprop279/ncprop279
+            libgraphitewasm.so
+            liboggwasm.so
+            libmozwayland.so
             ) ],
     },
     {
@@ -154,6 +160,7 @@ our @tests = (
             TorBrowser/Tor/PluggableTransports/meek-client-torbrowser
             TorBrowser/Tor/PluggableTransports/obfs4proxy
             TorBrowser/Tor/PluggableTransports/snowflake-client
+            TorBrowser/ncprop279/ncprop279
             ) ],
     },
     {
