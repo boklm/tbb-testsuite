@@ -4,9 +4,6 @@
 # Setting |dom.enable_performance_observer| to |false| and testing that
 # might not be sufficient.
 
-from marionette_driver import By
-from marionette_driver.errors import MarionetteException
-
 from marionette_harness import MarionetteTestCase
 
 class Test(MarionetteTestCase):
@@ -19,18 +16,25 @@ class Test(MarionetteTestCase):
 
     def test_performance_observer(self):
 
-        with self.marionette.using_context('content'):
-            self.marionette.navigate(self.TEST_URL)
+        def is_perf_obs_working(marionette):
+            return self.marionette.execute_async_script("""
+                let [resolve] = arguments;
+                var observer = new PerformanceObserver(function(...args) { resolve(true); });
+                observer.observe({entryTypes: ['resource', 'mark', 'measure']});
+                performance.mark("hello");
+                setTimeout(function() {
+                    resolve(false);
+                }, 2000);
+            """)
 
-            err_msg = 'performance observer is working'
-            self.assertTrue(self.marionette.execute_script("""
-                var pass = false;
-                try {
-                        var observer = new PerformanceObserver(function(list) { });
-                        observer.observe({entryTypes: ['resource', 'mark', 'measure']});
-                } catch (e) {
-                        pass = true;
-                }
-                return pass;
-                """),
-                msg=err_msg)
+        with self.marionette.using_context('content'):
+            m = self.marionette
+            m.navigate(self.TEST_URL)
+            m.timeout.script = 10
+
+            # Performance observer should not work with default settings
+            self.assertFalse(is_perf_obs_working(m), 'performance observer is working')
+
+            # Performance observer should work if `privacy.resistFingerprinting = false`
+            with self.marionette.using_prefs({"privacy.resistFingerprinting": False}):
+                self.assertTrue(is_perf_obs_working(m), 'performance observer is not working')

@@ -380,13 +380,6 @@ our @tests = (
         type            => 'marionette',
         descr           => 'Check that the Performance Observer API is really disabled',
         use_net         => 1,
-        # To check that the test fails when performance observer is enabled,
-        # uncomment this:
-        #prefs           => {
-        #    'dom.enable_performance_observer' => 'true',
-        #},
-        # Bug 27137: temporarily disable test
-        enable          => sub { undef },
     },
     {
         name            => 'searchengines',
