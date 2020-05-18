@@ -385,8 +385,6 @@ our @tests = (
         name            => 'searchengines',
         type            => 'marionette',
         descr           => 'Check that we have the default search engines set',
-        # Bug 30340: temporarily disable test
-        enable          => sub { undef },
     },
     {
         name            => 'noscript',

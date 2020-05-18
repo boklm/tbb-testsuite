@@ -22,12 +22,15 @@ class Test(MarionetteTestCase):
 
     def test_searchengines(self):
         with self.marionette.using_context('content'):
-            self.marionette.navigate('about:')
+            self.marionette.navigate('about:robots')
 
         with self.marionette.using_context('chrome'):
-            searchbar = self.marionette.find_element('id', 'searchbar')
-            txtbox = searchbar.find_element('anon attribute', {'anonid': 'searchbar-textbox'})
-            self.assertRegexpMatches(txtbox.get_attribute('label'), 'DuckDuckGo',
-                    'DuckDuckGo is not the default search engine!')
+            self.marionette.timeout.implicit = 5
+            searchbar = self.marionette.find_element('id', 'urlbar-input')
+            searchbar.click()
+            searchbar.send_keys("test")
+            urlbarresults = self.marionette.find_element('id', 'urlbar-results')
+            result = urlbarresults.find_element("css selector", "div:first-child .urlbarView-action")
+            self.assertRegexpMatches(result.text, 'DuckDuckGo', 'DuckDuckGo is not the default search engine!')
 
             #XXX: Test whether the second and third engine are the ones we want as well.
