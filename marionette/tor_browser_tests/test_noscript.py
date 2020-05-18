@@ -7,7 +7,6 @@ from marionette_harness import MarionetteTestCase
 
 import testsuite
 
-
 class Test(MarionetteTestCase):
 
     def setUp(self):
@@ -21,7 +20,7 @@ class Test(MarionetteTestCase):
 
 
     def test_noscript(self):
-        self.marionette.set_search_timeout(1000)
+        self.marionette.timeout.implicit = 1
 
         with self.marionette.using_context('content'):
 
