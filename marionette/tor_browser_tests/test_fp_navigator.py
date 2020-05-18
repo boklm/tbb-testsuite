@@ -15,9 +15,9 @@ nav_props = {"appCodeName": "Mozilla",
 "product": "Gecko",
 "productSub": "20100101",
 "plugins": "[object PluginArray]",
-"cookieEnabled": "true",
+"cookieEnabled": "false",
 "onLine": "true",
-"buildID": "20100101",
+"buildID": "20181001000000",
 "doNotTrack": "unspecified",
 "javaEnabled": """function javaEnabled() {
     [native code]
@@ -26,9 +26,6 @@ nav_props = {"appCodeName": "Mozilla",
     [native code]
 }""",
 "vibrate": """function vibrate() {
-    [native code]
-}""",
-"registerContentHandler": """function registerContentHandler() {
     [native code]
 }""",
 "registerProtocolHandler": """function registerProtocolHandler() {
@@ -63,7 +60,7 @@ class Test(MarionetteTestCase):
             app_version = "5.0 (Macintosh)"
             platform = "MacIntel"
             oscpu = "Intel Mac OS X 10.13"
-        nav_props["userAgent"] = "Mozilla/5.0 (" + ua_os + "; rv:60.0) Gecko/20100101 Firefox/60.0"
+        nav_props["userAgent"] = "Mozilla/5.0 (" + ua_os + "; rv:78.0) Gecko/20100101 Firefox/78.0"
         nav_props["appVersion"] = app_version
         nav_props["platform"] = platform
         nav_props["oscpu"] = oscpu

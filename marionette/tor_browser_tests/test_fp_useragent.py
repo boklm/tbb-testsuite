@@ -19,5 +19,5 @@ class Test(MarionetteTestCase):
                 ua_os = 'Windows NT 6.1; Win64; x64'
             if osname == 'MacOSX':
                 ua_os = 'Macintosh; Intel Mac OS X 10.13'
-            self.assertEqual("Mozilla/5.0 (" + ua_os + "; rv:60.0) Gecko/20100101 Firefox/60.0",
+            self.assertEqual("Mozilla/5.0 (" + ua_os + "; rv:78.0) Gecko/20100101 Firefox/78.0",
                               js("return navigator.userAgent"))
