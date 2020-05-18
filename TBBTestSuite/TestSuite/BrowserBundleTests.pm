@@ -428,10 +428,8 @@ our @tests = (
         descr           => 'Play some videos',
         use_net         => 1,
         marionette_test => 'page',
-        remote          => 1,
+        remote          => 0,
         timeout         => 50000,
-        # Bug 30339: temporarily disable test
-        enable          => sub { undef },
     },
     {
         name            => 'svg-disable',

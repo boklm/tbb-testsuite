@@ -34,7 +34,8 @@ for (var i = 0; i < videos.length; i++) {
         next[v.id] = 'videos_' + (i + 1).toString();
     document.getElementById("videos").appendChild(v);
 }
-document.getElementById("videos_0").play();
+const first = document.getElementById("videos_0");
+first.addEventListener("canplay", () => first.play());
 
     </script>
 </body>

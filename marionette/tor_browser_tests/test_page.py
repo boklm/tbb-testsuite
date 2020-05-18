@@ -13,9 +13,10 @@ class Test(MarionetteTestCase):
 
         if ts.t['test']['remote']:
             test_data_url = ts.t['options']['test_data_url']
+            self.test_page_url = '%s/%s.html' % (test_data_url, ts.t['test']['name'])
         else:
-            test_data_url = "file://%s" % ts.t['options']['test_data_dir']
-        self.test_page_url = '%s/%s.html' % (test_data_url, ts.t['test']['name'])
+            self.test_page_url = self.marionette.absolute_url('%s.html' % (ts.t['test']['name']))
+            self.marionette.set_pref("network.proxy.allow_hijacking_localhost", False)
 
         if ts.t['test']['timeout']:
             self.timeout = ts.t['test']['timeout']
