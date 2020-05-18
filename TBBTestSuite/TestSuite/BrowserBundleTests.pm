@@ -439,11 +439,8 @@ our @tests = (
         use_net         => 1,
         prefs           => {
             'extensions.torbutton.security_custom' => 'true',
-            'svg.in-content.enabled' => 'false',
+            'svg.disabled' => 'true',
         },
-        # Bug 28798: temporarily disable test
-        enable          => sub { undef },
-        #enable          => sub { $OSNAME eq 'linux' },
     },
     {
         name            => 'svg-enable',
@@ -453,11 +450,8 @@ our @tests = (
         use_net         => 1,
         prefs           => {
             'extensions.torbutton.security_custom' => 'true',
-            'svg.in-content.enabled' => 'true',
+            'svg.disabled' => 'false',
         },
-        # Bug 28798: temporarily disable test
-        enable          => sub { undef },
-        #enable          => sub { $OSNAME eq 'linux' },
     },
     {
         name            => 'download_pdf',
