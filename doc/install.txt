@@ -9,7 +9,7 @@ virtualenv, and xvfb or the Xorg dummy driver.
 
 Those dependencies can be installed by running the 'install-deps' script
 as root, which will install the needed packages. This script has been
-tested on Ubuntu, Debian, Fedora, Centos.
+tested on Ubuntu, Debian, Fedora, and Centos.
 
 After installing the required dependencies, a python virtualenv needs
 to be created with marionette. This can be with the 'setup-virtualenv'
