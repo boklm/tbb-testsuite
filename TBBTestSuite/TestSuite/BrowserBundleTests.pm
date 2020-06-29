@@ -488,6 +488,12 @@ our @tests = (
         use_net         => 1,
         descr           => 'Check that Onion-Location header handling works correctly',
     },
+    {
+        name            => 'onion_alias',
+        type            => 'marionette',
+        use_net         => 1,
+        descr           => 'Check that onion alias urlbar rewrites work properly',
+    },
 );
 
 sub set_test_prefs {
