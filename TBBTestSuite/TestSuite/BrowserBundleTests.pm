@@ -482,6 +482,12 @@ our @tests = (
         use_net         => 1,
         descr           => 'Check onion security expectations',
     },
+    {
+        name            => 'onion_location',
+        type            => 'marionette',
+        use_net         => 1,
+        descr           => 'Check that Onion-Location header handling works correctly',
+    },
 );
 
 sub set_test_prefs {
