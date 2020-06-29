@@ -476,6 +476,12 @@ our @tests = (
         # Bug 30432: temporarily disable test
         enable          => sub { undef },
     },
+    {
+        name            => 'onion_security_expectations',
+        type            => 'marionette',
+        use_net         => 1,
+        descr           => 'Check onion security expectations',
+    },
 );
 
 sub set_test_prefs {

@@ -5,6 +5,7 @@ PACKAGE_VERSION = '0.3'
 deps = [
         'marionette_harness == 5.0.0',
         'marionette_driver == 3.0.0',
+        'stem == 1.8.0',
 ]
 
 setup(name='tor-browser-tests',
