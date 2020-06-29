@@ -494,6 +494,12 @@ our @tests = (
         use_net         => 1,
         descr           => 'Check that onion alias urlbar rewrites work properly',
     },
+    {
+        name            => 'security_level_ui',
+        type            => 'marionette',
+        use_net         => 1,
+        descr           => 'Check that the security level UI is working properly',
+    },
 );
 
 sub set_test_prefs {
