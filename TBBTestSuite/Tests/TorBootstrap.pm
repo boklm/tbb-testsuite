@@ -153,11 +153,15 @@ sub start_tor {
     }
     write_file("$tbbinfos->{datadir}/Tor/torrc", ())
                 unless -f "$tbbinfos->{datadir}/Tor/torrc";
+    # These arguments should be kept in sync with tor-launcher
+    mkdir "$tbbinfos->{datadir}/Tor/onion-auth" unless -d "$tbbinfos->{datadir}/Tor/onion-auth";
     my @cmd = (winpath($tbbinfos->{torbin}), '--defaults-torrc',
         winpath($torrc_file),
         '-f', winpath("$tbbinfos->{datadir}/Tor/torrc"),
         'DataDirectory', winpath("$tbbinfos->{datadir}/Tor"),
         'GeoIPFile', winpath($tbbinfos->{torgeoip}),
+        'ClientOnionAuthDir', winpath("$tbbinfos->{datadir}/Tor/onion-auth"),
+        '__SocksPort', "$options->{'tor-socks-port'} ExtendedErrors IPv6Traffic PreferIPv6 KeepAliveIsolateSOCKSAuth",
         '__OwningControllerProcess', winpid($$));
     $tbbinfos->{torpid} = fork;
     if ($tbbinfos->{torpid} == 0) {

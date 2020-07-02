@@ -495,6 +495,13 @@ our @tests = (
         descr           => 'Check that onion alias urlbar rewrites work properly',
     },
     {
+        name            => 'onion_client_auth',
+        type            => 'marionette',
+        use_net         => 1,
+        descr           => 'Check that onion client auth works properly',
+        run_once        => 1,
+    },
+    {
         name            => 'security_level_ui',
         type            => 'marionette',
         use_net         => 1,
