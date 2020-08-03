@@ -1,5 +1,6 @@
 import os
 import json
+from marionette_harness import MarionetteTestCase
 
 class TestSuite(object):
     def __init__(self):
@@ -24,3 +25,9 @@ class TestSuite(object):
         output = open(screenshot_file, 'w')
         output.write(png_data)
         output.close()
+
+
+class TorBrowserTest(MarionetteTestCase):
+    def get_version(self):
+        with self.marionette.using_context("chrome"):
+            return self.marionette.execute_script("return parseFloat(AppConstants.MOZ_APP_VERSION);")

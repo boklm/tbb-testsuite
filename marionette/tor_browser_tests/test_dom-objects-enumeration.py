@@ -8,10 +8,11 @@ from marionette_driver import By
 from marionette_driver.errors import MarionetteException
 
 from marionette_harness import MarionetteTestCase
+import testsuite
 
-class Test(MarionetteTestCase):
+class Test(testsuite.TorBrowserTest):
     def setUp(self):
-        MarionetteTestCase.setUp(self)
+        testsuite.TorBrowserTest.setUp(self)
         self.marionette.set_pref("network.proxy.allow_hijacking_localhost", False)
         self.test_page_file_url = self.marionette.absolute_url("dom-objects-enumeration.html?testType=window")
         # The list of expected DOM objects
@@ -753,8 +754,15 @@ class Test(MarionetteTestCase):
                 "XPathResult",
                 "XSLTProcessor",
                 ]
+        self.expectedObjects80 = self.expectedObjects + ["AggregateError", "FinalizationRegistry", "WeakRef"]
+        self.expectedObjects80.remove("content")
+        self.expectedObjects80.sort()
 
     def test_dom_objects_enumeration(self):
+        expectedObjects = self.expectedObjects
+        if self.get_version() >= 80:
+            expectedObjects = self.expectedObjects80
+
         with self.marionette.using_context('content'):
             self.marionette.navigate(self.test_page_file_url)
             self.marionette.timeout.implicit = 5
@@ -763,7 +771,7 @@ class Test(MarionetteTestCase):
             err = False
             unknown_objects = ''
             for l in r:
-                if l in self.expectedObjects:
+                if l in expectedObjects:
                     continue
                 err = True
                 unknown_objects += l + "\n"
@@ -771,7 +779,7 @@ class Test(MarionetteTestCase):
             err_msg = "Unknown objects:\n%s" % unknown_objects
             self.assertFalse(err, msg=err_msg)
 
-            for l in self.expectedObjects:
+            for l in expectedObjects:
                 if l in r:
                     continue
                 err = True
