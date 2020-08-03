@@ -7,11 +7,12 @@ from marionette_driver import By
 from marionette_driver.errors import MarionetteException
 
 from marionette_harness import MarionetteTestCase
+import testsuite
 
-class Test(MarionetteTestCase):
+class Test(testsuite.TorBrowserTest):
 
     def setUp(self):
-        MarionetteTestCase.setUp(self)
+        testsuite.TorBrowserTest.setUp(self)
 
         self.TEST_URL = "https://www.mediawiki.org/wiki/MediaWiki"
 
@@ -40,6 +41,9 @@ class Test(MarionetteTestCase):
                 }
 
     def test_navigation_timing(self):
+        if (self.get_version() >= 79):
+            # Navigation timing was reenabled in 79 (https://bugzilla.mozilla.org/show_bug.cgi?id=1637985)
+            return
 
         with self.marionette.using_context('content'):
             self.marionette.navigate(self.TEST_URL)
