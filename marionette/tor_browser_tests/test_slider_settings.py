@@ -20,7 +20,6 @@ class Test(MarionetteTestCase):
                 "javascript.options.ion" :                  [ 0,  False, False, False, True ],
                 "javascript.options.baselinejit" :          [ 0,  False, False, False, True ],
                 "javascript.options.native_regexp" :        [ 0,  False, False, False, True ],
-                "media.webaudio.enabled" :                  [ 0,  False, False, False, True ],
                 "mathml.disabled" :                         [ 0,  True,  True,  True,  False],
                 "gfx.font_rendering.opentype_svg.enabled" : [ 0,  False, False, True,  True ],
                 "svg.disabled" :                            [ 0,  True,  False, False, False],
