@@ -7,6 +7,10 @@ import time
 
 
 class Test(WindowManagerMixin, MarionetteTestCase):
+    def get_url(self):
+        with self.marionette.using_context('content'):
+            return self.marionette.execute_script("return document.location.href;")
+
     def get_urlbar_value(self):
         with self.marionette.using_context('chrome'):
             return self.marionette.execute_script("return gURLBar.value;")
@@ -23,7 +27,7 @@ class Test(WindowManagerMixin, MarionetteTestCase):
         with m.using_context('content'):
             # Navigating to a known .tor.onion should redirect and rewrite the urlbar with the alias.
             m.navigate('http://theintercept.securedrop.tor.onion')
-            self.assertEqual(m.get_url(
+            self.assertEqual(self.get_url(
             ), 'http://xpxduj55x2j27l2qytu2tcetykyfxbjbafin3x4i3ywddzphkbrd3jyd.onion/')
             self.assertEqual(self.get_urlbar_value(),
                              'theintercept.securedrop.tor.onion')
@@ -46,8 +50,8 @@ class Test(WindowManagerMixin, MarionetteTestCase):
                 lambda _: len(m.window_handles) > 1)
             m.switch_to_window(m.window_handles[1])
             Wait(m, timeout=m.timeout.page_load).until(
-                lambda _: m.get_url() != 'about:blank')
-            self.assertEqual(m.get_url(
+                lambda _: self.get_url() != 'about:blank')
+            self.assertEqual(self.get_url(
             ), 'http://xpxduj55x2j27l2qytu2tcetykyfxbjbafin3x4i3ywddzphkbrd3jyd.onion/generate')
             self.assertEqual(self.get_urlbar_value(),
                              'theintercept.securedrop.tor.onion/generate')
@@ -59,7 +63,7 @@ class Test(WindowManagerMixin, MarionetteTestCase):
             m.switch_to_window(new_tab)
             m.navigate(
                 'http://xpxduj55x2j27l2qytu2tcetykyfxbjbafin3x4i3ywddzphkbrd3jyd.onion')
-            self.assertEqual(m.get_url(
+            self.assertEqual(self.get_url(
             ), 'http://xpxduj55x2j27l2qytu2tcetykyfxbjbafin3x4i3ywddzphkbrd3jyd.onion/')
             self.assertEqual(self.get_urlbar_value(
             ), 'xpxduj55x2j27l2qytu2tcetykyfxbjbafin3x4i3ywddzphkbrd3jyd.onion')
