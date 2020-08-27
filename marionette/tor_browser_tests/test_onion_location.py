@@ -5,6 +5,16 @@ from marionette_harness import MarionetteTestCase, WindowManagerMixin
 
 
 class Test(WindowManagerMixin, MarionetteTestCase):
+    # To be investigated in #40007:
+    # In 81, marionette.get_url() sometimes fails with:
+    # `UnknownException: TypeError: browsingContext.currentWindowGlobal is null`
+    # It happens when clicking "Always Prioritize Onions" in the doorhanger:
+    # opens a new tab + refreshes the previous one, then when we close the new tab
+    # and move to the old one, marionette.get_url() throws the error.
+    # Until a proper fix, this workaround seems to work fine.
+    def get_url(self):
+        with self.marionette.using_context('content'):
+            return self.marionette.execute_script("return document.location.href;")
 
     def test_onion_location(self):
         m = self.marionette
@@ -39,9 +49,9 @@ class Test(WindowManagerMixin, MarionetteTestCase):
                     lambda _: len(m.window_handles) > 1)
                 m.switch_to_window(m.window_handles[1])
                 Wait(m, timeout=m.timeout.page_load).until(
-                    lambda _: m.get_url() != "about:blank")
+                    lambda _: self.get_url() != "about:blank")
                 self.assertEqual(
-                    m.get_url(), "https://tb-manual.torproject.org/onion-services/")
+                    self.get_url(), "https://tb-manual.torproject.org/onion-services/")
                 m.close()
                 m.switch_to_window(m.window_handles[0])
 
@@ -74,23 +84,23 @@ class Test(WindowManagerMixin, MarionetteTestCase):
             with m.using_context('content'):
                 m.switch_to_window(m.window_handles[1])
                 self.assertEqual(
-                    m.get_url(), 'about:preferences#privacy-onionservices')
+                    self.get_url(), 'about:preferences#privacy-onionservices')
                 m.close()
                 m.switch_to_window(self.start_tab)
 
                 # Check that the original page is redirected to .onion
                 Wait(m, timeout=m.timeout.page_load).until(
-                    lambda _: m.get_url() != 'https://www.torproject.org/')
+                    lambda _: self.get_url() != 'https://www.torproject.org/')
                 self.assertEqual(
-                    m.get_url(), 'http://expyuzz4wqqyqhjn.onion/index.html')
+                    self.get_url(), 'http://expyuzz4wqqyqhjn.onion/index.html')
 
                 # Check that auto-redirects work
                 m.navigate('https://www.torproject.org/')
-                self.assertEqual(m.get_url(), 'https://www.torproject.org/')
+                self.assertEqual(self.get_url(), 'https://www.torproject.org/')
                 Wait(m, timeout=m.timeout.page_load).until(
-                    lambda _: m.get_url() != 'https://www.torproject.org/')
+                    lambda _: self.get_url() != 'https://www.torproject.org/')
                 self.assertEqual(
-                    m.get_url(), 'http://expyuzz4wqqyqhjn.onion/index.html')
+                    self.get_url(), 'http://expyuzz4wqqyqhjn.onion/index.html')
 
                 # Go to preferences and disable auto-redirects
                 new_tab = self.open_tab()
@@ -103,7 +113,7 @@ class Test(WindowManagerMixin, MarionetteTestCase):
                 m.switch_to_window(self.start_tab)
                 m.navigate('https://www.torproject.org/')
                 try:
-                    Wait(m, timeout=5).until(lambda _: m.get_url()
+                    Wait(m, timeout=5).until(lambda _: self.get_url()
                                              != 'https://www.torproject.org/')
                     self.assertTrue(False, "Should not redirect")
                 except TimeoutException:
@@ -115,10 +125,10 @@ class Test(WindowManagerMixin, MarionetteTestCase):
                     'id', 'onion-location-box').is_displayed())
                 m.find_element('id', 'onion-location-box').click()
                 with m.using_context('content'):
-                    Wait(m, timeout=5).until(lambda _: m.get_url()
+                    Wait(m, timeout=5).until(lambda _: self.get_url()
                                              != 'https://www.torproject.org/')
                     self.assertEqual(
-                        m.get_url(), 'http://expyuzz4wqqyqhjn.onion/index.html')
+                        self.get_url(), 'http://expyuzz4wqqyqhjn.onion/index.html')
 
             # Check learn more link
             with m.using_context('content'):
@@ -128,8 +138,8 @@ class Test(WindowManagerMixin, MarionetteTestCase):
                     lambda _: len(m.window_handles) > 1)
                 m.switch_to_window(m.window_handles[1])
                 Wait(m, timeout=m.timeout.page_load).until(
-                    lambda _: m.get_url() != "about:blank")
+                    lambda _: self.get_url() != "about:blank")
                 self.assertEqual(
-                    m.get_url(), "https://tb-manual.torproject.org/onion-services/")
+                    self.get_url(), "https://tb-manual.torproject.org/onion-services/")
                 m.close()
                 m.switch_to_window(m.window_handles[0])
