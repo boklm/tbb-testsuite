@@ -1,7 +1,5 @@
-from marionette_driver.errors import MarionetteException, JavascriptException, NoSuchElementException
-
+from marionette_driver.errors import JavascriptException
 from marionette_harness import MarionetteTestCase
-
 import testsuite
 
 class Test(MarionetteTestCase):

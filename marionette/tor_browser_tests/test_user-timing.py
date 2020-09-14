@@ -3,9 +3,6 @@
 # Tor Browser. Setting |dom.enable_user_timing| to |false| and testing that
 # might not be sufficient.
 
-from marionette_driver import By
-from marionette_driver.errors import MarionetteException
-
 from marionette_harness import MarionetteTestCase
 
 class Test(MarionetteTestCase):

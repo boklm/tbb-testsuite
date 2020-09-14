@@ -1,10 +1,6 @@
-from marionette_driver import By, Wait
-from marionette_driver.errors import MarionetteException
-
+from marionette_driver import Wait
 from marionette_harness import MarionetteTestCase
-
 import testsuite
-
 
 class Test(MarionetteTestCase):
 

@@ -1,10 +1,6 @@
-from marionette_driver import By, Wait
-from marionette_driver.errors import MarionetteException, NoSuchElementException, TimeoutException
+from marionette_driver import Wait
 from marionette_driver.legacy_actions import Actions
 from marionette_harness import MarionetteTestCase, WindowManagerMixin
-
-import time
-
 
 class Test(WindowManagerMixin, MarionetteTestCase):
     def get_url(self):

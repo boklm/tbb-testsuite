@@ -1,7 +1,6 @@
 from marionette_harness import MarionetteTestCase
-
-import testsuite
 import json
+import testsuite
 
 class Test(MarionetteTestCase):
 

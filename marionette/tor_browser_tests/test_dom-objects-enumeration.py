@@ -4,10 +4,6 @@
 # This test has been suggested in the iSEC partners' report:
 # https://blog.torproject.org/blog/isec-partners-conducts-tor-browser-hardening-study
 
-from marionette_driver import By
-from marionette_driver.errors import MarionetteException
-
-from marionette_harness import MarionetteTestCase
 import testsuite
 
 class Test(testsuite.TorBrowserTest):

@@ -3,10 +3,6 @@
 # Tor Browser. Setting |dom.enable_performance| to |false| and testing that has
 # been not sufficient. See bug 13186 for further details.
 
-from marionette_driver import By
-from marionette_driver.errors import MarionetteException
-
-from marionette_harness import MarionetteTestCase
 import testsuite
 
 class Test(testsuite.TorBrowserTest):

@@ -1,21 +1,14 @@
-from marionette_driver import By, Wait
-from marionette_driver.errors import MarionetteException, NoSuchElementException, TimeoutException
-from marionette_driver.legacy_actions import Actions
+from marionette_driver import Wait
 from marionette_harness import MarionetteTestCase, WindowManagerMixin
-
-import testsuite
-
 from stem.control import Controller
 from stem.process import launch_tor_with_config
-
 from urlparse import urlparse
 from tempfile import mkdtemp
 import shutil
 import os
 import base64
-
 import time
-
+import testsuite
 
 class Test(WindowManagerMixin, MarionetteTestCase):
     def setUp(self):

@@ -1,15 +1,9 @@
-from marionette_driver import By, Wait
-from marionette_driver.errors import MarionetteException, NoSuchElementException, TimeoutException
-from marionette_driver.legacy_actions import Actions
+from marionette_driver import Wait
 from marionette_harness import MarionetteTestCase, WindowManagerMixin
-
-import testsuite
-
 from stem.control import Controller
-
 from urlparse import urlparse
-
 import time
+import testsuite
 
 class OnionFixturesMixin(object):
     def setUp(self):

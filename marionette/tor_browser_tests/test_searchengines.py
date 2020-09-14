@@ -6,13 +6,8 @@
 # case while the search engines are still not properly ordered. Rather, we
 # check the entries in the search box directly.
 
-from marionette_driver import By, Wait
-from marionette_driver.errors import MarionetteException
-
 from marionette_harness import MarionetteTestCase
-
 import testsuite
-
 
 class Test(MarionetteTestCase):
 

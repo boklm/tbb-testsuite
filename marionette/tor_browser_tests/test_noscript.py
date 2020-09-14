@@ -1,10 +1,7 @@
 # https://trac.torproject.org/projects/tor/ticket/13053
 
-from marionette_driver import By
-from marionette_driver.errors import MarionetteException, NoSuchElementException
-
+from marionette_driver.errors import NoSuchElementException
 from marionette_harness import MarionetteTestCase
-
 import testsuite
 
 class Test(MarionetteTestCase):

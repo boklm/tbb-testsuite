@@ -1,8 +1,6 @@
-from marionette_driver import By, Wait
-from marionette_driver.errors import MarionetteException, NoSuchElementException, TimeoutException
-
+from marionette_driver import Wait
+from marionette_driver.errors import NoSuchElementException, TimeoutException
 from marionette_harness import MarionetteTestCase, WindowManagerMixin
-
 
 class Test(WindowManagerMixin, MarionetteTestCase):
     # To be investigated in #40007:

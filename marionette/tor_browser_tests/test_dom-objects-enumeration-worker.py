@@ -1,4 +1,3 @@
-from marionette_harness import MarionetteTestCase
 import testsuite
 
 class Test(testsuite.TorBrowserTest):
