@@ -52,36 +52,7 @@ our @tests = (
         enable       => sub { $_[0]->{os} eq 'Windows' },
         # ticket 16417
         skip_files   => [ qw(
-            TorBrowser/Tor/PluggableTransports/_ctypes.pyd
-            TorBrowser/Tor/PluggableTransports/_hashlib.pyd
-            TorBrowser/Tor/PluggableTransports/_socket.pyd
-            TorBrowser/Tor/PluggableTransports/_ssl.pyd
-            TorBrowser/Tor/PluggableTransports/bz2.pyd
-            TorBrowser/Tor/PluggableTransports/Crypto.Cipher._AES.pyd
-            TorBrowser/Tor/PluggableTransports/Crypto.Hash._SHA256.pyd
-            TorBrowser/Tor/PluggableTransports/Crypto.Hash._SHA512.pyd
-            TorBrowser/Tor/PluggableTransports/Crypto.Random.OSRNG.winrandom.pyd
-            TorBrowser/Tor/PluggableTransports/Crypto.Util._counter.pyd
-            TorBrowser/Tor/PluggableTransports/Crypto.Util.strxor.pyd
-            TorBrowser/Tor/PluggableTransports/flashproxy-client.exe
-            TorBrowser/Tor/PluggableTransports/flashproxy-reg-appspot.exe
-            TorBrowser/Tor/PluggableTransports/flashproxy-reg-email.exe
-            TorBrowser/Tor/PluggableTransports/flashproxy-reg-http.exe
-            TorBrowser/Tor/PluggableTransports/flashproxy-reg-url.exe
-            TorBrowser/Tor/PluggableTransports/fte.cDFA.pyd
-            TorBrowser/Tor/PluggableTransports/fteproxy.exe
-            TorBrowser/Tor/PluggableTransports/M2Crypto.__m2crypto.pyd
-            TorBrowser/Tor/PluggableTransports/meek-client-torbrowser.exe
-            TorBrowser/Tor/PluggableTransports/meek-client.exe
             TorBrowser/Tor/PluggableTransports/obfs4proxy.exe
-            TorBrowser/Tor/PluggableTransports/obfsproxy.exe
-            TorBrowser/Tor/PluggableTransports/pyexpat.pyd
-            TorBrowser/Tor/PluggableTransports/python27.dll
-            TorBrowser/Tor/PluggableTransports/select.pyd
-            TorBrowser/Tor/PluggableTransports/terminateprocess-buffer.exe
-            TorBrowser/Tor/PluggableTransports/unicodedata.pyd
-            TorBrowser/Tor/PluggableTransports/w9xpopen.exe
-            TorBrowser/Tor/PluggableTransports/zope.interface._zope_interface_coptimizations.pyd
             ) ],
     },
     {
@@ -94,11 +65,7 @@ our @tests = (
                                  && ( $_[0] =~ m/BIND_NOW/ ) },
         enable          => sub { $OSNAME eq 'linux' },
         skip_files   => [ qw(
-            TorBrowser/Tor/PluggableTransports/meek-client
-            TorBrowser/Tor/PluggableTransports/meek-client-torbrowser
-            TorBrowser/Tor/PluggableTransports/meek-client-torbrowser
             TorBrowser/Tor/PluggableTransports/obfs4proxy
-            TorBrowser/Tor/PluggableTransports/zope/interface/_zope_interface_coptimizations.so
             TorBrowser/Tor/PluggableTransports/snowflake-client
             TorBrowser/ncprop279/ncprop279
             ) ],
@@ -115,21 +82,9 @@ our @tests = (
         skip_files   => [ qw(
             abicheck
             gtk2/libmozgtk.so
-            libmozalloc.so
             libmozgtk.so
             libplc4.so
-            libplds4.so
             TorBrowser/Tor/libstdc++/libstdc++.so.6
-            TorBrowser/Tor/PluggableTransports/Crypto/Cipher/_ARC4.so
-            TorBrowser/Tor/PluggableTransports/Crypto/Cipher/_XOR.so
-            TorBrowser/Tor/PluggableTransports/Crypto/Util/_counter.so
-            TorBrowser/Tor/PluggableTransports/fte/cDFA.so
-            TorBrowser/Tor/PluggableTransports/meek-client-torbrowser
-            TorBrowser/Tor/PluggableTransports/twisted/python/_initgroups.so
-            TorBrowser/Tor/PluggableTransports/twisted/runner/portmap.so
-            TorBrowser/Tor/PluggableTransports/twisted/test/raiser.so
-            TorBrowser/Tor/PluggableTransports/zope/interface/_zope_interface_coptimizations.so
-            TorBrowser/Tor/PluggableTransports/meek-client
             TorBrowser/Tor/PluggableTransports/obfs4proxy
             TorBrowser/Tor/PluggableTransports/snowflake-client
             TorBrowser/ncprop279/ncprop279
@@ -156,8 +111,6 @@ our @tests = (
         check_output    => sub { $_[0] =~ m/Type:\s+DYN/ },
         enable          => sub { $OSNAME eq 'linux' },
         skip_files   => [ qw(
-            TorBrowser/Tor/PluggableTransports/meek-client
-            TorBrowser/Tor/PluggableTransports/meek-client-torbrowser
             TorBrowser/Tor/PluggableTransports/obfs4proxy
             TorBrowser/Tor/PluggableTransports/snowflake-client
             TorBrowser/ncprop279/ncprop279
@@ -200,8 +153,6 @@ our @tests = (
         enable          => sub { $OSNAME eq 'darwin' },
         retry           => 1,
         skip_files   => [ qw(
-            Contents/MacOS/Tor/PluggableTransports/meek-client
-            Contents/MacOS/Tor/PluggableTransports/meek-client-torbrowser
             Contents/MacOS/Tor/PluggableTransports/obfs4proxy
             ) ],
     },
