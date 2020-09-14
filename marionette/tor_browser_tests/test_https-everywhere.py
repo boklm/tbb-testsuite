@@ -1,10 +1,6 @@
-from marionette_driver import By
-from marionette_driver.errors import MarionetteException
-
 from marionette_harness import MarionetteTestCase
-
+from marionette_driver import Wait
 import testsuite
-
 
 class Test(MarionetteTestCase):
 
@@ -17,13 +13,47 @@ class Test(MarionetteTestCase):
         self.HTTP_URL = "http://httpbin.org/"
         self.HTTPS_URL = "https://httpbin.org/"
 
+        self.is_disabled = self.ts.t['test']['name'] == 'https-everywhere-disabled'
+
+        if self.is_disabled:
+            with self.marionette.using_context('chrome'):
+                self.marionette.execute_async_script("""
+                    let [resolve] = arguments;
+                    const { AddonManager } = ChromeUtils.import(
+                        "resource://gre/modules/AddonManager.jsm"
+                    );
+                    AddonManager.getAddonByID("https-everywhere-eff@eff.org")
+                        .then(addon => addon.disable())
+                        .then(resolve);
+                """)
+
+    def tearDown(self):
+        super(Test, self).tearDown()
+        if self.is_disabled:
+            with self.marionette.using_context('chrome'):
+                self.marionette.execute_async_script("""
+                    let [resolve] = arguments;
+                    const { AddonManager } = ChromeUtils.import(
+                        "resource://gre/modules/AddonManager.jsm"
+                    );
+                    AddonManager.getAddonByID("https-everywhere-eff@eff.org")
+                        .then(addon => addon.enable())
+                        .then(resolve);
+                """)
 
     def test_https_everywhere(self):
+        # Wait until .tor.onion rules have been loaded, to make sure HTTPS Everywhere
+        # has loaded correctly.
+        m = self.marionette
+        if not self.is_disabled:
+            with m.using_context('chrome'):
+                Wait(m, timeout=m.timeout.page_load).until(
+                    lambda _: m.execute_script("return OnionAliasStore._onionMap.size;") > 0)
+
         with self.marionette.using_context('content'):
             self.marionette.navigate(self.HTTP_URL)
 
-            if self.ts.t['test']['name'] == 'https-everywhere':
+            if not self.is_disabled:
                 self.assertEqual(self.marionette.get_url(), self.HTTPS_URL)
             else:
                 self.assertEqual(self.marionette.get_url(), self.HTTP_URL)
-

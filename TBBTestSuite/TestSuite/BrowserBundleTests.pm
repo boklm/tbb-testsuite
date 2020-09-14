@@ -272,27 +272,12 @@ our @tests = (
         type            => 'marionette',
         descr           => 'Check that https everywhere is not doing anything when disabled',
         use_net         => 1,
-        pre             => sub {
-            my ($tbbinfos, $t) = @_;
-            my $hdir = "$tbbinfos->{tmpdir}/https-everywhere";
-            mkdir "$hdir";
-            move($tbbinfos->{ffprofiledir} . '/extensions/https-everywhere-eff@eff.org.xpi',
-                $hdir . '/https-everywhere-eff@eff.org.xpi');
-        },
-        post            => sub {
-            my ($tbbinfos, $t) = @_;
-            my $hdir = "$tbbinfos->{tmpdir}/https-everywhere";
-            move($hdir . '/https-everywhere-eff@eff.org.xpi',
-                $tbbinfos->{ffprofiledir} . '/extensions/https-everywhere-eff@eff.org.xpi');
-        },
     },
     {
         name            => 'https-everywhere',
         type            => 'marionette',
         use_net         => 1,
         descr           => 'Check that https everywhere is working',
-        # Bug 30431: temporarily disable test
-        enable          => sub { undef },
     },
     {
         name            => 'settings',
