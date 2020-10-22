@@ -28,6 +28,10 @@ class TestSuite(object):
 
 
 class TorBrowserTest(MarionetteTestCase):
+    def is_early_beta_or_earlier(self):
+        with self.marionette.using_context("chrome"):
+            return self.marionette.execute_script("return AppConstants.EARLY_BETA_OR_EARLIER;")
+
     def get_version(self):
         with self.marionette.using_context("chrome"):
             return self.marionette.execute_script("return parseFloat(AppConstants.MOZ_APP_VERSION);")
