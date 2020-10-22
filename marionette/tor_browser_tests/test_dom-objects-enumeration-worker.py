@@ -8,7 +8,7 @@ class Test(testsuite.TorBrowserTest):
         self.marionette.set_pref("network.proxy.allow_hijacking_localhost", False)
         self.test_page_file_url = self.marionette.absolute_url("dom-objects-enumeration.html?testType=worker")
 
-        self.expectedObjects = [
+        self.expectedObjects = {
                 "AbortController",
                 "AbortSignal",
                 "addEventListener",
@@ -195,14 +195,12 @@ class Test(testsuite.TorBrowserTest):
                 "XMLHttpRequest",
                 "XMLHttpRequestEventTarget",
                 "XMLHttpRequestUpload",
-                ]
-        self.expectedObjects80 = self.expectedObjects + ["AggregateError", "FinalizationRegistry", "WeakRef"]
-        self.expectedObjects80.sort()
+        }
 
     def test_dom_objects_enumeration_workers(self):
         expectedObjects = self.expectedObjects
         if self.get_version() >= 80:
-            expectedObjects = self.expectedObjects80
+            expectedObjects = expectedObjects.union({"AggregateError", "FinalizationRegistry", "WeakRef"})
 
         with self.marionette.using_context('content'):
             self.marionette.navigate(self.test_page_file_url)
