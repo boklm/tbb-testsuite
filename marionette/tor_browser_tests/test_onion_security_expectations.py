@@ -51,8 +51,8 @@ class Test(OnionFixturesMixin, WindowManagerMixin, MarionetteTestCase):
                 'document.getElementById("identity-popup-more-info").click()')
             m.switch_to_window(m.chrome_window_handles[1])
             Wait(m, timeout=m.timeout.page_load).until(
-                lambda _: m.find_element('id', 'security-technical-shortform').text != '')
-            text = m.find_element('id', 'security-technical-shortform').text
+                lambda _: m.find_element('id', 'security-technical-shortform').get_attribute('value') != '')
+            text = m.find_element('id', 'security-technical-shortform').get_attribute('value')
             m.close_chrome_window()
             m.switch_to_window(self.start_window)
             return text

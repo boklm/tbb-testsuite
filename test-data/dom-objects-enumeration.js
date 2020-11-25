@@ -1,4 +1,6 @@
-(() => {
+// The setTimeout is a workaround for some objects not being immediately available in some cases,
+// such as NotifyPaintEvent.
+setTimeout(() => {
     // getAllPropertyNames function taken from:
     // https://stackoverflow.com/questions/8024149/is-it-possible-to-get-the-non-enumerable-inherited-property-names-of-an-object
     function getAllPropertyNames(obj) {
@@ -41,4 +43,4 @@
             onmessage(getGlobalNames());
         }
     }
-})();
+}, 2000);

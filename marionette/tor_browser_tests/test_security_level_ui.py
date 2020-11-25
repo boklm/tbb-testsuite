@@ -1,4 +1,4 @@
-from marionette_driver import Wait
+from marionette_driver import Wait, expected
 from marionette_harness import MarionetteTestCase
 
 class Test(MarionetteTestCase):
@@ -12,8 +12,9 @@ class Test(MarionetteTestCase):
                 'id', 'securityLevel-advancedSecuritySettings').click()
             with m.using_context('content'):
                 # Test whether changing the security level value works
+                spotlight = m.find_element('class name', 'spotlight')
                 self.assertEqual(
-                    m.get_url(), "about:preferences#privacy-securitylevel")
+                    spotlight.get_attribute("data-subcategory"), "securitylevel")
                 self.assertEqual(4, m.get_pref(
                     'extensions.torbutton.security_slider'))
                 m.find_element(

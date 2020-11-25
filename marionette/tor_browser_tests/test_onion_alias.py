@@ -1,5 +1,4 @@
 from marionette_driver import Wait
-from marionette_driver.legacy_actions import Actions
 from marionette_harness import MarionetteTestCase, WindowManagerMixin
 
 class Test(WindowManagerMixin, MarionetteTestCase):
@@ -39,9 +38,11 @@ class Test(WindowManagerMixin, MarionetteTestCase):
 
             # Opening a same-origin link should keep the onion alias in the urlbar
             el = m.find_element('id', 'submit-documents-button')
-            action = Actions(m)
-            action.middle_click(el)
-            action.perform()
+            mouse_chain = self.marionette.actions.sequence(
+                "pointer", "pointer_id", {"pointerType": "mouse"}
+            )
+            mouse_chain.click(element=el, button=1).perform()
+
             Wait(m, timeout=m.timeout.page_load).until(
                 lambda _: len(m.window_handles) > 1)
             m.switch_to_window(m.window_handles[1])

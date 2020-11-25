@@ -7,6 +7,7 @@
 # check the entries in the search box directly.
 
 from marionette_harness import MarionetteTestCase
+from marionette_driver import Wait
 import testsuite
 
 class Test(MarionetteTestCase):
@@ -16,6 +17,7 @@ class Test(MarionetteTestCase):
         ts = testsuite.TestSuite()
 
     def test_searchengines(self):
+        m = self.marionette
         with self.marionette.using_context('content'):
             self.marionette.navigate('about:robots')
 
@@ -26,6 +28,7 @@ class Test(MarionetteTestCase):
             searchbar.send_keys("test")
             urlbarresults = self.marionette.find_element('id', 'urlbar-results')
             result = urlbarresults.find_element("css selector", "div:first-child .urlbarView-action")
+            Wait(m, timeout=m.timeout.page_load).until(lambda _: result.text != '')
             self.assertRegexpMatches(result.text, 'DuckDuckGo', 'DuckDuckGo is not the default search engine!')
 
             #XXX: Test whether the second and third engine are the ones we want as well.

@@ -81,8 +81,9 @@ class Test(WindowManagerMixin, MarionetteTestCase):
 
             with m.using_context('content'):
                 m.switch_to_window(m.window_handles[1])
+                spotlight = m.find_element('class name', 'spotlight')
                 self.assertEqual(
-                    self.get_url(), 'about:preferences#privacy-onionservices')
+                    spotlight.get_attribute("data-subcategory"), "onionservices")
                 m.close()
                 m.switch_to_window(self.start_tab)
 

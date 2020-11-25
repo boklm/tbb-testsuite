@@ -760,6 +760,8 @@ class Test(testsuite.TorBrowserTest):
             expectedObjects = expectedObjects.union({"MediaMetadata","MediaSession","Sanitizer"})
         if self.get_version() >= 83 and self.is_early_beta_or_earlier():
             expectedObjects = expectedObjects.union({"onbeforeinput"})
+        if self.get_version() >= 84:
+            expectedObjects = expectedObjects.union({"PerformancePaintTiming"}).difference({"Sanitizer"})
 
         with self.marionette.using_context('content'):
             self.marionette.navigate(self.test_page_file_url)
