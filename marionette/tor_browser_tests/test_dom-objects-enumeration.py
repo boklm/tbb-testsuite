@@ -753,9 +753,11 @@ class Test(testsuite.TorBrowserTest):
 
     def test_dom_objects_enumeration(self):
         expectedObjects = self.expectedObjects
+        if self.get_version() >= 77 and self.is_early_beta_or_earlier():
+            # https://bugzilla.mozilla.org/show_bug.cgi?id=1632143
+            expectedObjects.remove("content")
         if self.get_version() >= 80:
             expectedObjects = expectedObjects.union({"AggregateError", "FinalizationRegistry", "WeakRef"})
-            expectedObjects.remove("content")
         if self.get_version() >= 82:
             expectedObjects = expectedObjects.union({"MediaMetadata","MediaSession","Sanitizer"})
         if self.get_version() >= 83 and self.is_early_beta_or_earlier():
