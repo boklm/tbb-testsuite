@@ -2,12 +2,21 @@ from marionette_driver import Wait, expected
 from marionette_harness import MarionetteTestCase
 
 class Test(MarionetteTestCase):
+    # Starting 84, opening the security level panel by clicking the button
+    # started to fail (the panel was not visible). Opening via JavaScript
+    # seems to still work for 84 and 78.
+    def open_security_level_panel(self):
+        m = self.marionette
+        with m.using_context('chrome'):
+            self.marionette.execute_script(
+                'document.getElementById("security-level-button").click();')
+
     def test_security_level_ui(self):
         custom_pref = 'javascript.options.wasm'
         m = self.marionette
         m.timeout.implicit = 5
         with m.using_context('chrome'):
-            m.find_element('id', 'security-level-button').click()
+            self.open_security_level_panel()
             m.find_element(
                 'id', 'securityLevel-advancedSecuritySettings').click()
             with m.using_context('content'):
@@ -49,7 +58,7 @@ class Test(MarionetteTestCase):
                     m.get_url() in ["https://tb-manual.torproject.org/en-US/security-settings/", "https://tb-manual.torproject.org/security-settings/"])
 
             # Test Learn More link from panel
-            m.find_element('id', 'security-level-button').click()
+            self.open_security_level_panel()
             m.find_element('id', 'securityLevel-learnMore').click()
             Wait(m, timeout=m.timeout.page_load).until(
                 lambda _: len(m.window_handles) > 2)
@@ -64,7 +73,7 @@ class Test(MarionetteTestCase):
             m.set_pref(custom_pref, False)
             elem = m.find_element('id', 'securityLevel-restoreDefaults')
             self.assertEqual(elem.is_displayed(), False)
-            m.find_element('id', 'security-level-button').click()
+            self.open_security_level_panel()
             self.assertEqual(elem.is_displayed(), True)
             elem.click()
             self.assertEqual(True, m.get_pref(custom_pref))
