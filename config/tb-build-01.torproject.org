@@ -1,0 +1,38 @@
+# vim: filetype=perl expandtab
+use strict;
+use FindBin;
+use DateTime;
+use TBBTestSuite::TestSuite::TorBrowserBuild;
+
+my $date = DateTime->now->ymd;
+my $tbb_version = 'tbb-nightly.' . DateTime->now->ymd('.');
+my $name = "tor-browser-$date";
+
+my $builds_dir_root = '/home/tb-builder/nightly-builds';
+my $reports_dir = "$builds_dir_root/reports";
+
+if (-d "$reports_dir/r/$name") {
+    print "Doing nothing: $name already done\n";
+    return ( args => [] );
+}
+
+my $testsuite = TBBTestSuite::TestSuite::TorBrowserBuild->new({
+        tbb_version => $tbb_version,
+        publish_dir => "$builds_dir_root/tor-browser-builds/$tbb_version",
+        publish_url => "https://nightlies.tbb.torproject.org/nightly-builds/tor-browser-builds/$tbb_version",
+        rbm_local_conf => "$FindBin::Bin/rbm-config/tb-build-01.torproject.org.rbm.local.conf",
+        make_clean => 1,
+    });
+
+my %res = (
+    name => $name,
+    args => [ $testsuite ],
+    tags => [ 'nightly' ],
+    'reports-dir' => $reports_dir,
+    'reports-url' => 'https://nightlies.tbb.torproject.org/nightly-builds/reports/',
+    'email-subject' => '[build result: [% success ? "ok" : "failed" %]] [% options.name %]',
+    'email-report' => 1,
+    'email-to' => [ 'boklm@torproject.org', 'gk@torproject.org', 'sysrqb@torproject.org', ],
+    'email-from' => 'Tor Browser Nightly Builds <tb-builder@tb-build-01.torproject.org>',
+);
+%res;
