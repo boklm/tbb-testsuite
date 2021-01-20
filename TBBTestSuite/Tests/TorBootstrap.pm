@@ -62,6 +62,10 @@ sub monitor_bootstrap {
     print $sock 'AUTHENTICATE "', $control_passwd, "\"\n";
     my $r = <$sock>;
     exit_error "Authentication error: $r" unless $r =~ m/^250 OK/;
+
+    print $sock "SETCONF DisableNetwork=0\n";
+    $r = <$sock>;
+    exit_error "SETCONF DisableNetwork=0 error: $r" unless $r =~ m/^250 OK/;
     my $i = 0;
     while (1) {
         print $sock "GETINFO status/bootstrap-phase\n";
@@ -162,7 +166,8 @@ sub start_tor {
         'GeoIPFile', winpath($tbbinfos->{torgeoip}),
         'ClientOnionAuthDir', winpath("$tbbinfos->{datadir}/Tor/onion-auth"),
         '__SocksPort', "$options->{'tor-socks-port'} ExtendedErrors IPv6Traffic PreferIPv6 KeepAliveIsolateSOCKSAuth",
-        '__OwningControllerProcess', winpid($$));
+        '__OwningControllerProcess', winpid($$),
+        'DisableNetwork', '1');
     $tbbinfos->{torpid} = fork;
     if ($tbbinfos->{torpid} == 0) {
         $ENV{LD_LIBRARY_PATH} = "$tbbinfos->{tbbdir}:$tbbinfos->{tordir}";
