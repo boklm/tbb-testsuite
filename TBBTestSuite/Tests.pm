@@ -81,6 +81,7 @@ sub run_tests {
         }
         $test->{finish_time} = time;
         $test->{run_time} = $test->{finish_time} - $test->{start_time};
+        $options->{test_post}->($tbbinfos, $test) if ref $options->{test_post} eq 'CODE';
         if ($test->{fail_type} eq 'fatal' && is_test_error($test)) {
             last;
         }
