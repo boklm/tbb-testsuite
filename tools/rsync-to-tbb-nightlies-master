@@ -1,0 +1,16 @@
+#!/usr/bin/perl -w
+use strict;
+use FindBin;
+use Path::Tiny;
+
+my $lockfile = "$FindBin::Bin/rsync-to-tbb-nightlies-master.lock";
+if (-f $lockfile) {
+    my $oldpid = path($lockfile)->slurp_utf8;
+    exit if kill 0, $oldpid;
+    unlink $lockfile;
+}
+path($lockfile)->spew_utf8($$);
+
+system('rsync', '-aH', '--delete-before', '/home/tb-builder/nightly-builds/',
+    'tbb-nightlies@tbb-nightlies-master.torproject.org:/');
+unlink $lockfile;

@@ -2,6 +2,8 @@
 use strict;
 use FindBin;
 use DateTime;
+use IO::CaptureOutput qw(capture_exec);
+use File::Slurp;
 use TBBTestSuite::TestSuite::TorBrowserBuild;
 
 my $date = DateTime->now->ymd;
@@ -10,6 +12,20 @@ my $name = "tor-browser-$date";
 
 my $builds_dir_root = '/home/tb-builder/nightly-builds';
 my $reports_dir = "$builds_dir_root/reports";
+
+my $run_rsync = sub {
+    # we fork to run the rsync in the background
+    # we do a double fork to prevent having zombie processes
+    my $pid = fork;
+    if ($pid) {
+        waitpid($pid, 0);
+        return;
+    }
+    exit 0 if fork;
+
+    capture_exec("$FindBin::Bin/tools/rsync-to-tbb-nightlies-master");
+    exit;
+};
 
 if (-d "$reports_dir/r/$name") {
     print "Doing nothing: $name already done\n";
@@ -34,5 +50,6 @@ my %res = (
     'email-report' => 1,
     'email-to' => [ 'boklm@torproject.org', 'gk@torproject.org', 'sysrqb@torproject.org', ],
     'email-from' => 'Tor Browser Nightly Builds <tb-builder@tb-build-01.torproject.org>',
+    'test_post' => $run_rsync,
 );
 %res;
