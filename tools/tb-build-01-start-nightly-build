@@ -1,10 +1,41 @@
 #!/bin/bash
 set -e
 
+today_version=$(date '+tbb-nightly.%Y.%m.%d')
+
 cd /home/tb-builder/tor-browser-bundle-testsuite
 export RBM_NO_DEBUG=1
 ./tbb-testsuite --config=tb-build-01.torproject.org "$@"
-/home/tb-builder/tor-browser-bundle-testsuite/clones/tor-browser-build/tools/prune-old-builds --days 1 --weeks 0 --months 0 ~/nightly-builds/tor-browser-builds
+
+# Archive today's build
+archive_dir=~/tor-browser-builds-archive/"$today_version"
+if ! test -d "$archive_dir"
+then
+  mkdir -p "$archive_dir"
+  for dir in ~/nightly-builds/tor-browser-builds/"$today_version"/*
+  do
+    test -d "$dir" || continue
+    dname=$archive_dir/$(basename "$dir")
+    mkdir -p "$dname"
+    test -d "$dir/logs" && cp -a "$dir/logs" "$dname"
+    find "$dir" -maxdepth 1 \( \
+                   -name '*.txt' \
+                -o -name '*.asc' \
+                -o -name 'torbrowser-install-*_en-US.exe' \
+                -o -name 'TorBrowser-*_en-US.dmg' \
+                -o -name 'tor-browser-linux*_en-US.tar.xz' \
+                -o -name '*-multi-qa.apk' \
+                \) \
+      -a -execdir cp -a {} "$dname" \;
+  done
+  /home/tb-builder/tor-browser-bundle-testsuite/clones/tor-browser-build/tools/prune-old-builds --days 100 --weeks 30 --months 12 ~/tor-browser-builds-archive
+fi
+
+# Only clean previous builds if we use more than 20GB
+builds_size=$(du -s ~/nightly-builds/tor-browser-builds | cut -f 1)
+test "$builds_size" -gt 20000000 && \
+  /home/tb-builder/tor-browser-bundle-testsuite/clones/tor-browser-build/tools/prune-old-builds --days 1 --weeks 0 --months 0 ~/nightly-builds/tor-browser-builds
+
 # sleep for 5m to give time to previous rsync to finish
 sleep 5m
 /home/tb-builder/tor-browser-bundle-testsuite/tools/rsync-to-tbb-nightlies-master
