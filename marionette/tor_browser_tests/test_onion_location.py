@@ -91,7 +91,7 @@ class Test(WindowManagerMixin, MarionetteTestCase):
                 Wait(m, timeout=m.timeout.page_load).until(
                     lambda _: self.get_url() != 'https://www.torproject.org/')
                 self.assertEqual(
-                    self.get_url(), 'http://expyuzz4wqqyqhjn.onion/index.html')
+                    self.get_url(), 'http://2gzyxa5ihm7nsggfxnu52rck2vv4rvmdlkiu3zzui5du4xyclen53wid.onion/index.html')
 
                 # Check that auto-redirects work
                 m.navigate('https://www.torproject.org/')
@@ -99,7 +99,7 @@ class Test(WindowManagerMixin, MarionetteTestCase):
                 Wait(m, timeout=m.timeout.page_load).until(
                     lambda _: self.get_url() != 'https://www.torproject.org/')
                 self.assertEqual(
-                    self.get_url(), 'http://expyuzz4wqqyqhjn.onion/index.html')
+                    self.get_url(), 'http://2gzyxa5ihm7nsggfxnu52rck2vv4rvmdlkiu3zzui5du4xyclen53wid.onion/index.html')
 
                 # Go to preferences and disable auto-redirects
                 new_tab = self.open_tab()
@@ -127,7 +127,7 @@ class Test(WindowManagerMixin, MarionetteTestCase):
                     Wait(m, timeout=5).until(lambda _: self.get_url()
                                              != 'https://www.torproject.org/')
                     self.assertEqual(
-                        self.get_url(), 'http://expyuzz4wqqyqhjn.onion/index.html')
+                        self.get_url(), 'http://2gzyxa5ihm7nsggfxnu52rck2vv4rvmdlkiu3zzui5du4xyclen53wid.onion/index.html')
 
             # Check learn more link
             with m.using_context('content'):
