@@ -118,7 +118,7 @@ class Test(OnionFixturesMixin, WindowManagerMixin, MarionetteTestCase):
 
         # Onion with valid TLS certificate
         with m.using_context('content'):
-            m.navigate('https://3g2upl4pq6kufc4m.onion/')
+            m.navigate('https://duckduckgogg42xjoc72x3sjasowoarfbgcmvfimaftt6twagswzczad.onion/')
             self.assertTrue(self.execute_chrome(
                 "return !!gIdentityHandler._isSecureConnection;"))
             self.assertEqual(self.get_identity_class(), 'onionVerifiedDomain')
