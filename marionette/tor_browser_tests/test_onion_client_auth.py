@@ -180,6 +180,8 @@ class Test(WindowManagerMixin, MarionetteTestCase):
             m.find_element(
                 'css selector', '#tor-clientauth-notification .popup-notification-primary-button').click()
         with m.using_context('content'):
+            # Wait until the page loads. There is a 2 second delay built-in, plus the associated circuit latency.
+            Wait(m, timeout=m.timeout.page_load).until(lambda _: m.find_element('id', 'enumeration'))
             m.find_element('id', 'enumeration')
             keys = self.get_keys()
             self.assertEqual(len(keys), 1)
