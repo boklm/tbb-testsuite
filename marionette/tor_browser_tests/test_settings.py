@@ -32,10 +32,12 @@ class Test(MarionetteTestCase):
                 # Disk activity: Disable Browsing History Storage
                 "browser.privatebrowsing.autostart": True,
                 "browser.cache.disk.enable": False,
-                "browser.cache.offline.enable": False,
                 "permissions.memory_only": True,
                 "network.cookie.lifetimePolicy": 2,
                 "security.nocertdb": True,
+
+                # Enabled LSNG
+                "dom.storage.next_gen": True,
 
                 # Disk activity: TBB Directory Isolation
                 "browser.download.useDownloadDir": False,
@@ -60,6 +62,9 @@ class Test(MarionetteTestCase):
                 "datareporting.policy.dataSubmissionEnabled": False,
                 "security.mixed_content.block_active_content": True, # Activated with bug #21323
 
+                # Bug 40083: Make sure Region.jsm fetching is disabled
+                "browser.region.update.enabled": False,
+
                 # Make sure Unified Telemetry is really disabled, see: #18738.
                 "toolkit.telemetry.unified": False,
                 "toolkit.telemetry.enabled": True if ts.t["tbbinfos"]["version"].startswith("tbb-nightly") else False,
@@ -75,10 +80,8 @@ class Test(MarionetteTestCase):
                 "privacy.trackingprotection.pbmode.enabled": False,
                 # Disable the Pocket extension (Bug #18886 and #31602)
                 "extensions.pocket.enabled": False,
-                "network.http.referer.hideOnionSource": True,
 
                 # Fingerprinting
-                "webgl.disable-extensions": True,
                 "webgl.disable-fail-if-major-performance-caveat": True,
                 "webgl.enable-webgl2": False,
                 "gfx.downloadable_fonts.fallback_delay": -1,
@@ -91,22 +94,38 @@ class Test(MarionetteTestCase):
                 "privacy.resistFingerprinting.block_mozAddonManager": True, # Bug 26114
                 "dom.webaudio.enabled": False, # Bug 13017: Disable Web Audio API
                 "dom.w3c_touch_events.enabled": 0, # Bug 10286: Always disable Touch API
-                "dom.w3c_pointer_events.enabled": False,
                 "dom.vr.enabled": False, # Bug 21607: Disable WebVR for now
                 # Disable randomised Firefox HTTP cache decay user test groups (Bug: 13575)
                 "security.webauth.webauthn": False, # Bug 26614: Disable Web Authentication API for now
+                # Disable SAB, no matter if the sites are cross-origin isolated.
+                "dom.postMessage.sharedArrayBuffer.withCOOP_COEP": False,
+                "network.http.referer.hideOnionSource": True,
+                # Bug 40463: Disable Windows SSO
+                "network.http.windows-sso.enabled": False,
+                # Bug 40383: Disable new PerformanceEventTiming
+                "dom.enable_event_timing": False,
+                # Disable API for measuring text width and height.
+                "dom.textMetrics.actualBoundingBox.enabled": False,
+                "dom.textMetrics.baselines.enabled": False,
+                "dom.textMetrics.emHeight.enabled": False,
+                "dom.textMetrics.fontBoundingBox.enabled": False,
+                "pdfjs.enableScripting": False,
 
                 # Third party stuff
                 "network.cookie.cookieBehavior": 1,
                 "privacy.firstparty.isolate": True,
                 "network.http.spdy.allow-push": False, # Disabled for now. See https://bugs.torproject.org/27127
                 "network.predictor.enabled": False, # Temporarily disabled. See https://bugs.torproject.org/16633
+                # Bug 40177: Make sure tracker cookie purging is disabled
+                "privacy.purge_trackers.enabled": False,
                 
                 # Proxy and proxy security
                 "network.proxy.socks": "127.0.0.1",
                 "network.proxy.socks_remote_dns": True,
                 "network.proxy.no_proxies_on": "", # For fingerprinting and local service vulns (#10419)
                 "network.proxy.type": 1,
+                # Bug 40548: Disable proxy-bypass
+                "network.proxy.failover_direct": False,
                 "network.security.ports.banned": "9050,9051,9150,9151",
                 "network.dns.disablePrefetch": True,
                 "network.protocol-handler.external-default": False,
@@ -118,7 +137,6 @@ class Test(MarionetteTestCase):
                 "network.protocol-handler.warn-external.news": True,
                 "network.protocol-handler.warn-external.nntp": True,
                 "network.protocol-handler.warn-external.snews": True,
-                "plugin.state.flash": 0,
                 "media.peerconnection.enabled": False, # Disable WebRTC interfaces
                 # Disables media devices but only if `media.peerconnection.enabled` is set to
                 # `false` as well. (see bug 16328 for this defense-in-depth measure)
@@ -173,14 +191,14 @@ class Test(MarionetteTestCase):
                 # extensions.enabledScopes is set to 5 by marionette_driver
                 #"extensions.enabledScopes": 1,
                 "extensions.pendingOperations": False,
-                "xpinstall.whitelist.add": "",
-                "xpinstall.whitelist.add.36": "",
                 # We don't know what extensions Mozilla is advertising to our users and we
                 # don't want to have some random Google Analytics script running either on the
                 # about:addons page, see bug 22073 and 22900.
                 "extensions.getAddons.showPane": False,
                 # Bug 26114: Allow NoScript to access addons.mozilla.org etc.
                 "extensions.webextensions.restrictedDomains": "",
+                # Don't give Mozilla-recommended third-party extensions special privileges.
+                "extensions.postDownloadThirdPartyPrompt": False,
 
                 "dom.enable_resource_timing": False,
 
@@ -190,15 +208,11 @@ class Test(MarionetteTestCase):
                 # Enforce certificate pinning, see: https://bugs.torproject.org/16206
                 "security.cert_pinning.enforcement_level": 2,
 
+                # Don't load OS client certs.
+                "security.osclientcerts.autoload": False,
+
                 # Don't allow MitM via Microsoft Family Safety, see bug 21686
                 "security.family_safety.mode": 0,
-
-                # Disable the language pack signing check for now, see: bug 26465
-
-                # Avoid report TLS errors to Mozilla. We might want to repurpose this feature
-                # one day to help detecting bad relays (which is bug 19119). For now we just
-                # hide the checkbox, see bug 22072.
-                "security.ssl.errorReporting.enabled": False,
 
                 # Workaround for https://bugs.torproject.org/13579. Progress on
                 # `about:downloads` is only shown if the following preference is set to `true`
@@ -211,7 +225,7 @@ class Test(MarionetteTestCase):
                 # checking torbrowser.version match the version from the filename
                 "torbrowser.version": ts.t["tbbinfos"]["version"],
 
-                "startup.homepage_override_url": "https://blog.torproject.org/category/tags/tor-browser",
+                "startup.homepage_override_url": "https://blog.torproject.org/category/applications",
 
                 # Disable network information API everywhere
                 # but, alas, the behavior is inconsistent across platforms, see:
@@ -219,6 +233,10 @@ class Test(MarionetteTestCase):
                 # not leak that difference if possible.
                 "dom.netinfo.enabled": False,
                 }
+
+        MOZ_BUNDLED_FONTS = True
+        if MOZ_BUNDLED_FONTS:
+            self.SETTINGS["gfx.bundled-fonts.activate"] = 1
 
         # Settings for the Tor Browser 8.0
         self.SETTINGS_80 = {

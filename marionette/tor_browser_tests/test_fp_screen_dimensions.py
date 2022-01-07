@@ -3,6 +3,8 @@ from marionette_harness import MarionetteTestCase
 class Test(MarionetteTestCase):
     def test_screen_dims(self):
         with self.marionette.using_context('content'):
+            self.marionette.navigate('https://check.torproject.org/')
+
             # https://gitweb.torproject.org/torbrowser.git/blob/HEAD:/src/current-patches/firefox/0021-Do-not-expose-physical-screen-info.-via-window-and-w.patch
             js = self.marionette.execute_script
             # check that availWidth and availHeight are equal to window innerWidth and innerHeight

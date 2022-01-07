@@ -56,7 +56,8 @@ class Test(MarionetteTestCase):
             app_version = "5.0 (Macintosh)"
             platform = "MacIntel"
             oscpu = "Intel Mac OS X 10.13"
-        nav_props["userAgent"] = "Mozilla/5.0 (" + ua_os + "; rv:78.0) Gecko/20100101 Firefox/78.0"
+        ua_ver = '91.0'
+        nav_props["userAgent"] = "Mozilla/5.0 (" + ua_os + "; rv:" + ua_ver + ") Gecko/20100101 Firefox/" + ua_ver
         nav_props["appVersion"] = app_version
         nav_props["platform"] = platform
         nav_props["oscpu"] = oscpu

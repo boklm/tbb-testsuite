@@ -10,8 +10,8 @@ class Test(MarionetteTestCase):
         ts = testsuite.TestSuite()
         self.ts = ts
 
-        self.HTTP_URL = "http://httpbin.org/"
-        self.HTTPS_URL = "https://httpbin.org/"
+        self.HTTP_URL = "http://https-everywhere.badssl.com/redirect-test/status.svg"
+        self.HTTPS_URL = "https://https-everywhere.badssl.com/redirect-test/status.svg"
 
         self.is_disabled = self.ts.t['test']['name'] == 'https-everywhere-disabled'
 
@@ -51,6 +51,9 @@ class Test(MarionetteTestCase):
                     lambda _: m.execute_script("return OnionAliasStore._onionMap.size;") > 0)
 
         with self.marionette.using_context('content'):
+            # Even without HTTPS Everywhere, Firefox checks if HTTPS is
+            # available, with this set to true
+            self.marionette.set_pref('dom.security.https_first_pbm', False)
             self.marionette.navigate(self.HTTP_URL)
 
             if not self.is_disabled:
