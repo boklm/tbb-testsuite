@@ -42,7 +42,7 @@ if ($OSNAME eq 'cygwin') {
 }
 
 unless (-d $virtenv_marionette_dir) {
-    run($virtualenv_cmd, $virtenv_marionette_dir);
+    run($virtualenv_cmd, $virtenv_marionette_dir, '-p', 'python2');
     # upgrade pip and setuptools
     run("$virtenv_marionette_dir/$bin/pip", 'install', '--upgrade', 'pip');
     run("$virtenv_marionette_dir/$bin/pip", 'install', '--upgrade', 'setuptools');
