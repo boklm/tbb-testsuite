@@ -465,6 +465,12 @@ our @tests = (
         use_net         => 1,
         descr           => 'Check that the security level UI is working properly',
     },
+    {
+        name            => 'volatile_preferences',
+        type            => 'marionette',
+        use_net         => 0,
+        descr           => 'Check that the site preferences are not saved to disk',
+    }
 );
 
 sub set_test_prefs {
