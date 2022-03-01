@@ -1,0 +1,32 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="utf-8">
+		<title>Font fingerprinting test</title>
+		<style type="text/css">
+#stage-div {
+	text-align: center;
+}
+
+#stage-span {
+	font-size: 500%;
+}
+		</style>
+	</head>
+	<body>
+		<div id="stage-div">
+			<span id="stage-span">
+				<span id="stage-slot"></span>
+			</span>
+		</div>
+		<div id="fonts-list"></div>
+		<div id="glyphs"></div>
+		<script src="fonts.js"></script>
+		<script>
+			const fonts = JSON.stringify(getFonts());
+			const glyphs = JSON.stringify(getUnicode());
+			document.querySelector('#fonts-list').textContent = fonts;
+			document.querySelector('#glyphs').textContent = glyphs;
+		</script>
+	</body>
+</html>

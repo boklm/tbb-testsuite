@@ -375,6 +375,13 @@ our @tests = (
         descr           => 'Check that navigator properties are as expected',
     },
     {
+        name            => 'fp_fonts',
+        type            => 'marionette',
+        use_net         => 1,
+        descr           => 'Check that we are using only bundled fonts',
+        enable          => sub { $OSNAME eq 'linux' },
+    },
+    {
         name            => 'play_videos',
         type            => 'marionette',
         descr           => 'Play some videos',
