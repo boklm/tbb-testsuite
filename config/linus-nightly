@@ -34,7 +34,6 @@ return ( args => [] ) unless $ok;
     'email-from' => 'TBB Nightly Tests <boklm@torproject.org>',
     'email-to'   => [
         'boklm@mars-attacks.org',
-        'gk@torproject.org',
         'mikeperry@torproject.org',
         'brade@pearlcrescent.com',
         'mcs@pearlcrescent.com',
