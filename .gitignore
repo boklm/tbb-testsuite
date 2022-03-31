@@ -2,7 +2,7 @@
 *.pyc
 clones
 virtualenv
-virtualenv-marionette-4.3.0
+virtualenv-marionette-*
 reports
 tmp
 bundle

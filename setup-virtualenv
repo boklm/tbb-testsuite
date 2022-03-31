@@ -46,6 +46,9 @@ unless (-d $virtenv_marionette_dir) {
     # upgrade pip and setuptools
     run("$virtenv_marionette_dir/$bin/pip", 'install', '--upgrade', 'pip');
     run("$virtenv_marionette_dir/$bin/pip", 'install', '--upgrade', 'setuptools');
+    # for some reason setup.py tries to install distro version 1.7 which is not
+    # compatible with python2.7, so have pip resolve this dependency manually to 1.6
+    run("$virtenv_marionette_dir/$bin/pip", 'install', 'distro');
     run_from_dir('marionette', "$virtenv_marionette_dir/$bin/python", 'setup.py', 'develop');
 }
 
