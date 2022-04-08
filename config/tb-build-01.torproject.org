@@ -48,7 +48,13 @@ my %res = (
     'reports-url' => 'https://nightlies.tbb.torproject.org/nightly-builds/reports/',
     'email-subject' => '[build result: [% success ? "ok" : "failed" %]] [% options.name %]',
     'email-report' => 1,
-    'email-to' => [ 'boklm@torproject.org', 'sysrqb@torproject.org', ],
+    'email-to' => [
+      'aguestuser@torproject.org',
+      'boklm@torproject.org',
+      'pierov@torproject.org',
+      'richard@torproject.org',
+      'sysrqb@torproject.org',
+    ],
     'email-from' => 'Tor Browser Nightly Builds <tb-builder@tb-build-01.torproject.org>',
     'test_post' => $run_rsync,
 );
