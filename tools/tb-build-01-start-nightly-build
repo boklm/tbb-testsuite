@@ -59,7 +59,3 @@ test "$builds_size" -gt 20000000 && \
 # sleep for 5m to give time to previous rsync to finish
 sleep 5m
 /home/tb-builder/tor-browser-bundle-testsuite/tools/rsync-to-tbb-nightlies-master
-# Run static-update-component on tbb-nightlies-master:
-#   in /etc/ssh/userkeys/tbb-nightlies on tbb-nightlies-master we have a
-#   command="" option with this key running static-update-component
-ssh -i /home/tb-builder/.ssh/id_rsa_static-update-component tbb-nightlies@tbb-nightlies-master.torproject.org true

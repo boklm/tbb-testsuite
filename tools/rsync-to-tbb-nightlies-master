@@ -11,6 +11,11 @@ if (-f $lockfile) {
 }
 path($lockfile)->spew_utf8($$);
 
-system('rsync', '-aH', '--delete-before', '/home/tb-builder/nightly-builds/',
+my $res = system('rsync', '-aH', '--delete-before', '/home/tb-builder/nightly-builds/',
     'tbb-nightlies@tbb-nightlies-master.torproject.org:/');
+# Run static-update-component on tbb-nightlies-master:
+#   in /etc/ssh/userkeys/tbb-nightlies on tbb-nightlies-master we have a
+#   command="" option with this key running static-update-component
+system('ssh', '-i', '/home/tb-builder/.ssh/id_rsa_static-update-component',
+  'tbb-nightlies@tbb-nightlies-master.torproject.org', 'true') if $res == 0;
 unlink $lockfile;
