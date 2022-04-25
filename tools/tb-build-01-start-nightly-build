@@ -1,6 +1,26 @@
 #!/bin/bash
 set -e
 
+function getlock {
+  lockfile=/run/lock/tb-build-01-start-nightly-build.lock
+  if test -f $lockfile
+  then
+    old_pid=$(cat $lockfile)
+    if test -z "$old_pid" || ! test -d "/proc/$old_pid"
+    then
+      echo "Removing old lockfile: $lockfile"
+      rm -f $lockfile
+    else
+      echo "Script already running. Exiting." 1>&2
+      exit 0
+    fi
+  fi
+  echo $$ > $lockfile
+  trap "rm -f $lockfile" EXIT
+}
+
+getlock
+
 today_version=$(date '+tbb-nightly.%Y.%m.%d')
 
 cd /home/tb-builder/tor-browser-bundle-testsuite
