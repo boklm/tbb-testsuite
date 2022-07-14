@@ -36,7 +36,8 @@ sub set_tests {
             targets => [
                 'noversiondir',
                 'nightly',
-                'torbrowser-linux-x86_64',
+                'browser-linux-x86_64',
+                'torbrowser',
             ],
             publish_dir => 'nightly-linux-x86_64',
         },
@@ -54,7 +55,8 @@ sub set_tests {
             targets => [
                 'noversiondir',
                 'nightly',
-                'torbrowser-linux-i686',
+                'browser-linux-i686',
+                'torbrowser',
             ],
             publish_dir => 'nightly-linux-i686',
         },
@@ -72,7 +74,8 @@ sub set_tests {
             targets => [
                 'noversiondir',
                 'nightly',
-                'torbrowser-windows-i686',
+                'browser-windows-i686',
+                'torbrowser',
             ],
             publish_dir => 'nightly-windows-i686',
         },
@@ -90,7 +93,8 @@ sub set_tests {
             targets => [
                 'noversiondir',
                 'nightly',
-                'torbrowser-windows-x86_64',
+                'browser-windows-x86_64',
+                'torbrowser',
             ],
             publish_dir => 'nightly-windows-x86_64',
         },
@@ -108,7 +112,8 @@ sub set_tests {
             targets => [
                 'noversiondir',
                 'nightly',
-                'torbrowser-osx-x86_64',
+                'browser-osx-x86_64',
+                'torbrowser',
             ],
             publish_dir => 'nightly-osx-x86_64',
         },
@@ -126,7 +131,8 @@ sub set_tests {
             targets => [
                 'noversiondir',
                 'nightly',
-                'torbrowser-android-armv7',
+                'browser-android-armv7',
+                'torbrowser',
             ],
             publish_dir => 'nightly-android-armv7',
         },
@@ -138,7 +144,8 @@ sub set_tests {
             targets => [
                 'noversiondir',
                 'nightly',
-                'torbrowser-android-x86',
+                'browser-android-x86',
+                'torbrowser',
             ],
             publish_dir => 'nightly-android-x86',
         },
@@ -150,7 +157,8 @@ sub set_tests {
             targets => [
                 'noversiondir',
                 'nightly',
-                'torbrowser-android-x86_64',
+                'browser-android-x86_64',
+                'torbrowser',
             ],
             publish_dir => 'nightly-android-x86_64',
         },
@@ -162,7 +170,8 @@ sub set_tests {
             targets => [
                 'noversiondir',
                 'nightly',
-                'torbrowser-android-aarch64',
+                'browser-android-aarch64',
+                'torbrowser',
             ],
             publish_dir => 'nightly-android-aarch64',
         },
