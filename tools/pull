@@ -11,18 +11,18 @@ then
     fi
     bundle_commit=$(cat bundle/bundle_commit.txt)
     git init
-    git remote add origin https://git.torproject.org/boklm/tor-browser-bundle-testsuite.git
+    git remote add origin https://gitlab.torproject.org/tpo/applications/tor-browser-bundle-testsuite.git
     git fetch origin
-    git branch master $bundle_commit
-    git branch --set-upstream-to=origin/master master
-    git reset master
+    git branch main $bundle_commit
+    git branch --set-upstream-to=origin/main main
+    git reset main
 fi
 git config --replace-all --local gpg.program "$basedir/gpggit"
 if ! git symbolic-ref -q HEAD > /dev/null
 then
-    # checkout origin/master if we are not on a branch
+    # checkout origin/main if we are not on a branch
     remote="${1:-origin}"
-    branch="${2:-master}"
+    branch="${2:-main}"
     git fetch "$remote"
     git verify-commit "$remote/$branch"
     git checkout "$remote/$branch"
