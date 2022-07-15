@@ -204,7 +204,7 @@ sub pre_tests {
             git_url => 'https://git.torproject.org/builders/tor-browser-build.git',
         });
     $gr->clone_fetch;
-    $gr->cmd('git', 'checkout', 'master');
+    $gr->cmd('git', 'checkout', 'main');
     chdir $gr->clone_dir();
     copy($tbbinfos->{rbm_local_conf}, $gr->clone_dir() . '/rbm.local.conf')
             if $tbbinfos->{rbm_local_conf};
