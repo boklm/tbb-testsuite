@@ -49,7 +49,6 @@ my %res = (
     'email-subject' => '[build result: [% success ? "ok" : "failed" %]] [% options.name %]',
     'email-report' => 1,
     'email-to' => [
-      'aguestuser@torproject.org',
       'boklm@torproject.org',
       'pierov@torproject.org',
       'richard@torproject.org',
