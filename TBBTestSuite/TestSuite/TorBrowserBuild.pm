@@ -27,9 +27,9 @@ sub test_types {
 sub set_tests {
     my ($testsuite) = @_;
     $testsuite->{tests} = [
-        # Nightly
+        # Tor Browser Nightly
         {
-            name  => 'nightly-linux-x86_64',
+            name  => 'torbrowser-nightly-linux-x86_64',
             descr => 'build tor-browser nightly linux-x86_64',
             type  => 'rbm_build',
             project => 'release',
@@ -42,13 +42,13 @@ sub set_tests {
             publish_dir => 'nightly-linux-x86_64',
         },
         {
-            name  => 'incrementals-nightly-linux-x86_64',
+            name  => 'torbrowser-incrementals-nightly-linux-x86_64',
             descr => 'create incrementals for tor-browser nightly linux-x86_64',
             type  => 'make_incrementals',
             publish_dir => 'nightly-linux-x86_64',
         },
         {
-            name  => 'nightly-linux-i686',
+            name  => 'torbrowser-nightly-linux-i686',
             descr => 'build tor-browser nightly linux-i686',
             type  => 'rbm_build',
             project => 'release',
@@ -61,13 +61,13 @@ sub set_tests {
             publish_dir => 'nightly-linux-i686',
         },
         {
-            name  => 'incrementals-nightly-linux-i686',
+            name  => 'torbrowser-incrementals-nightly-linux-i686',
             descr => 'create incrementals for tor-browser nightly linux-i686',
             type  => 'make_incrementals',
             publish_dir => 'nightly-linux-i686',
         },
         {
-            name  => 'nightly-windows-i686',
+            name  => 'torbrowser-nightly-windows-i686',
             descr => 'build tor-browser nightly windows-i686',
             type  => 'rbm_build',
             project => 'release',
@@ -80,13 +80,13 @@ sub set_tests {
             publish_dir => 'nightly-windows-i686',
         },
         {
-            name  => 'incrementals-nightly-windows-i686',
+            name  => 'torbrowser-incrementals-nightly-windows-i686',
             descr => 'create incrementals for tor-browser nightly windows-i686',
             type  => 'make_incrementals',
             publish_dir => 'nightly-windows-i686',
         },
         {
-            name  => 'nightly-windows-x86_64',
+            name  => 'torbrowser-nightly-windows-x86_64',
             descr => 'build tor-browser nightly windows-x86_64',
             type  => 'rbm_build',
             project => 'release',
@@ -99,13 +99,13 @@ sub set_tests {
             publish_dir => 'nightly-windows-x86_64',
         },
         {
-            name  => 'incrementals-nightly-windows-x86_64',
+            name  => 'torbrowser-incrementals-nightly-windows-x86_64',
             descr => 'create incrementals for tor-browser nightly windows-x86_64',
             type  => 'make_incrementals',
             publish_dir => 'nightly-windows-x86_64',
         },
         {
-            name  => 'nightly-osx-x86_64',
+            name  => 'torbrowser-nightly-osx-x86_64',
             descr => 'build tor-browser nightly osx-x86_64',
             type  => 'rbm_build',
             project => 'release',
@@ -118,13 +118,13 @@ sub set_tests {
             publish_dir => 'nightly-osx-x86_64',
         },
         {
-            name  => 'incrementals-nightly-osx-x86_64',
+            name  => 'torbrowser-incrementals-nightly-osx-x86_64',
             descr => 'create incrementals for tor-browser nightly osx-x86_64',
             type  => 'make_incrementals',
             publish_dir => 'nightly-osx-x86_64',
         },
         {
-            name  => 'nightly-android-armv7',
+            name  => 'torbrowser-nightly-android-armv7',
             descr => 'build tor-browser nightly android-armv7',
             type  => 'rbm_build',
             project => 'release',
@@ -137,7 +137,7 @@ sub set_tests {
             publish_dir => 'nightly-android-armv7',
         },
         {
-            name  => 'nightly-android-x86',
+            name  => 'torbrowser-nightly-android-x86',
             descr => 'build tor-browser nightly android-x86',
             type  => 'rbm_build',
             project => 'release',
@@ -150,7 +150,7 @@ sub set_tests {
             publish_dir => 'nightly-android-x86',
         },
         {
-            name  => 'nightly-android-x86_64',
+            name  => 'torbrowser-nightly-android-x86_64',
             descr => 'build tor-browser nightly android-x86_64',
             type  => 'rbm_build',
             project => 'release',
@@ -163,7 +163,7 @@ sub set_tests {
             publish_dir => 'nightly-android-x86_64',
         },
         {
-            name  => 'nightly-android-aarch64',
+            name  => 'torbrowser-nightly-android-aarch64',
             descr => 'build tor-browser nightly android-aarch64',
             type  => 'rbm_build',
             project => 'release',
@@ -174,6 +174,72 @@ sub set_tests {
                 'torbrowser',
             ],
             publish_dir => 'nightly-android-aarch64',
+        },
+        # Base Browser Nightly
+        {
+            name  => 'basebrowser-nightly-linux-x86_64',
+            descr => 'build base-browser nightly linux-x86_64',
+            type  => 'rbm_build',
+            project => 'release',
+            targets => [
+                'noversiondir',
+                'nightly',
+                'browser-linux-x86_64',
+                'basebrowser',
+            ],
+            publish_dir => 'basebrowser-nightly-linux-x86_64',
+        },
+        {
+            name  => 'basebrowser-nightly-linux-i686',
+            descr => 'build base-browser nightly linux-i686',
+            type  => 'rbm_build',
+            project => 'release',
+            targets => [
+                'noversiondir',
+                'nightly',
+                'browser-linux-i686',
+                'basebrowser',
+            ],
+            publish_dir => 'basebrowser-nightly-linux-i686',
+        },
+        {
+            name  => 'basebrowser-nightly-windows-i686',
+            descr => 'build base-browser nightly windows-i686',
+            type  => 'rbm_build',
+            project => 'release',
+            targets => [
+                'noversiondir',
+                'nightly',
+                'browser-windows-i686',
+                'basebrowser',
+            ],
+            publish_dir => 'basebrowser-nightly-windows-i686',
+        },
+        {
+            name  => 'basebrowser-nightly-windows-x86_64',
+            descr => 'build base-browser nightly windows-x86_64',
+            type  => 'rbm_build',
+            project => 'release',
+            targets => [
+                'noversiondir',
+                'nightly',
+                'browser-windows-x86_64',
+                'basebrowser',
+            ],
+            publish_dir => 'basebrowser-nightly-windows-x86_64',
+        },
+        {
+            name  => 'basebrowser-nightly-macos',
+            descr => 'build base-browser nightly macos',
+            type  => 'rbm_build',
+            project => 'release',
+            targets => [
+                'noversiondir',
+                'nightly',
+                'browser-osx-x86_64',
+                'basebrowser',
+            ],
+            publish_dir => 'basebrowser-nightly-macos',
         },
     ];
 }
