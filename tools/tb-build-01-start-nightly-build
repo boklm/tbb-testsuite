@@ -57,7 +57,7 @@ fi
 # Only clean previous builds if we use more than 20GB
 builds_size=$(du -s ~/nightly-builds/tor-browser-builds | cut -f 1)
 test "$builds_size" -gt 20000000 && \
-  /home/tb-builder/tor-browser-bundle-testsuite/clones/tor-browser-build/tools/prune-old-builds --days 1 --weeks 0 --months 0 ~/nightly-builds/tor-browser-builds
+  /home/tb-builder/tor-browser-bundle-testsuite/clones/tor-browser-build/tools/prune-old-builds --days 10 --weeks 0 --months 0 ~/nightly-builds/tor-browser-builds
 
 # sleep for 5m to give time to previous rsync to finish
 sleep 5m
