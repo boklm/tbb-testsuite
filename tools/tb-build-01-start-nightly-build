@@ -41,10 +41,13 @@ then
     find "$dir" -maxdepth 1 \( \
                    -name '*.txt' \
                 -o -name '*.asc' \
-                -o -name 'torbrowser-install-*_en-US.exe' \
-                -o -name 'TorBrowser-*_en-US.dmg' \
-                -o -name 'tor-browser-linux*_en-US.tar.xz' \
+                -o -name 'torbrowser-install-*_ALL.exe' \
+                -o -name 'TorBrowser-*_ALL.dmg' \
+                -o -name 'tor-browser-linux*_ALL.tar.xz' \
                 -o -name '*-multi-qa.apk' \
+                -o -name 'basebrowser-install-*_ALL.exe' \
+                -o -name 'BaseBrowser-*_ALL.dmg' \
+                -o -name 'base-browser-linux*_ALL.tar.xz' \
                 \) \
       -a -execdir cp -a {} "$dname" \;
   done
